@@ -17,8 +17,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
@@ -29,7 +27,6 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
  */
 public class JsonFormatPreferencePage extends PreferencePage implements IWorkbenchPreferencePage, SelectionListener
 {
-	private Spinner mSpinner;
 	private Button mWrapObject;
 	private Button mWrapArray;
 	private Button mNewLineObject;
@@ -63,14 +60,7 @@ public class JsonFormatPreferencePage extends PreferencePage implements IWorkben
 		{
 			final String key = JsonPreferencesInitializer.FORMAT_KEYS[i];
 
-			if (JsonPreferencesInitializer.PREF_TAB_WIDTH.equals(key))
-			{
-				dest.setValue(key, source.getInt(key));
-			}
-			else
-			{
-				dest.setValue(key, source.getBoolean(key));
-			}
+			dest.setValue(key, source.getBoolean(key));
 		}
 	}
 
@@ -80,28 +70,11 @@ public class JsonFormatPreferencePage extends PreferencePage implements IWorkben
 		final Composite appearanceComposite = new Composite(parent, SWT.NONE);
 		appearanceComposite.setLayout(new FormLayout());
 
-		final Label lblTabWidth = new Label(appearanceComposite, SWT.NONE);
-		final FormData fd_lblTabWidth = new FormData();
-		fd_lblTabWidth.top = new FormAttachment(0, 5);
-		fd_lblTabWidth.left = new FormAttachment(0, 0);
-		lblTabWidth.setLayoutData(fd_lblTabWidth);
-		lblTabWidth.setText("Tab width:");
-
-		mSpinner = new Spinner(appearanceComposite, SWT.BORDER);
-		mSpinner.setData(JsonPreferencesInitializer.PREF_TAB_WIDTH);
-		final FormData fd_spinner = new FormData();
-		fd_spinner.top = new FormAttachment(lblTabWidth, 0, SWT.CENTER);
-		fd_spinner.left = new FormAttachment(lblTabWidth, 5);
-		mSpinner.setMinimum(0);
-		mSpinner.setMaximum(99);
-		mSpinner.setLayoutData(fd_spinner);
-		mSpinner.addSelectionListener(this);
-
 		mAutoFormat = new Button(appearanceComposite, SWT.CHECK);
 		mAutoFormat.setData(JsonPreferencesInitializer.PREF_AUTO_FORMAT_ON_SAVE);
 		final FormData fd_btnAutoFormatOn = new FormData();
-		fd_btnAutoFormatOn.top = new FormAttachment(0, 5);
-		fd_btnAutoFormatOn.left = new FormAttachment(mSpinner, 30);
+		fd_btnAutoFormatOn.top = new FormAttachment(0, 0);
+		fd_btnAutoFormatOn.left = new FormAttachment(0, 0);
 		mAutoFormat.setLayoutData(fd_btnAutoFormatOn);
 		mAutoFormat.setText("Auto format on save");
 		mAutoFormat.addSelectionListener(this);
@@ -110,7 +83,7 @@ public class JsonFormatPreferencePage extends PreferencePage implements IWorkben
 		grpWrap.setText("Wrap");
 		grpWrap.setLayout(new FormLayout());
 		final FormData fd_grpWrap = new FormData();
-		fd_grpWrap.top = new FormAttachment(mSpinner, 10);
+		fd_grpWrap.top = new FormAttachment(mAutoFormat, 10);
 		fd_grpWrap.left = new FormAttachment(0, 0);
 		grpWrap.setLayoutData(fd_grpWrap);
 
@@ -267,7 +240,6 @@ public class JsonFormatPreferencePage extends PreferencePage implements IWorkben
 
 	public void update(IPreferenceStore store)
 	{
-		mSpinner.setSelection(store.getInt(JsonPreferencesInitializer.PREF_TAB_WIDTH));
 		mWrapObject.setSelection(store.getBoolean(JsonPreferencesInitializer.PREF_WRAP_OBJECT));
 		mWrapArray.setSelection(store.getBoolean(JsonPreferencesInitializer.PREF_WRAP_ARRAY));
 		mNewLineObject.setSelection(store.getBoolean(JsonPreferencesInitializer.PREF_OBJECT_BRACKETS_NEW_LINE));
@@ -302,14 +274,7 @@ public class JsonFormatPreferencePage extends PreferencePage implements IWorkben
 	{
 		final String key = (String) e.widget.getData();
 
-		if (e.widget == mSpinner)
-		{
-			mPreferenceStore.setValue(key, mSpinner.getSelection());
-		}
-		else
-		{
-			mPreferenceStore.setValue(key, ((Button) e.widget).getSelection());
-		}
+		mPreferenceStore.setValue(key, ((Button) e.widget).getSelection());
 
 		mFormatter.update();
 	}

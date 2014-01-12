@@ -33,8 +33,6 @@ public class JsonPreferencesInitializer extends AbstractPreferenceInitializer
 	public static final String PREF_SPACE_AFTER_ARRAY_OPEN = "spaceAfterArrayOpen";
 	public static final String PREF_SPACE_BEFORE_ARRAY_CLOSE = "spaceAfterArrayClose";
 
-	public static final String PREF_TAB_WIDTH = "tabWidth";
-
 	/*@formatter:off*/
 	
 	public static final String[] FORMAT_KEYS = {
@@ -50,8 +48,7 @@ public class JsonPreferencesInitializer extends AbstractPreferenceInitializer
 		PREF_SPACE_AFTER_OBJECT_OPEN,
 		PREF_SPACE_BEFORE_OBJECT_CLOSE,
 		PREF_SPACE_AFTER_ARRAY_OPEN,
-		PREF_SPACE_BEFORE_ARRAY_CLOSE,
-		PREF_TAB_WIDTH
+		PREF_SPACE_BEFORE_ARRAY_CLOSE
 	};
 
 	/*@formatter:on*/
@@ -195,8 +192,6 @@ public class JsonPreferencesInitializer extends AbstractPreferenceInitializer
 
 		store.setDefault(PREF_SPACE_AFTER_OBJECT_OPEN, false);
 		store.setDefault(PREF_SPACE_BEFORE_OBJECT_CLOSE, false);
-
-		store.setDefault(PREF_TAB_WIDTH, 4);
 
 		final ColorType[] values = ColorType.values();
 

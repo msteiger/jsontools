@@ -1,7 +1,5 @@
 package org.bimeg.eclipse.json.editor;
 
-import org.bimeg.eclipse.json.JsonPlugin;
-import org.bimeg.eclipse.json.preference.JsonPreferencesInitializer;
 import org.eclipse.jface.text.DefaultIndentLineAutoEditStrategy;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
@@ -29,12 +27,6 @@ public class JsonConfiguration extends TextSourceViewerConfiguration
 	public JsonConfiguration(JsonEditor editor)
 	{
 		mEditor = editor;
-	}
-
-	@Override
-	public int getTabWidth(ISourceViewer sourceViewer)
-	{
-		return JsonPlugin.getDefault().getPreferenceStore().getInt(JsonPreferencesInitializer.PREF_TAB_WIDTH);
 	}
 
 	private ITokenScanner getJsonScanner()
