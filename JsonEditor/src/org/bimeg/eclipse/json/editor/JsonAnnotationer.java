@@ -11,14 +11,13 @@ import org.bimeg.eclipse.json.model.JsonElement;
 import org.bimeg.eclipse.json.model.JsonObject;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.Position;
-import org.eclipse.jface.text.source.IAnnotationModel;
+import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotation;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotationModel;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.services.IDisposable;
-import org.eclipse.ui.texteditor.DefaultRangeIndicator;
 
 /**
  * 11 янв. 2014 г.
@@ -28,19 +27,18 @@ import org.eclipse.ui.texteditor.DefaultRangeIndicator;
 public class JsonAnnotationer implements ISelectionListener, IDisposable
 {
 	private final ProjectionAnnotationModel mProjectionModel;
-	private final IAnnotationModel mModel;
 	private JsonElement mElement;
 	private final JsonEditor mEditor;
 	private final SelectionsFinder mFinder = new SelectionsFinder();
-	private DefaultRangeIndicator mRangeIndicator;
 	private Map<JsonElement, ProjectionAnnotation> mAnnos;
 	private final Map<ProjectionAnnotation, Boolean> mState = new IdentityHashMap<>();
+	private ISourceViewer mViewer;
 
-	public JsonAnnotationer(ProjectionAnnotationModel projectionModel, IAnnotationModel model, JsonEditor editor)
+	public JsonAnnotationer(ProjectionAnnotationModel projectionModel, JsonEditor editor, ISourceViewer viewer)
 	{
 		mProjectionModel = projectionModel;
-		mModel = model;
 		mEditor = editor;
+		mViewer = viewer;
 		mEditor.getSite().getPage().addPostSelectionListener(this);
 	}
 
@@ -67,18 +65,7 @@ public class JsonAnnotationer implements ISelectionListener, IDisposable
 				selected = selected.getParent();
 			}
 
-			final Position position = pos(selected);
-
-			if (mRangeIndicator != null)
-			{
-				mModel.removeAnnotation(mRangeIndicator);
-				mModel.addAnnotation(mRangeIndicator, position);
-			}
-			else
-			{
-				mRangeIndicator = new DefaultRangeIndicator();
-				mModel.addAnnotation(mRangeIndicator, position);
-			}
+			mViewer.setRangeIndication(selected.getStart(), selected.getLength(), false);
 		}
 	}
 

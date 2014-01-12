@@ -6,6 +6,7 @@ import org.eclipse.jface.text.DefaultIndentLineAutoEditStrategy;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.formatter.IContentFormatter;
+import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.presentation.PresentationReconciler;
 import org.eclipse.jface.text.reconciler.IReconciler;
@@ -13,14 +14,14 @@ import org.eclipse.jface.text.reconciler.MonoReconciler;
 import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
 import org.eclipse.jface.text.rules.ITokenScanner;
 import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.jface.text.source.SourceViewerConfiguration;
+import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 
 /**
  * 09 янв. 2014 г.
  * 
  * @author denis.mirochnik
  */
-public class JsonConfiguration extends SourceViewerConfiguration
+public class JsonConfiguration extends TextSourceViewerConfiguration
 {
 	private JsonScanner mJsonScanner;
 	private final JsonEditor mEditor;
@@ -50,6 +51,12 @@ public class JsonConfiguration extends SourceViewerConfiguration
 	public IContentFormatter getContentFormatter(ISourceViewer sourceViewer)
 	{
 		return new JsonContentFormatter(mEditor);
+	}
+
+	@Override
+	public IInformationPresenter getInformationPresenter(ISourceViewer sourceViewer)
+	{
+		return super.getInformationPresenter(sourceViewer);
 	}
 
 	@Override

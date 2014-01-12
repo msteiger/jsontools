@@ -248,7 +248,7 @@ public class JsonEditor extends TextEditor
 
 		sourceViewer.doOperation(ProjectionViewer.TOGGLE);
 
-		mAnnotationer = new JsonAnnotationer(sourceViewer.getProjectionAnnotationModel(), sourceViewer.getVisualAnnotationModel(), this);
+		mAnnotationer = new JsonAnnotationer(sourceViewer.getProjectionAnnotationModel(), this, getSourceViewer());
 	}
 
 	@Override

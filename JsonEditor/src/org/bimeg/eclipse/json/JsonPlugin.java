@@ -25,8 +25,6 @@ public class JsonPlugin extends AbstractUIPlugin
 	 */
 	public JsonPlugin()
 	{
-		//TODO inspect TextSourceViewewConfiguration
-		//TODO use setRangeIndicator to TextEditor
 		//TODO inspect getInformationPresenter in SourceViewerConfiguration
 	}
 
