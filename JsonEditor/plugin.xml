@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+	<extension point="org.eclipse.ui.editors">
+		<editor
+			class="org.bimeg.eclipse.json.editor.JsonEditor"
+			default="true"
+			extensions="json"
+			id="org.bimeg.eclipse.json.editor"
+			name="JSON Editor">
+		</editor>
+	</extension>
+	<extension point="org.eclipse.core.runtime.preferences">
+		<initializer
+			class="org.bimeg.eclipse.json.preference.JsonPreferencesInitializer">
+		</initializer>
+	</extension>
+	<extension point="org.eclipse.ui.commands">
+		<command
+			categoryId="org.eclipse.ui.category.edit"
+			name="Format JSON"
+			id="org.bimeg.eclipse.json.format">
+		</command>
+		<command
+			categoryId="org.eclipse.ui.category.navigate"
+			name="Quick outline"
+			id="org.bimeg.eclipse.json.outline">
+		</command>
+		<command
+			defaultHandler="org.bimeg.eclipse.json.editor.OpenJsonEditorHandler"
+			categoryId="org.eclipse.ui.category.textEditor"
+			name="New JSON Editor"
+			id="org.bimeg.eclipse.json.openEditor">
+		</command>
+	</extension>
+	<extension point="org.eclipse.ui.menus">
+		<menuContribution locationURI="menu:window?after=additions">
+			<command
+				commandId="org.bimeg.eclipse.json.openEditor"
+				style="push">
+			</command>
+		</menuContribution>
+	</extension>
+	<extension point="org.eclipse.ui.contexts">
+		<context
+			name="JSON editor"
+			parentId="org.eclipse.ui.textEditorScope"
+			id="org.bimeg.eclipse.json.jsonEditorScope">
+		</context>
+	</extension>
+	<extension point="org.eclipse.ui.bindings">
+		<key
+			sequence="M1+M2+F"
+			contextId="org.bimeg.eclipse.json.jsonEditorScope"
+			commandId="org.bimeg.eclipse.json.format"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
+		<key
+			sequence="M1+O"
+			contextId="org.bimeg.eclipse.json.jsonEditorScope"
+			commandId="org.bimeg.eclipse.json.outline"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
+		<key
+			sequence="M2+M3+Q N"
+			contextId="org.eclipse.ui.contexts.window"
+			commandId="org.bimeg.eclipse.json.openEditor"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
+	</extension>
+	<extension point="org.eclipse.ui.preferencePages">
+		<page
+			class="org.bimeg.eclipse.json.preference.JsonRootPreferencePage"
+			id="org.bimeg.eclipse.json.pregerence.RootPage"
+			name="JSON">
+		</page>
+		<page
+			class="org.bimeg.eclipse.json.preference.colors.JsonSyntaxColorsPreferencePage"
+			id="org.bimeg.eclipse.json.pregerence.SyntaxColorPage"
+			category="org.bimeg.eclipse.json.pregerence.RootPage"
+			name="Syntax Coloring">
+		</page>
+		<page
+			class="org.bimeg.eclipse.json.preference.format.JsonFormatPreferencePage"
+			id="org.bimeg.eclipse.json.pregerence.FormatterPAge"
+			category="org.bimeg.eclipse.json.pregerence.RootPage"
+			name="Formatter">
+		</page>
+	</extension>
+	<extension point="org.eclipse.ui.newWizards">
+		<category
+			id="org.bimeg.eclipse.json.new.category"
+			name="JSON">
+		</category>
+		<wizard
+			id="org.bimeg.eclipse.json.new"
+			name="JSON File"
+			class="org.bimeg.eclipse.json.newfile.JsonNewFileWizard"
+			category="org.bimeg.eclipse.json.new.category">
+			<selection class="org.eclipse.core.resources.IResource" />
+		</wizard>
+	</extension>
+</plugin>
