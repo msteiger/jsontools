@@ -37,6 +37,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * 10 янв. 2014 г.
@@ -59,7 +60,7 @@ public class JsonQuickOutline extends AbstractInformationControl implements ISel
 
 		create();
 
-		final Rectangle bounds = getShell().getDisplay().getBounds();
+		final Rectangle bounds = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().getBounds();
 
 		final int width = bounds.width / 3;
 		final int height = bounds.height / 2;
