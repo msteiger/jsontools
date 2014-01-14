@@ -44,6 +44,11 @@ public class JsonAnnotationer implements ISelectionListener, IDisposable
 
 	public void store()
 	{
+		if (mAnnos == null)
+		{
+			return;
+		}
+
 		final Collection<ProjectionAnnotation> values = mAnnos.values();
 
 		mState.clear();
@@ -59,6 +64,13 @@ public class JsonAnnotationer implements ISelectionListener, IDisposable
 		if (mElement != null)
 		{
 			JsonElement selected = mFinder.findSelectedScope(start, mElement);
+
+			if (selected == null)
+			{
+				mViewer.setRangeIndicator(null);
+
+				return;
+			}
 
 			if (selected.isPrimitive())
 			{

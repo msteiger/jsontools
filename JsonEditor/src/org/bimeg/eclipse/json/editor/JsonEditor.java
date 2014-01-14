@@ -7,19 +7,25 @@ import org.bimeg.eclipse.json.outline.JsonOutlinePage;
 import org.bimeg.eclipse.json.outline.JsonQuickOutline;
 import org.bimeg.eclipse.json.preference.JsonPreferencesInitializer;
 import org.bimeg.eclipse.json.preference.JsonPreferencesInitializer.ColorType;
+import org.eclipse.core.filebuffers.IDocumentSetupParticipant;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.source.AnnotationModel;
 import org.eclipse.jface.text.source.DefaultCharacterPairMatcher;
+import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.jface.text.source.projection.ProjectionSupport;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.editors.text.ForwardingDocumentProvider;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.texteditor.ChainedPreferenceStore;
+import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
@@ -72,56 +78,6 @@ public class JsonEditor extends TextEditor
 			@Override
 			public void run()
 			{
-/*				ISourceViewer sourceViewer = getSourceViewer();
-
-				sourceViewer.getTextWidget().setRedraw(true);
-
-				if (getSourceViewer() != null)
-				{
-					int offset = 5;//getReplacementOffset() + getCursorPosition();
-					int exit = 7;//getReplacementOffset() + getReplacementString().length();
-
-					IDocument document = getDocumentProvider().getDocument(getEditorInput());
-
-					try
-					{
-						document.addPositionCategory(toString());
-						document.addPositionUpdater(new IPositionUpdater()
-						{
-
-							@Override
-							public void update(DocumentEvent event)
-							{
-							}
-						});
-						document.addPosition(toString(), new Position(offset, 2));
-
-						LinkedModeModel model = new LinkedModeModel();
-
-						LinkedPositionGroup group = new LinkedPositionGroup();
-						group.addPosition(new LinkedPosition(document, offset, 2, LinkedPositionGroup.NO_STOP));
-						model.addGroup(group);
-
-						group = new LinkedPositionGroup();
-						group.addPosition(new LinkedPosition(getDocumentProvider().getDocument(getEditorInput()), offset + 5, 2, LinkedPositionGroup.NO_STOP));
-						model.addGroup(group);
-
-						model.forceInstall();
-
-						LinkedModeUI ui = new EditorLinkedModeUI(model, getSourceViewer());
-						ui.setSimpleMode(true);
-						ui.setExitPosition(getSourceViewer(), offset + 4, 0, Integer.MAX_VALUE);
-						ui.setCyclingMode(LinkedModeUI.CYCLE_NEVER);
-						ui.enter();
-					}
-					catch (BadLocationException x)
-					{
-					}
-					catch (BadPositionCategoryException e)
-					{
-					}
-				}
-*/
 				format();
 			}
 
@@ -138,8 +94,6 @@ public class JsonEditor extends TextEditor
 			{
 				if (mElement != null)
 				{
-//					((SourceViewer) getSourceViewer()).doOperation(SourceViewer.INFORMATION);
-
 					final JsonQuickOutline outline = new JsonQuickOutline(getSite().getShell(), null, JsonEditor.this);
 					outline.setInput(mElement);
 					outline.setVisible(true);
@@ -249,6 +203,38 @@ public class JsonEditor extends TextEditor
 		sourceViewer.doOperation(ProjectionViewer.TOGGLE);
 
 		mAnnotationer = new JsonAnnotationer(sourceViewer.getProjectionAnnotationModel(), this, getSourceViewer());
+	}
+
+	@Override
+	public IDocumentProvider getDocumentProvider()
+	{
+		IDocumentProvider provider = super.getDocumentProvider();
+
+		if (provider == null)
+		{
+			return provider;
+		}
+
+		if (provider.getAnnotationModel(getEditorInput()) == null)
+		{
+			return new ForwardingDocumentProvider(null, new IDocumentSetupParticipant()
+			{
+
+				@Override
+				public void setup(IDocument document)
+				{
+				}
+			}, provider)
+			{
+				@Override
+				public IAnnotationModel getAnnotationModel(Object element)
+				{
+					return new AnnotationModel();
+				}
+			};
+		}
+
+		return provider;
 	}
 
 	@Override
