@@ -12,8 +12,6 @@ import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
 
 public class JsonNewFileWizard extends BasicNewResourceWizard
 {
-	public static final String WIZARD_ID = "org.sweetlemonade.eclipse.json.new";
-
 	private WizardNewFileCreationPage mainPage;
 
 	public JsonNewFileWizard()
@@ -57,6 +55,7 @@ public class JsonNewFileWizard extends BasicNewResourceWizard
 			if (dw != null)
 			{
 				final IWorkbenchPage page = dw.getActivePage();
+
 				if (page != null)
 				{
 					IDE.openEditor(page, file, true);

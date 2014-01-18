@@ -10,6 +10,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.sweetlemonade.eclipse.json.Constants;
 
 /**
  * 11 янв. 2014 г.
@@ -32,7 +33,7 @@ public class OpenJsonEditorHandler extends AbstractHandler
 		{
 			try
 			{
-				page.openEditor(input, "org.sweetlemonade.eclipse.json.editor");
+				page.openEditor(input, Constants.JSON_EDITOR_ID);
 			}
 			catch (final PartInitException e)
 			{

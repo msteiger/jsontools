@@ -85,9 +85,9 @@ public class JsonEditor extends TextEditor
 			}
 		};
 
-		action.setActionDefinitionId(Constants.JSON_EDITOR_FORMAT_ACTION);
+		action.setActionDefinitionId(Constants.COMMAND_FORMAT_ID);
 		action.setText("Format Json");
-		setAction(Constants.JSON_EDITOR_FORMAT_ACTION, action);
+		setAction(Constants.COMMAND_FORMAT_ID, action);
 
 		action = new Action()
 		{
@@ -104,9 +104,9 @@ public class JsonEditor extends TextEditor
 			}
 		};
 
-		action.setActionDefinitionId(Constants.JSON_EDITOR_QUICK_OUTLINE_ACTION);
+		action.setActionDefinitionId(Constants.COMMAND_QUICK_OUTLINE_ID);
 		action.setText("Quick outline");
-		setAction(Constants.JSON_EDITOR_QUICK_OUTLINE_ACTION, action);
+		setAction(Constants.COMMAND_QUICK_OUTLINE_ID, action);
 	}
 
 	@Override
@@ -133,8 +133,8 @@ public class JsonEditor extends TextEditor
 	{
 		super.editorContextMenuAboutToShow(menu);
 
-		addAction(menu, ITextEditorActionConstants.GROUP_EDIT, Constants.JSON_EDITOR_FORMAT_ACTION);
-		addAction(menu, ITextEditorActionConstants.GROUP_OPEN, Constants.JSON_EDITOR_QUICK_OUTLINE_ACTION);
+		addAction(menu, ITextEditorActionConstants.GROUP_EDIT, Constants.COMMAND_FORMAT_ID);
+		addAction(menu, ITextEditorActionConstants.GROUP_OPEN, Constants.COMMAND_QUICK_OUTLINE_ID);
 	}
 
 	@Override
