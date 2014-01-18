@@ -40,6 +40,7 @@ public class JsonEditor extends TextEditor
 	private JsonOutlinePage mOutlinePage;
 	private JsonElement mElement;
 	private JsonAnnotationer mAnnotationer;
+	private boolean mDirty;
 
 	public JsonEditor()
 	{
@@ -63,6 +64,8 @@ public class JsonEditor extends TextEditor
 
 	private void format()
 	{
+		mDirty = isDirty();
+
 		mAnnotationer.store();
 
 		((ProjectionViewer) getSourceViewer()).doOperation(ISourceViewer.FORMAT);
@@ -119,7 +122,10 @@ public class JsonEditor extends TextEditor
 
 	public void doSaveAfterFormat()
 	{
-		super.doSave(null);
+		if (!mDirty)
+		{
+			super.doSave(null);
+		}
 	}
 
 	@Override
