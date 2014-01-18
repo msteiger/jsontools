@@ -25,7 +25,6 @@ public class JsonPlugin extends AbstractUIPlugin
 	 */
 	public JsonPlugin()
 	{
-		//TODO inspect getInformationPresenter in SourceViewerConfiguration
 		//TODO make "remember location and size" for quick outline
 	}
 
