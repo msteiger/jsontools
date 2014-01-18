@@ -4,7 +4,6 @@ import org.eclipse.jface.text.DefaultIndentLineAutoEditStrategy;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.formatter.IContentFormatter;
-import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.presentation.PresentationReconciler;
 import org.eclipse.jface.text.reconciler.IReconciler;
@@ -43,12 +42,6 @@ public class JsonConfiguration extends TextSourceViewerConfiguration
 	public IContentFormatter getContentFormatter(ISourceViewer sourceViewer)
 	{
 		return new JsonContentFormatter(mEditor);
-	}
-
-	@Override
-	public IInformationPresenter getInformationPresenter(ISourceViewer sourceViewer)
-	{
-		return super.getInformationPresenter(sourceViewer);
 	}
 
 	@Override

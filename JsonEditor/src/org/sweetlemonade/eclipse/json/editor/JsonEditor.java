@@ -80,7 +80,6 @@ public class JsonEditor extends TextEditor
 			{
 				format();
 			}
-
 		};
 
 		action.setActionDefinitionId(Constants.JSON_EDITOR_FORMAT_ACTION);
@@ -94,7 +93,7 @@ public class JsonEditor extends TextEditor
 			{
 				if (mElement != null)
 				{
-					final JsonQuickOutline outline = new JsonQuickOutline(getSite().getShell(), null, JsonEditor.this);
+					final JsonQuickOutline outline = new JsonQuickOutline(getSite().getShell(), JsonEditor.this);
 					outline.setInput(mElement);
 					outline.setVisible(true);
 					outline.setFocus();

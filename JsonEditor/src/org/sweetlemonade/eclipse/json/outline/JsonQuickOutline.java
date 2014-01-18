@@ -54,9 +54,10 @@ public class JsonQuickOutline extends AbstractInformationControl implements ISel
 	private Text mFilter;
 	private final SelectionsFinder mFinder = new SelectionsFinder();
 
-	public JsonQuickOutline(Shell parentShell, ToolBarManager toolBarManager, JsonEditor editor)
+	public JsonQuickOutline(Shell parentShell, JsonEditor editor)
 	{
-		super(parentShell, toolBarManager);
+		super(parentShell, (ToolBarManager) null);
+
 		mEditor = editor;
 
 		create();
