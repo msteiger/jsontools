@@ -3,7 +3,7 @@
 <plugin>
 	<extension point="org.eclipse.ui.editors">
 		<editor
-			class="org.bimeg.eclipse.json.editor.JsonEditor"
+			class="org.sweetlemonade.eclipse.json.editor.JsonEditor"
 			default="true"
 			extensions="json"
 			id="org.bimeg.eclipse.json.editor"
@@ -12,7 +12,7 @@
 	</extension>
 	<extension point="org.eclipse.core.runtime.preferences">
 		<initializer
-			class="org.bimeg.eclipse.json.preference.JsonPreferencesInitializer">
+			class="org.sweetlemonade.eclipse.json.preference.JsonPreferencesInitializer">
 		</initializer>
 	</extension>
 	<extension point="org.eclipse.ui.commands">
@@ -27,7 +27,7 @@
 			id="org.bimeg.eclipse.json.outline">
 		</command>
 		<command
-			defaultHandler="org.bimeg.eclipse.json.editor.OpenJsonEditorHandler"
+			defaultHandler="org.sweetlemonade.eclipse.json.editor.OpenJsonEditorHandler"
 			categoryId="org.eclipse.ui.category.textEditor"
 			name="New JSON Editor"
 			id="org.bimeg.eclipse.json.openEditor">
@@ -67,18 +67,18 @@
 	</extension>
 	<extension point="org.eclipse.ui.preferencePages">
 		<page
-			class="org.bimeg.eclipse.json.preference.JsonRootPreferencePage"
+			class="org.sweetlemonade.eclipse.json.preference.JsonRootPreferencePage"
 			id="org.bimeg.eclipse.json.pregerence.RootPage"
 			name="JSON">
 		</page>
 		<page
-			class="org.bimeg.eclipse.json.preference.colors.JsonSyntaxColorsPreferencePage"
+			class="org.sweetlemonade.eclipse.json.preference.colors.JsonSyntaxColorsPreferencePage"
 			id="org.bimeg.eclipse.json.pregerence.SyntaxColorPage"
 			category="org.bimeg.eclipse.json.pregerence.RootPage"
 			name="Syntax Coloring">
 		</page>
 		<page
-			class="org.bimeg.eclipse.json.preference.format.JsonFormatPreferencePage"
+			class="org.sweetlemonade.eclipse.json.preference.format.JsonFormatPreferencePage"
 			id="org.bimeg.eclipse.json.pregerence.FormatterPAge"
 			category="org.bimeg.eclipse.json.pregerence.RootPage"
 			name="Formatter">
@@ -92,7 +92,7 @@
 		<wizard
 			id="org.bimeg.eclipse.json.new"
 			name="JSON File"
-			class="org.bimeg.eclipse.json.newfile.JsonNewFileWizard"
+			class="org.sweetlemonade.eclipse.json.newfile.JsonNewFileWizard"
 			category="org.bimeg.eclipse.json.new.category">
 			<selection class="org.eclipse.core.resources.IResource" />
 		</wizard>
