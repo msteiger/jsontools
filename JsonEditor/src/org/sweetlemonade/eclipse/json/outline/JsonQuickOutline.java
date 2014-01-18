@@ -6,6 +6,7 @@ import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.text.AbstractInformationControl;
 import org.eclipse.jface.text.IInformationControlExtension2;
 import org.eclipse.jface.text.ITextSelection;
+import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IElementComparer;
@@ -161,7 +162,10 @@ public class JsonQuickOutline extends AbstractInformationControl implements ISel
 
 		mTreeViewer = new TreeViewer(composite, getTreeStyle());
 		mTreeViewer.setContentProvider(new JsonOutlineContentProvider());
-		mTreeViewer.setLabelProvider(new JsonLabelProvider());
+
+		DelegatingStyledCellLabelProvider delegatingStyledCellLabelProvider = new DelegatingStyledCellLabelProvider(new JsonLabelProvider());
+		mTreeViewer.setLabelProvider(delegatingStyledCellLabelProvider);
+
 		mTreeViewer.setFilters(new ViewerFilter[] { new QuickOutlineFilter(mFilter) });
 
 		mTreeViewer.addSelectionChangedListener(this);

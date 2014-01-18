@@ -1,6 +1,7 @@
 package org.sweetlemonade.eclipse.json.outline;
 
 import org.eclipse.jface.text.ITextSelection;
+import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -40,7 +41,10 @@ public class JsonOutlinePage extends ContentOutlinePage implements ISelectionLis
 
 		final TreeViewer viewer = getTreeViewer();
 		viewer.setContentProvider(new JsonOutlineContentProvider());
-		viewer.setLabelProvider(new JsonLabelProvider());
+
+		DelegatingStyledCellLabelProvider delegatingStyledCellLabelProvider = new DelegatingStyledCellLabelProvider(new JsonLabelProvider());
+		viewer.setLabelProvider(delegatingStyledCellLabelProvider);
+
 		getSite().getPage().addPostSelectionListener(this);
 
 		mExpander = new JsonTreeExpander(viewer);
