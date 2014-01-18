@@ -254,6 +254,13 @@ public class JsonQuickOutline extends AbstractInformationControl implements ISel
 	@Override
 	public void keyPressed(KeyEvent e)
 	{
+		if (e.keyCode == SWT.ARROW_DOWN)
+		{
+			if (e.widget == mFilter)
+			{
+				mTreeViewer.getControl().setFocus();
+			}
+		}
 	}
 
 	@Override
