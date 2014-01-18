@@ -32,7 +32,7 @@ public class OpenJsonEditorHandler extends AbstractHandler
 		{
 			try
 			{
-				page.openEditor(input, "org.bimeg.eclipse.json.editor");
+				page.openEditor(input, "org.sweetlemonade.eclipse.json.editor");
 			}
 			catch (final PartInitException e)
 			{

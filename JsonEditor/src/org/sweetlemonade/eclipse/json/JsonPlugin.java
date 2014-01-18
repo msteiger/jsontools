@@ -12,7 +12,7 @@ public class JsonPlugin extends AbstractUIPlugin
 {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "org.bimeg.eclipse.json"; //$NON-NLS-1$
+	public static final String PLUGIN_ID = "org.sweetlemonade.eclipse.json"; //$NON-NLS-1$
 
 	// The shared instance
 	private static JsonPlugin plugin;

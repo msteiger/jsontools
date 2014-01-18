@@ -12,7 +12,7 @@ import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
 
 public class JsonNewFileWizard extends BasicNewResourceWizard
 {
-	public static final String WIZARD_ID = "org.bimeg.eclipse.json.new";
+	public static final String WIZARD_ID = "org.sweetlemonade.eclipse.json.new";
 
 	private WizardNewFileCreationPage mainPage;
 

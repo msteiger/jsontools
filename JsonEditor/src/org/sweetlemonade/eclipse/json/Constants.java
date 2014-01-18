@@ -7,8 +7,8 @@ package org.sweetlemonade.eclipse.json;
  */
 public class Constants
 {
-	public static final String JSON_EDITOR_CONTEXT = "org.bimeg.eclipse.json.jsonEditorScope";
+	public static final String JSON_EDITOR_CONTEXT = "org.sweetlemonade.eclipse.json.jsonEditorScope";
 
-	public static final String JSON_EDITOR_FORMAT_ACTION = "org.bimeg.eclipse.json.format";
-	public static final String JSON_EDITOR_QUICK_OUTLINE_ACTION = "org.bimeg.eclipse.json.outline";
+	public static final String JSON_EDITOR_FORMAT_ACTION = "org.sweetlemonade.eclipse.json.format";
+	public static final String JSON_EDITOR_QUICK_OUTLINE_ACTION = "org.sweetlemonade.eclipse.json.outline";
 }

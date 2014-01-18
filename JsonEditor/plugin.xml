@@ -6,7 +6,7 @@
 			class="org.sweetlemonade.eclipse.json.editor.JsonEditor"
 			default="true"
 			extensions="json"
-			id="org.bimeg.eclipse.json.editor"
+			id="org.sweetlemonade.eclipse.json.editor"
 			name="JSON Editor">
 		</editor>
 	</extension>
@@ -19,24 +19,24 @@
 		<command
 			categoryId="org.eclipse.ui.category.edit"
 			name="Format JSON"
-			id="org.bimeg.eclipse.json.format">
+			id="org.sweetlemonade.eclipse.json.format">
 		</command>
 		<command
 			categoryId="org.eclipse.ui.category.navigate"
 			name="Quick outline"
-			id="org.bimeg.eclipse.json.outline">
+			id="org.sweetlemonade.eclipse.json.outline">
 		</command>
 		<command
 			defaultHandler="org.sweetlemonade.eclipse.json.editor.OpenJsonEditorHandler"
 			categoryId="org.eclipse.ui.category.textEditor"
 			name="New JSON Editor"
-			id="org.bimeg.eclipse.json.openEditor">
+			id="org.sweetlemonade.eclipse.json.openEditor">
 		</command>
 	</extension>
 	<extension point="org.eclipse.ui.menus">
 		<menuContribution locationURI="menu:window?after=additions">
 			<command
-				commandId="org.bimeg.eclipse.json.openEditor"
+				commandId="org.sweetlemonade.eclipse.json.openEditor"
 				style="push">
 			</command>
 		</menuContribution>
@@ -45,55 +45,55 @@
 		<context
 			name="JSON editor"
 			parentId="org.eclipse.ui.textEditorScope"
-			id="org.bimeg.eclipse.json.jsonEditorScope">
+			id="org.sweetlemonade.eclipse.json.jsonEditorScope">
 		</context>
 	</extension>
 	<extension point="org.eclipse.ui.bindings">
 		<key
 			sequence="M1+M2+F"
-			contextId="org.bimeg.eclipse.json.jsonEditorScope"
-			commandId="org.bimeg.eclipse.json.format"
+			contextId="org.sweetlemonade.eclipse.json.jsonEditorScope"
+			commandId="org.sweetlemonade.eclipse.json.format"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key
 			sequence="M1+O"
-			contextId="org.bimeg.eclipse.json.jsonEditorScope"
-			commandId="org.bimeg.eclipse.json.outline"
+			contextId="org.sweetlemonade.eclipse.json.jsonEditorScope"
+			commandId="org.sweetlemonade.eclipse.json.outline"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key
 			sequence="M2+M3+Q N"
 			contextId="org.eclipse.ui.contexts.window"
-			commandId="org.bimeg.eclipse.json.openEditor"
+			commandId="org.sweetlemonade.eclipse.json.openEditor"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 	</extension>
 	<extension point="org.eclipse.ui.preferencePages">
 		<page
 			class="org.sweetlemonade.eclipse.json.preference.JsonRootPreferencePage"
-			id="org.bimeg.eclipse.json.pregerence.RootPage"
+			id="org.sweetlemonade.eclipse.json.pregerence.RootPage"
 			name="JSON">
 		</page>
 		<page
 			class="org.sweetlemonade.eclipse.json.preference.colors.JsonSyntaxColorsPreferencePage"
-			id="org.bimeg.eclipse.json.pregerence.SyntaxColorPage"
-			category="org.bimeg.eclipse.json.pregerence.RootPage"
+			id="org.sweetlemonade.eclipse.json.pregerence.SyntaxColorPage"
+			category="org.sweetlemonade.eclipse.json.pregerence.RootPage"
 			name="Syntax Coloring">
 		</page>
 		<page
 			class="org.sweetlemonade.eclipse.json.preference.format.JsonFormatPreferencePage"
-			id="org.bimeg.eclipse.json.pregerence.FormatterPAge"
-			category="org.bimeg.eclipse.json.pregerence.RootPage"
+			id="org.sweetlemonade.eclipse.json.pregerence.FormatterPAge"
+			category="org.sweetlemonade.eclipse.json.pregerence.RootPage"
 			name="Formatter">
 		</page>
 	</extension>
 	<extension point="org.eclipse.ui.newWizards">
 		<category
-			id="org.bimeg.eclipse.json.new.category"
+			id="org.sweetlemonade.eclipse.json.new.category"
 			name="JSON">
 		</category>
 		<wizard
-			id="org.bimeg.eclipse.json.new"
+			id="org.sweetlemonade.eclipse.json.new"
 			name="JSON File"
 			class="org.sweetlemonade.eclipse.json.newfile.JsonNewFileWizard"
-			category="org.bimeg.eclipse.json.new.category">
+			category="org.sweetlemonade.eclipse.json.new.category">
 			<selection class="org.eclipse.core.resources.IResource" />
 		</wizard>
 	</extension>

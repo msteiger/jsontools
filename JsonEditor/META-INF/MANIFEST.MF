@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JsonEditor
-Bundle-SymbolicName: org.bimeg.eclipse.json;singleton:=true
+Bundle-SymbolicName: org.sweetlemonade.eclipse.json;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Activator: org.sweetlemonade.eclipse.json.JsonPlugin
-Bundle-Vendor: bimeg
+Bundle-Vendor: sweetlemonade
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.ui.editors;bundle-version="3.8.100",
