@@ -7,8 +7,8 @@ import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategyExtension;
 import org.eclipse.swt.widgets.Display;
-import org.sweetlemonade.eclipse.json.model.JsonElement;
-import org.sweetlemonade.eclipse.json.model.JsonParser;
+import org.sweetlemonade.eclipse.json.model.antlr.IllegalParseStateException;
+import org.sweetlemonade.eclipse.json.model.antlr.ParseUtils;
 
 /**
  * 10 янв. 2014 г.
@@ -45,7 +45,30 @@ public class JsonReconcileStrategy implements IReconcilingStrategy, IReconciling
 
 	private void reconcile()
 	{
-		final JsonElement parse = parse();
+		try
+		{
+			final Object parse = ParseUtils.parse(mDocument);
+
+			Display.getDefault().asyncExec(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					mEditor.setJsonInput(ParseUtils.tree(parse));
+				}
+
+			});
+
+			return;
+		}
+		catch (IllegalParseStateException e)
+		{
+			e.getClass();
+
+			return;
+		}
+
+/*		final JsonElement parse = parse();
 
 		Display.getDefault().asyncExec(new Runnable()
 		{
@@ -56,13 +79,13 @@ public class JsonReconcileStrategy implements IReconcilingStrategy, IReconciling
 			}
 
 		});
-	}
+*/	}
 
-	private JsonElement parse()
+/*	private JsonElement parse()
 	{
-		return new JsonParser(mDocument).parse();
+		return new JsonParserMy(mDocument).parse();
 	}
-
+*/
 	@Override
 	public void setProgressMonitor(IProgressMonitor monitor)
 	{

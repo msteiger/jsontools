@@ -11,12 +11,12 @@ import org.sweetlemonade.eclipse.json.model.JsonPrimitive.PrimitiveType;
  * 
  * @author denis.mirochnik
  */
-public class JsonParser
+public class JsonParserMy
 {
 	private final IDocument mDoc;
 	private int mPosition;
 
-	public JsonParser(IDocument document)
+	public JsonParserMy(IDocument document)
 	{
 		mDoc = document;
 	}

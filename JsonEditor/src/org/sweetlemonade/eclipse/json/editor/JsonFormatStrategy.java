@@ -9,7 +9,7 @@ import org.eclipse.jface.text.formatter.FormattingContextProperties;
 import org.eclipse.jface.text.formatter.IFormattingContext;
 import org.sweetlemonade.eclipse.json.JsonPlugin;
 import org.sweetlemonade.eclipse.json.model.JsonElement;
-import org.sweetlemonade.eclipse.json.model.JsonParser;
+import org.sweetlemonade.eclipse.json.model.JsonParserMy;
 
 /**
  * 10 янв. 2014 г.
@@ -37,7 +37,7 @@ public class JsonFormatStrategy extends ContextBasedFormattingStrategy
 
 		final IDocument document = (IDocument) context.getProperty(FormattingContextProperties.CONTEXT_MEDIUM);
 
-		mElement = new JsonParser(document).parse(); //TODO do it right sometime...
+		mElement = new JsonParserMy(document).parse(); //TODO do it right sometime...
 		mFormatter = new JsonFormatter(mElement, store);
 
 		mDocuments.addLast(document);
