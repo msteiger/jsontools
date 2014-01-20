@@ -2,7 +2,7 @@ package org.sweetlemonade.eclipse.json.model.antlr;
 
 import java.util.List;
 
-import org.antlr.runtime.ANTLRStringStream;
+import org.antlr.runtime.CommonToken;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.Token;
 import org.antlr.runtime.tree.CommonTree;
@@ -22,8 +22,7 @@ public class ParseUtils
 {
 	public static Object parse(IDocument document) throws IllegalParseStateException
 	{
-		JsonLexer lexer = new JsonLexer(new ANTLRStringStream(document.get()));
-//		JsonLexer lexer = new JsonLexer(new DocumentCharStream(document));
+		JsonLexer lexer = new JsonLexer(new DocumentCharStream(document));
 		CommonTokenStream tokenStream = new CommonTokenStream(lexer);
 		JsonParser parser = new JsonParser(tokenStream);
 
@@ -70,11 +69,9 @@ public class ParseUtils
 				text = dequote(text);
 				type2 = PrimitiveType.STRING;
 				break;
-		}
 
-		if (type2 == null)
-		{
-			return null;
+			default:
+				return null;
 		}
 
 		return fill(new JsonPrimitive(parent, text, type2), tree);
@@ -95,7 +92,14 @@ public class ParseUtils
 		{
 			CommonTree child = (CommonTree) object;
 
-			array.add(element(child, array));
+			JsonElement element = element(child, array);
+
+			if (element == null)
+			{
+				continue;
+			}
+
+			array.add(element);
 		}
 
 		return array;
@@ -111,10 +115,22 @@ public class ParseUtils
 		{
 			CommonTree child = (CommonTree) object2;
 
+			if (child.getType() != JsonParser.STRING)
+			{
+				continue;
+			}
+
 			String text = child.getToken().getText();
 			text = dequote(text);
 
-			object.put(text, element((CommonTree) child.getChild(0), object));
+			JsonElement element = element((CommonTree) child.getChild(0), object);
+
+			if (element == null)
+			{
+				continue;
+			}
+
+			object.put(text, element);
 		}
 
 		return object;
@@ -122,12 +138,20 @@ public class ParseUtils
 
 	private static <T extends JsonElement> T fill(T element, CommonTree tree)
 	{
-		element.setStart(tree.getTokenStartIndex());
-		element.setEnd(tree.getTokenStopIndex());
-//		element.setStart(tree.getTokenStartIndex());
-//		element.setEnd(tree.getTokenStopIndex());
-		element.setStartLine(tree.getLine());
-		element.setEndLine(tree.getLine());
+		CommonToken startToken = (CommonToken) tree.getToken();
+		CommonToken lastToken = startToken;
+
+		int childCount = tree.getChildCount();
+
+		if (childCount > 0)
+		{
+			lastToken = (CommonToken) ((CommonTree) tree.getChild(childCount - 1)).getToken();
+		}
+
+		element.setStart(startToken.getStartIndex());
+		element.setEnd(lastToken.getStopIndex() + 1);
+		element.setStartLine(startToken.getLine());
+		element.setEndLine(lastToken.getLine());
 
 		return element;
 	}

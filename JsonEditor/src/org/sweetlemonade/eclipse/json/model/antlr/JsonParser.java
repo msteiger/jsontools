@@ -1,6 +1,6 @@
 package org.sweetlemonade.eclipse.json.model.antlr;
 
-// $ANTLR 3.5 D:\\Documents\\grammars\\Json.g 2014-01-20 01:02:22
+// $ANTLR 3.5 D:\\Documents\\grammars\\Json.g 2014-01-20 02:30:21
 
 import org.antlr.runtime.BitSet;
 import org.antlr.runtime.NoViableAltException;
@@ -556,7 +556,7 @@ public class JsonParser extends Parser
 	};
 
 	// $ANTLR start "jsonObject"
-	// D:\\Documents\\grammars\\Json.g:35:1: jsonObject : OBJECT ^ ( member ( ',' ! member )* )? '}' !;
+	// D:\\Documents\\grammars\\Json.g:35:1: jsonObject : OBJECT ^ ( member ( ',' ! member )* )? '}' ;
 	public final JsonParser.jsonObject_return jsonObject()
 	{
 		JsonParser.jsonObject_return retval = new JsonParser.jsonObject_return();
@@ -576,8 +576,8 @@ public class JsonParser extends Parser
 
 		try
 		{
-			// D:\\Documents\\grammars\\Json.g:36:9: ( OBJECT ^ ( member ( ',' ! member )* )? '}' !)
-			// D:\\Documents\\grammars\\Json.g:36:11: OBJECT ^ ( member ( ',' ! member )* )? '}' !
+			// D:\\Documents\\grammars\\Json.g:36:9: ( OBJECT ^ ( member ( ',' ! member )* )? '}' )
+			// D:\\Documents\\grammars\\Json.g:36:11: OBJECT ^ ( member ( ',' ! member )* )? '}'
 			{
 				root_0 = adaptor.nil();
 
@@ -639,6 +639,9 @@ public class JsonParser extends Parser
 				}
 
 				char_literal19 = (Token) match(input, 20, FOLLOW_20_in_jsonObject223);
+				char_literal19_tree = adaptor.create(char_literal19);
+				adaptor.addChild(root_0, char_literal19_tree);
+
 			}
 
 			retval.stop = input.LT(-1);
@@ -674,7 +677,7 @@ public class JsonParser extends Parser
 	};
 
 	// $ANTLR start "jsonArray"
-	// D:\\Documents\\grammars\\Json.g:40:1: jsonArray : ARRAY ^ ( jsonValue ( ',' ! jsonValue )* )? ']' !;
+	// D:\\Documents\\grammars\\Json.g:40:1: jsonArray : ARRAY ^ ( jsonValue ( ',' ! jsonValue )* )? ']' ;
 	public final JsonParser.jsonArray_return jsonArray()
 	{
 		JsonParser.jsonArray_return retval = new JsonParser.jsonArray_return();
@@ -694,12 +697,12 @@ public class JsonParser extends Parser
 
 		try
 		{
-			// D:\\Documents\\grammars\\Json.g:41:9: ( ARRAY ^ ( jsonValue ( ',' ! jsonValue )* )? ']' !)
-			// D:\\Documents\\grammars\\Json.g:41:11: ARRAY ^ ( jsonValue ( ',' ! jsonValue )* )? ']' !
+			// D:\\Documents\\grammars\\Json.g:41:9: ( ARRAY ^ ( jsonValue ( ',' ! jsonValue )* )? ']' )
+			// D:\\Documents\\grammars\\Json.g:41:11: ARRAY ^ ( jsonValue ( ',' ! jsonValue )* )? ']'
 			{
 				root_0 = adaptor.nil();
 
-				ARRAY20 = (Token) match(input, ARRAY, FOLLOW_ARRAY_in_jsonArray242);
+				ARRAY20 = (Token) match(input, ARRAY, FOLLOW_ARRAY_in_jsonArray241);
 				ARRAY20_tree = adaptor.create(ARRAY20);
 				root_0 = adaptor.becomeRoot(ARRAY20_tree, root_0);
 
@@ -715,7 +718,7 @@ public class JsonParser extends Parser
 					case 1:
 					// D:\\Documents\\grammars\\Json.g:41:19: jsonValue ( ',' ! jsonValue )*
 					{
-						pushFollow(FOLLOW_jsonValue_in_jsonArray246);
+						pushFollow(FOLLOW_jsonValue_in_jsonArray245);
 						jsonValue21 = jsonValue();
 						state._fsp--;
 
@@ -736,8 +739,8 @@ public class JsonParser extends Parser
 								case 1:
 								// D:\\Documents\\grammars\\Json.g:41:30: ',' ! jsonValue
 								{
-									char_literal22 = (Token) match(input, 17, FOLLOW_17_in_jsonArray249);
-									pushFollow(FOLLOW_jsonValue_in_jsonArray252);
+									char_literal22 = (Token) match(input, 17, FOLLOW_17_in_jsonArray248);
+									pushFollow(FOLLOW_jsonValue_in_jsonArray251);
 									jsonValue23 = jsonValue();
 									state._fsp--;
 
@@ -756,7 +759,10 @@ public class JsonParser extends Parser
 
 				}
 
-				char_literal24 = (Token) match(input, 19, FOLLOW_19_in_jsonArray258);
+				char_literal24 = (Token) match(input, 19, FOLLOW_19_in_jsonArray257);
+				char_literal24_tree = adaptor.create(char_literal24);
+				adaptor.addChild(root_0, char_literal24_tree);
+
 			}
 
 			retval.stop = input.LT(-1);
@@ -801,9 +807,9 @@ public class JsonParser extends Parser
 	public static final BitSet FOLLOW_17_in_jsonObject214 = new BitSet(new long[] { 0x0000000000002000L });
 	public static final BitSet FOLLOW_member_in_jsonObject217 = new BitSet(new long[] { 0x0000000000120000L });
 	public static final BitSet FOLLOW_20_in_jsonObject223 = new BitSet(new long[] { 0x0000000000000002L });
-	public static final BitSet FOLLOW_ARRAY_in_jsonArray242 = new BitSet(new long[] { 0x0000000000087C90L });
-	public static final BitSet FOLLOW_jsonValue_in_jsonArray246 = new BitSet(new long[] { 0x00000000000A0000L });
-	public static final BitSet FOLLOW_17_in_jsonArray249 = new BitSet(new long[] { 0x0000000000007C90L });
-	public static final BitSet FOLLOW_jsonValue_in_jsonArray252 = new BitSet(new long[] { 0x00000000000A0000L });
-	public static final BitSet FOLLOW_19_in_jsonArray258 = new BitSet(new long[] { 0x0000000000000002L });
+	public static final BitSet FOLLOW_ARRAY_in_jsonArray241 = new BitSet(new long[] { 0x0000000000087C90L });
+	public static final BitSet FOLLOW_jsonValue_in_jsonArray245 = new BitSet(new long[] { 0x00000000000A0000L });
+	public static final BitSet FOLLOW_17_in_jsonArray248 = new BitSet(new long[] { 0x0000000000007C90L });
+	public static final BitSet FOLLOW_jsonValue_in_jsonArray251 = new BitSet(new long[] { 0x00000000000A0000L });
+	public static final BitSet FOLLOW_19_in_jsonArray257 = new BitSet(new long[] { 0x0000000000000002L });
 }
