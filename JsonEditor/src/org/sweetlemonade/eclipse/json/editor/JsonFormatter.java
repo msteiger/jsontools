@@ -1,11 +1,12 @@
 package org.sweetlemonade.eclipse.json.editor;
 
-import java.util.Set;
+import java.util.Collection;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.sweetlemonade.eclipse.json.model.JsonArray;
 import org.sweetlemonade.eclipse.json.model.JsonElement;
 import org.sweetlemonade.eclipse.json.model.JsonObject;
+import org.sweetlemonade.eclipse.json.model.JsonObject.Key;
 import org.sweetlemonade.eclipse.json.model.JsonPrimitive;
 import org.sweetlemonade.eclipse.json.model.JsonPrimitive.PrimitiveType;
 import org.sweetlemonade.eclipse.json.preference.JsonPreferencesInitializer;
@@ -154,12 +155,12 @@ public class JsonFormatter
 				indent(builder, indent + 1);
 			}
 
-			final Set<String> keySet = object.keySet();
+			final Collection<Key> keySet = object.keys();
 
 			boolean first = true;
 			boolean wasComplex = true;
 
-			for (final String key : keySet)
+			for (final Key key : keySet)
 			{
 				if (!first)
 				{

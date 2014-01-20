@@ -5,6 +5,7 @@ import java.util.List;
 import org.antlr.runtime.CommonToken;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.Token;
+import org.antlr.runtime.tree.CommonErrorNode;
 import org.antlr.runtime.tree.CommonTree;
 import org.eclipse.jface.text.IDocument;
 import org.sweetlemonade.eclipse.json.model.JsonArray;
@@ -34,9 +35,14 @@ public class ParseUtils
 		return element((CommonTree) t, null);
 	}
 
-	private static JsonElement element(CommonTree t, JsonElement parent)
+	private static JsonElement element(CommonTree tree, JsonElement parent)
 	{
-		CommonTree tree = t;
+		if (tree instanceof CommonErrorNode)
+		{
+			CommonErrorNode error = (CommonErrorNode) tree;
+
+			return null;
+		}
 
 		Token token = tree.getToken();
 

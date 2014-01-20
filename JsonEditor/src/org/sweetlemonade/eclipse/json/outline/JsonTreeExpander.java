@@ -2,14 +2,15 @@ package org.sweetlemonade.eclipse.json.outline;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.jface.viewers.IElementComparer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.sweetlemonade.eclipse.json.Container;
 import org.sweetlemonade.eclipse.json.model.JsonElement;
 import org.sweetlemonade.eclipse.json.model.JsonObject;
+import org.sweetlemonade.eclipse.json.model.JsonObject.Key;
 
 /**
  * 11 янв. 2014 г.
@@ -73,26 +74,30 @@ public class JsonTreeExpander
 		mElement = element;
 	}
 
-	private void check(JsonElement elementWas, JsonElement elementNow, List<JsonElement> expanded, List<JsonElement> expand)
+	private boolean check(JsonElement elementWas, JsonElement elementNow, List<JsonElement> expanded, List<JsonElement> expand)
 	{
 		if (elementWas.isPrimitive() || elementNow.isPrimitive())
 		{
-			return;
+			return false;
 		}
 
 		if (elementWas.getClass() != elementNow.getClass())
 		{
-			return;
+			return false;
 		}
+
+		boolean result = false;
 
 		if (expanded.contains(elementWas))
 		{
+			result = true;
+
 			expand.add(elementNow);
 		}
 
 		if (!elementWas.hasChilds())
 		{
-			return;
+			return result;
 		}
 
 		if (elementWas.isArray())
@@ -115,16 +120,24 @@ public class JsonTreeExpander
 			final JsonObject wasObj = elementWas.asObject();
 			final JsonObject nowObj = elementNow.asObject();
 
-			final Set<String> wasSet = wasObj.keySet();
-			final Set<String> nowSet = nowObj.keySet();
+			final Collection<Key> wasSet = wasObj.keys();
+			final Collection<Key> nowSet = nowObj.keys();
 
-			for (final String wasKey : wasSet)
+			outer: for (final Key wasKey : wasSet)
 			{
-				if (nowSet.contains(wasKey))
+				for (Key nowKey : nowSet)
 				{
-					check(wasObj.get(wasKey), nowObj.get(wasKey), expanded, expand);
+					if (nowKey.getValue().equals(wasKey.getValue()))
+					{
+						if (check(wasObj.get(wasKey), nowObj.get(nowKey), expanded, expand))
+						{
+							continue outer;
+						}
+					}
 				}
 			}
 		}
+
+		return result;
 	}
 }

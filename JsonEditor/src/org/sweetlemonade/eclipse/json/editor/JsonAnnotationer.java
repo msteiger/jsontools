@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.Position;
@@ -18,6 +17,7 @@ import org.eclipse.ui.services.IDisposable;
 import org.sweetlemonade.eclipse.json.SelectionsFinder;
 import org.sweetlemonade.eclipse.json.model.JsonElement;
 import org.sweetlemonade.eclipse.json.model.JsonObject;
+import org.sweetlemonade.eclipse.json.model.JsonObject.Key;
 
 /**
  * 11 янв. 2014 г.
@@ -125,20 +125,24 @@ public class JsonAnnotationer implements ISelectionListener, IDisposable
 		}
 	}
 
-	private void check(JsonElement elementWas, JsonElement elementNow, Map<JsonElement, ProjectionAnnotation> oldAnnos, Map<JsonElement, ProjectionAnnotation> newAnnos)
+	private boolean check(JsonElement elementWas, JsonElement elementNow, Map<JsonElement, ProjectionAnnotation> oldAnnos, Map<JsonElement, ProjectionAnnotation> newAnnos)
 	{
 		if (elementWas.isPrimitive() || elementNow.isPrimitive())
 		{
-			return;
+			return false;
 		}
 
 		if (elementWas.getClass() != elementNow.getClass())
 		{
-			return;
+			return false;
 		}
+
+		boolean result = false;
 
 		if (oldAnnos.containsKey(elementWas))
 		{
+			result = true;
+
 			final ProjectionAnnotation annotation = oldAnnos.get(elementWas);
 
 			if (annotation.isCollapsed())
@@ -153,7 +157,7 @@ public class JsonAnnotationer implements ISelectionListener, IDisposable
 
 		if (!elementWas.hasChilds())
 		{
-			return;
+			return result;
 		}
 
 		if (elementWas.isArray())
@@ -176,17 +180,25 @@ public class JsonAnnotationer implements ISelectionListener, IDisposable
 			final JsonObject wasObj = elementWas.asObject();
 			final JsonObject nowObj = elementNow.asObject();
 
-			final Set<String> wasSet = wasObj.keySet();
-			final Set<String> nowSet = nowObj.keySet();
+			final Collection<Key> wasSet = wasObj.keys();
+			final Collection<Key> nowSet = nowObj.keys();
 
-			for (final String wasKey : wasSet)
+			outer: for (final Key wasKey : wasSet)
 			{
-				if (nowSet.contains(wasKey))
+				for (Key nowKey : nowSet)
 				{
-					check(wasObj.get(wasKey), nowObj.get(wasKey), oldAnnos, newAnnos);
+					if (nowKey.getValue().equals(wasKey.getValue()))
+					{
+						if (check(wasObj.get(wasKey), nowObj.get(nowKey), oldAnnos, newAnnos))
+						{
+							continue outer;
+						}
+					}
 				}
 			}
 		}
+
+		return result;
 	}
 
 	private void collect(JsonElement element, Map<ProjectionAnnotation, Position> target, IdentityHashMap<JsonElement, ProjectionAnnotation> annos)
