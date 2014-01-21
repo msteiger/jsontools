@@ -1,9 +1,13 @@
 package org.sweetlemonade.eclipse.json.model.antlr;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+import org.antlr.runtime.BaseRecognizer;
 import org.antlr.runtime.CommonToken;
 import org.antlr.runtime.CommonTokenStream;
+import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.Token;
 import org.antlr.runtime.tree.CommonErrorNode;
 import org.antlr.runtime.tree.CommonTree;
@@ -21,13 +25,83 @@ import org.sweetlemonade.eclipse.json.model.JsonPrimitive.PrimitiveType;
  */
 public class ParseUtils
 {
-	public static Object parse(IDocument document) throws IllegalParseStateException
+	public static class ParseError
 	{
-		JsonLexer lexer = new JsonLexer(new DocumentCharStream(document));
-		CommonTokenStream tokenStream = new CommonTokenStream(lexer);
-		JsonParser parser = new JsonParser(tokenStream);
+		public RecognitionException error;
+		public String text;
+		public int line;
+		public int start = -1;
+		public int stop = -1;
+	}
 
-		return parser.jsonText().getTree();
+	public static class ParseResult
+	{
+		public Object tree;
+		public Collection<ParseError> errors;
+	}
+
+	private static ParseError fillError(RecognitionException e, BaseRecognizer recognizer, IDocument document)
+	{
+		ParseError error = new ParseError();
+
+		error.error = e;
+		error.line = e.line;
+
+		CommonToken token = (CommonToken) e.token;
+
+		if (token != null)
+		{
+			error.start = token.getStartIndex();
+			error.stop = token.getStopIndex();
+
+			if (error.stop == error.start)
+			{
+				error.stop++;
+			}
+		}
+		else
+		{
+			error.start = e.index;
+		}
+
+		error.text = recognizer.getErrorMessage(e, recognizer.getTokenNames());
+
+		return error;
+	}
+
+	public static ParseResult parse(final IDocument document) throws IllegalParseStateException
+	{
+		ParseResult result = new ParseResult();
+
+		final ArrayList<ParseError> errors = new ArrayList<>();
+
+		result.errors = errors;
+
+		JsonLexer lexer = new JsonLexer(new DocumentCharStream(document))
+		{
+			@Override
+			public void reportError(RecognitionException e)
+			{
+				super.reportError(e);
+
+				errors.add(fillError(e, this, document));
+			}
+		};
+		CommonTokenStream tokenStream = new CommonTokenStream(lexer);
+		JsonParser parser = new JsonParser(tokenStream)
+		{
+			@Override
+			public void reportError(RecognitionException e)
+			{
+				super.reportError(e);
+
+				errors.add(fillError(e, this, document));
+			}
+		};
+
+		result.tree = parser.jsonText().getTree();
+
+		return result;
 	}
 
 	public static JsonElement tree(Object t)
@@ -39,12 +113,15 @@ public class ParseUtils
 	{
 		if (tree instanceof CommonErrorNode)
 		{
-			CommonErrorNode error = (CommonErrorNode) tree;
-
 			return null;
 		}
 
 		Token token = tree.getToken();
+
+		if (token == null)
+		{
+			tree.getClass();
+		}
 
 		int type = token.getType();
 		String text = token.getText();
@@ -162,3 +239,71 @@ public class ParseUtils
 		return element;
 	}
 }
+/*if (e instanceof NoViableAltException)
+{
+	NoViableAltException exception = (NoViableAltException) e;
+
+	exception.getClass();
+	//token
+}
+else if (e instanceof MismatchedTreeNodeException)
+{
+	MismatchedTreeNodeException exception = (MismatchedTreeNodeException) e;
+
+	exception.getClass();
+}
+else if (e instanceof MissingTokenException)
+{
+	MissingTokenException exception = (MissingTokenException) e;
+
+	exception.getClass();
+	//token
+}
+else if (e instanceof UnwantedTokenException)
+{
+	UnwantedTokenException exception = (UnwantedTokenException) e;
+
+	exception.getClass();
+	//token
+}
+else if (e instanceof MismatchedTokenException)
+{
+	MismatchedTokenException exception = (MismatchedTokenException) e;
+
+	exception.getClass();
+	//token
+}
+else if (e instanceof MismatchedNotSetException)
+{
+	MismatchedNotSetException exception = (MismatchedNotSetException) e;
+
+	exception.getClass();
+	//token
+}
+else if (e instanceof MismatchedSetException)
+{
+	MismatchedSetException exception = (MismatchedSetException) e;
+
+	exception.getClass();
+	//token
+}
+else if (e instanceof MismatchedRangeException)
+{
+	MismatchedRangeException exception = (MismatchedRangeException) e;
+
+	exception.getClass();
+}
+else if (e instanceof FailedPredicateException)
+{
+	FailedPredicateException exception = (FailedPredicateException) e;
+
+	exception.getClass();
+}
+else if (e instanceof EarlyExitException)
+{
+	EarlyExitException exception = (EarlyExitException) e;
+
+	exception.getClass();
+	//token
+}
+*/

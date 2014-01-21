@@ -29,6 +29,6 @@ public class QuickOutlineFilter extends ViewerFilter
 			return true;
 		}
 
-		return Checker.check(text, (JsonElement) element);
+		return Checker.check(text, (JsonElement) element); //FIXME do it right 
 	}
 }

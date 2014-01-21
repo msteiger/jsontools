@@ -15,4 +15,6 @@ public class Constants
 	public static final String COMMAND_OPEN_EDITOR_ID = "org.sweetlemonade.eclipse.json.openEditor";
 
 	public static final String NEW_JSON_FILE_WIZARD_ID = "org.sweetlemonade.eclipse.json.new";
+
+	public static final String MARKER_ERROR = "org.sweetlemonade.eclipse.json.marker.error";
 }

@@ -9,6 +9,7 @@ import org.eclipse.jface.text.reconciler.IReconcilingStrategyExtension;
 import org.eclipse.swt.widgets.Display;
 import org.sweetlemonade.eclipse.json.model.antlr.IllegalParseStateException;
 import org.sweetlemonade.eclipse.json.model.antlr.ParseUtils;
+import org.sweetlemonade.eclipse.json.model.antlr.ParseUtils.ParseResult;
 
 /**
  * 10 янв. 2014 г.
@@ -47,14 +48,14 @@ public class JsonReconcileStrategy implements IReconcilingStrategy, IReconciling
 	{
 		try
 		{
-			final Object parse = ParseUtils.parse(mDocument);
+			final ParseResult parse = ParseUtils.parse(mDocument);
 
 			Display.getDefault().asyncExec(new Runnable()
 			{
 				@Override
 				public void run()
 				{
-					mEditor.setJsonInput(ParseUtils.tree(parse));
+					mEditor.setJsonInput(ParseUtils.tree(parse.tree), parse.errors);
 				}
 
 			});

@@ -1,6 +1,11 @@
 package org.sweetlemonade.eclipse.json.editor;
 
+import java.util.Collection;
+
 import org.eclipse.core.filebuffers.IDocumentSetupParticipant;
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
@@ -17,6 +22,7 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.editors.text.ForwardingDocumentProvider;
 import org.eclipse.ui.editors.text.TextEditor;
+import org.eclipse.ui.ide.ResourceUtil;
 import org.eclipse.ui.texteditor.ChainedPreferenceStore;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
@@ -25,6 +31,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.sweetlemonade.eclipse.json.Constants;
 import org.sweetlemonade.eclipse.json.JsonPlugin;
 import org.sweetlemonade.eclipse.json.model.JsonElement;
+import org.sweetlemonade.eclipse.json.model.antlr.ParseUtils.ParseError;
 import org.sweetlemonade.eclipse.json.outline.JsonOutlinePage;
 import org.sweetlemonade.eclipse.json.outline.JsonQuickOutline;
 import org.sweetlemonade.eclipse.json.preference.JsonPreferencesInitializer;
@@ -266,8 +273,45 @@ public class JsonEditor extends TextEditor
 		return super.getAdapter(required);
 	}
 
-	public void setJsonInput(JsonElement element)
+	public void setJsonInput(JsonElement element, Collection<ParseError> errors)
 	{
+		IResource resource = ResourceUtil.getResource(getEditorInput());
+
+		if (resource != null)
+		{
+			try
+			{
+				resource.deleteMarkers(Constants.MARKER_ERROR, false, 0);
+
+				for (ParseError parseError : errors)
+				{
+					IMarker marker = resource.createMarker(Constants.MARKER_ERROR);
+
+					marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
+					marker.setAttribute(IMarker.LOCATION, "Line " + parseError.line);
+					marker.setAttribute(IMarker.MESSAGE, parseError.text);
+
+					if (parseError.start != -1)
+					{
+						marker.setAttribute(IMarker.CHAR_START, parseError.start);
+
+						if (parseError.stop != -1)
+						{
+							marker.setAttribute(IMarker.CHAR_END, parseError.stop);
+						}
+						else
+						{
+							marker.setAttribute(IMarker.CHAR_END, parseError.start + 1);
+						}
+					}
+
+				}
+			}
+			catch (CoreException e)
+			{
+			}
+		}
+
 		mAnnotationer.update(element);
 
 		mElement = element;
