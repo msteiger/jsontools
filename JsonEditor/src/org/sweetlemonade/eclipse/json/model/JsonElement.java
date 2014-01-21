@@ -138,6 +138,18 @@ public abstract class JsonElement
 		return mStartLine;
 	}
 
+	public int getIndex()
+	{
+		JsonElement parent = getParent();
+
+		if (parent == null || !parent.isArray())
+		{
+			return -1;
+		}
+
+		return parent.asArray().indexOf(this);
+	}
+
 	public String getKey()
 	{
 		final JsonElement parent = getParent();

@@ -39,13 +39,20 @@ public class JsonLabelProvider extends ColumnLabelProvider implements IStyledLab
 			string.append(" : ", new SimpleStyler(ColorType.DEFAULT));
 		}
 
+		int index = jsonElement.getIndex();
+
+		if (index != -1)
+		{
+			string.append("[" + index + "] : ", new SimpleStyler(ColorType.DEFAULT));
+		}
+
 		if (jsonElement.isObject())
 		{
 			string.append("{}", new SimpleStyler(ColorType.OBJECT_BRACKETS));
 		}
 		else if (jsonElement.isArray())
 		{
-			string.append("[]", new SimpleStyler(ColorType.OBJECT_BRACKETS));
+			string.append("[" + jsonElement.asArray().size() + "]", new SimpleStyler(ColorType.OBJECT_BRACKETS));
 		}
 		else if (jsonElement.isPrimitive())
 		{
