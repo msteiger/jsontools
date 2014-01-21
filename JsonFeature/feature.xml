@@ -2,7 +2,7 @@
 <feature
       id="org.sweetlemonade.eclipse.json.feature"
       label="Json Tools"
-      version="1.0.0"
+      version="1.0.1"
       provider-name="Sweet Lemonade">
 
    <description>
@@ -77,11 +77,12 @@ If Recipient institutes patent litigation against any entity (including a cross-
 
 All Recipient&apos;s rights under this Agreement shall terminate if it fails
    </license>
+
    <plugin
          id="org.sweetlemonade.eclipse.json"
          download-size="0"
          install-size="0"
-         version="1.0.0"
+         version="1.0.1"
          unpack="false"/>
 
 </feature>
