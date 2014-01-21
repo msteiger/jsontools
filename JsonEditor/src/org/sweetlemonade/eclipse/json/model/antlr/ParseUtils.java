@@ -15,6 +15,7 @@ import org.eclipse.jface.text.IDocument;
 import org.sweetlemonade.eclipse.json.model.JsonArray;
 import org.sweetlemonade.eclipse.json.model.JsonElement;
 import org.sweetlemonade.eclipse.json.model.JsonObject;
+import org.sweetlemonade.eclipse.json.model.JsonObject.Key;
 import org.sweetlemonade.eclipse.json.model.JsonPrimitive;
 import org.sweetlemonade.eclipse.json.model.JsonPrimitive.PrimitiveType;
 
@@ -203,8 +204,14 @@ public class ParseUtils
 				continue;
 			}
 
-			String text = child.getToken().getText();
+			CommonToken token = (CommonToken) child.getToken();
+			String text = token.getText();
 			text = dequote(text);
+
+			Key key = new Key(text);
+			key.setStart(token.getStartIndex());
+			key.setStop(token.getStopIndex() + 1);
+			key.setLine(token.getLine());
 
 			JsonElement element = element((CommonTree) child.getChild(0), object);
 
@@ -213,7 +220,7 @@ public class ParseUtils
 				continue;
 			}
 
-			object.put(text, element);
+			object.put(key, element);
 		}
 
 		return object;

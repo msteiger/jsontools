@@ -18,8 +18,11 @@ public class JsonObject extends JsonElement implements Map<Key, JsonElement>
 	public static class Key
 	{
 		private final String mValue;
+		private int mStart = -1;
+		private int mStop = -1;
+		private int mLine;
 
-		private Key(String value)
+		public Key(String value)
 		{
 			mValue = value;
 		}
@@ -27,6 +30,36 @@ public class JsonObject extends JsonElement implements Map<Key, JsonElement>
 		public String getValue()
 		{
 			return mValue;
+		}
+
+		public void setLine(int line)
+		{
+			mLine = line;
+		}
+
+		public int getLine()
+		{
+			return mLine;
+		}
+
+		public void setStart(int start)
+		{
+			mStart = start;
+		}
+
+		public void setStop(int stop)
+		{
+			mStop = stop;
+		}
+
+		public int getStart()
+		{
+			return mStart;
+		}
+
+		public int getStop()
+		{
+			return mStop;
 		}
 
 		@Override

@@ -31,6 +31,8 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.sweetlemonade.eclipse.json.Constants;
 import org.sweetlemonade.eclipse.json.JsonPlugin;
 import org.sweetlemonade.eclipse.json.model.JsonElement;
+import org.sweetlemonade.eclipse.json.model.JsonObject;
+import org.sweetlemonade.eclipse.json.model.JsonObject.Key;
 import org.sweetlemonade.eclipse.json.model.antlr.ParseUtils.ParseError;
 import org.sweetlemonade.eclipse.json.outline.JsonOutlinePage;
 import org.sweetlemonade.eclipse.json.outline.JsonQuickOutline;
@@ -273,15 +275,70 @@ public class JsonEditor extends TextEditor
 		return super.getAdapter(required);
 	}
 
+	private void findDupKeys(JsonElement element, IResource resource)
+	{
+		if (element.isObject())
+		{
+			JsonObject object = element.asObject();
+
+			Collection<Key> keys = object.keys();
+
+			for (Key key1 : keys)
+			{
+				for (Key key2 : keys)
+				{
+					if (key1 != key2 && key1.getValue().equals(key2.getValue()))
+					{
+						try
+						{
+							IMarker marker = resource.createMarker(Constants.MARKER_ERROR);
+
+							marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_WARNING);
+							marker.setAttribute(IMarker.LOCATION, "Line " + key1.getLine());
+							marker.setAttribute(IMarker.MESSAGE, "Duplicate keys");
+
+							int start = key1.getStart();
+							int stop = key1.getStop();
+
+							if (start != -1)
+							{
+								marker.setAttribute(IMarker.CHAR_START, start);
+
+								if (stop != -1)
+								{
+									marker.setAttribute(IMarker.CHAR_END, stop);
+								}
+								else
+								{
+									marker.setAttribute(IMarker.CHAR_END, start + 1);
+								}
+							}
+
+						}
+						catch (CoreException e)
+						{
+						}
+					}
+				}
+
+				findDupKeys(object.get(key1), resource);
+			}
+		}
+		else if (element.isArray())
+		{
+			Collection<JsonElement> childs = element.getChilds();
+
+			for (JsonElement jsonElement : childs)
+			{
+				findDupKeys(jsonElement, resource);
+			}
+		}
+	}
+
 	public void setJsonInput(JsonElement element, Collection<ParseError> errors)
 	{
 		IResource resource = ResourceUtil.getResource(getEditorInput());
 
-/*		if (resource == null)
-		{
-			resource = ResourcesPlugin.getWorkspace().getRoot();
-		}
-*/
 		if (resource != null)
 		{
 			try
@@ -314,6 +371,8 @@ public class JsonEditor extends TextEditor
 			catch (CoreException e)
 			{
 			}
+
+			findDupKeys(element, resource);
 		}
 
 		mAnnotationer.update(element);
