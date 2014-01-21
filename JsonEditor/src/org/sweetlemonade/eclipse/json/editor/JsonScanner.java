@@ -10,7 +10,7 @@ import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.text.rules.WordRule;
 import org.sweetlemonade.eclipse.json.JsonPlugin;
 import org.sweetlemonade.eclipse.json.preference.JsonPreferences;
-import org.sweetlemonade.eclipse.json.preference.JsonPreferencesInitializer.ColorType;
+import org.sweetlemonade.eclipse.json.preference.JsonPreferencesInitializer.TokenType;
 
 /**
  * 09 янв. 2014 г.
@@ -28,13 +28,13 @@ public class JsonScanner extends RuleBasedScanner
 	{
 		final JsonPreferences preferences = JsonPlugin.getPreferences();
 
-		final IToken objectBrackets = new Token(new TextAttribute(preferences.getColor(ColorType.OBJECT_BRACKETS)));
-		final IToken arrayBrackets = new Token(new TextAttribute(preferences.getColor(ColorType.ARRAY_BRACKETS)));
-		final IToken keys = new Token(new TextAttribute(preferences.getColor(ColorType.KEYS)));
-		final IToken strings = new Token(new TextAttribute(preferences.getColor(ColorType.STRINGS)));
-		final IToken numbers = new Token(new TextAttribute(preferences.getColor(ColorType.NUMBERS)));
-		final IToken booleans = new Token(new TextAttribute(preferences.getColor(ColorType.BOOLEANS)));
-		final IToken nulls = new Token(new TextAttribute(preferences.getColor(ColorType.NULL)));
+		final IToken objectBrackets = new Token(new TextAttribute(preferences.getColor(TokenType.OBJECT_BRACKETS)));
+		final IToken arrayBrackets = new Token(new TextAttribute(preferences.getColor(TokenType.ARRAY_BRACKETS)));
+		final IToken keys = new Token(new TextAttribute(preferences.getColor(TokenType.KEYS)));
+		final IToken strings = new Token(new TextAttribute(preferences.getColor(TokenType.STRINGS)));
+		final IToken numbers = new Token(new TextAttribute(preferences.getColor(TokenType.NUMBERS)));
+		final IToken booleans = new Token(new TextAttribute(preferences.getColor(TokenType.BOOLEANS)));
+		final IToken nulls = new Token(new TextAttribute(preferences.getColor(TokenType.NULL)));
 
 		final IRule[] rules = new IRule[6];
 
@@ -69,6 +69,6 @@ public class JsonScanner extends RuleBasedScanner
 
 		setRules(rules);
 
-		setDefaultReturnToken(new Token(new TextAttribute(JsonPlugin.getPreferences().getColor(ColorType.DEFAULT))));
+		setDefaultReturnToken(new Token(new TextAttribute(JsonPlugin.getPreferences().getColor(TokenType.DEFAULT))));
 	}
 }

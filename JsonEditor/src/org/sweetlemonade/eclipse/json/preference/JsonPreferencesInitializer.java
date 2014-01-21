@@ -75,7 +75,7 @@ public class JsonPreferencesInitializer extends AbstractPreferenceInitializer
 	public static final String PREF_ENABLED_NULL = "colorNullEnabled";
 	public static final String PREF_ENABLED_DEFAULT = "colorDefaultEnabled";
 
-	public enum ColorType
+	public enum TokenType
 	{
 		MATCHED_BRACKET(PREF_COLOR_MATCH_BRACKET, PREF_ENABLED_MATCH_BRACKET, new RGB(0, 0, 0), true),
 		BRACKETS(PREF_COLOR_BRACKET, PREF_ENABLED_BRACKET, new RGB(0, 0, 0), false),
@@ -129,7 +129,7 @@ public class JsonPreferencesInitializer extends AbstractPreferenceInitializer
 		private final boolean mEnabledDef;
 		private final String mEnabledKey;
 
-		private ColorType(String key, String enabledKey, RGB def, boolean enabledDef)
+		private TokenType(String key, String enabledKey, RGB def, boolean enabledDef)
 		{
 			mKey = key;
 			mEnabledKey = enabledKey;
@@ -193,9 +193,9 @@ public class JsonPreferencesInitializer extends AbstractPreferenceInitializer
 		store.setDefault(PREF_SPACE_AFTER_OBJECT_OPEN, false);
 		store.setDefault(PREF_SPACE_BEFORE_OBJECT_CLOSE, false);
 
-		final ColorType[] values = ColorType.values();
+		final TokenType[] values = TokenType.values();
 
-		for (final ColorType colorType : values)
+		for (final TokenType colorType : values)
 		{
 			store.setDefault(colorType.mKey, StringConverter.asString(colorType.mDef));
 			store.setDefault(colorType.mEnabledKey, StringConverter.asString(colorType.mEnabledDef));

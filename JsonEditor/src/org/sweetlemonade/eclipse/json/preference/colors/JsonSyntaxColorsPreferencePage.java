@@ -29,7 +29,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.sweetlemonade.eclipse.json.Container;
 import org.sweetlemonade.eclipse.json.JsonPlugin;
 import org.sweetlemonade.eclipse.json.preference.PseudoPreferenceStore;
-import org.sweetlemonade.eclipse.json.preference.JsonPreferencesInitializer.ColorType;
+import org.sweetlemonade.eclipse.json.preference.JsonPreferencesInitializer.TokenType;
 
 /**
  * 10 янв. 2014 г.
@@ -40,16 +40,16 @@ public class JsonSyntaxColorsPreferencePage extends PreferencePage implements IW
 {
 	private final PseudoPreferenceStore mPreferenceStore = new PseudoPreferenceStore();
 	private Button mEnabledButton;
-	private ColorType mSelection;
+	private TokenType mSelection;
 	private ColorSelector mSelector;
 	private TextHighlighter mHighlighter;
 
 	public JsonSyntaxColorsPreferencePage()
 	{
 		final IPreferenceStore store = JsonPlugin.getDefault().getPreferenceStore();
-		final ColorType[] types = ColorType.values();
+		final TokenType[] types = TokenType.values();
 
-		for (final ColorType colorType : types)
+		for (final TokenType colorType : types)
 		{
 			mPreferenceStore.setValue(colorType.getKey(), StringConverter.asString(colorType.getOwnColor(store)));
 			mPreferenceStore.setValue(colorType.getEnabledKey(), colorType.isEnabled(store));
@@ -104,7 +104,7 @@ public class JsonSyntaxColorsPreferencePage extends PreferencePage implements IW
 		listViewer.setLabelProvider(new ColorsLabelProvider());
 		listViewer.addSelectionChangedListener(this);
 
-		final ColorType[] values = ColorType.values();
+		final TokenType[] values = TokenType.values();
 		listViewer.setInput(new Container(values));
 
 		if (mSelection == null)
@@ -120,7 +120,7 @@ public class JsonSyntaxColorsPreferencePage extends PreferencePage implements IW
 	@Override
 	public void selectionChanged(SelectionChangedEvent event)
 	{
-		mSelection = (ColorType) ((IStructuredSelection) event.getSelection()).getFirstElement();
+		mSelection = (TokenType) ((IStructuredSelection) event.getSelection()).getFirstElement();
 
 		updateSelection();
 	}
@@ -140,7 +140,7 @@ public class JsonSyntaxColorsPreferencePage extends PreferencePage implements IW
 	{
 		mSelector.setColorValue(mSelection.getOwnColor(mPreferenceStore));
 
-		if (mSelection == ColorType.DEFAULT)
+		if (mSelection == TokenType.DEFAULT)
 		{
 			mEnabledButton.setSelection(true);
 			mEnabledButton.setEnabled(false);
@@ -158,9 +158,9 @@ public class JsonSyntaxColorsPreferencePage extends PreferencePage implements IW
 	public boolean performOk()
 	{
 		final IPreferenceStore store = JsonPlugin.getDefault().getPreferenceStore();
-		final ColorType[] types = ColorType.values();
+		final TokenType[] types = TokenType.values();
 
-		for (final ColorType type : types)
+		for (final TokenType type : types)
 		{
 			store.setValue(type.getEnabledKey(), type.isEnabled(mPreferenceStore));
 			store.setValue(type.getKey(), StringConverter.asString(type.getOwnColor(mPreferenceStore)));

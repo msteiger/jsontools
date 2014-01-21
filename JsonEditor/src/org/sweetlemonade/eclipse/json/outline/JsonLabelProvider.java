@@ -9,7 +9,7 @@ import org.sweetlemonade.eclipse.json.JsonPlugin;
 import org.sweetlemonade.eclipse.json.model.JsonElement;
 import org.sweetlemonade.eclipse.json.model.JsonPrimitive;
 import org.sweetlemonade.eclipse.json.model.JsonPrimitive.PrimitiveType;
-import org.sweetlemonade.eclipse.json.preference.JsonPreferencesInitializer.ColorType;
+import org.sweetlemonade.eclipse.json.preference.JsonPreferencesInitializer.TokenType;
 
 /**
  * 10 янв. 2014 г.
@@ -35,24 +35,24 @@ public class JsonLabelProvider extends ColumnLabelProvider implements IStyledLab
 
 		if (key != null && key.length() > 0)
 		{
-			string.append(key, new SimpleStyler(ColorType.KEYS));
-			string.append(" : ", new SimpleStyler(ColorType.DEFAULT));
+			string.append(key, new SimpleStyler(TokenType.KEYS));
+			string.append(" : ", new SimpleStyler(TokenType.DEFAULT));
 		}
 
 		int index = jsonElement.getIndex();
 
 		if (index != -1)
 		{
-			string.append("[" + index + "] : ", new SimpleStyler(ColorType.DEFAULT));
+			string.append("[" + index + "] : ", new SimpleStyler(TokenType.DEFAULT));
 		}
 
 		if (jsonElement.isObject())
 		{
-			string.append("{}", new SimpleStyler(ColorType.OBJECT_BRACKETS));
+			string.append("{}", new SimpleStyler(TokenType.OBJECT_BRACKETS));
 		}
 		else if (jsonElement.isArray())
 		{
-			string.append("[" + jsonElement.asArray().size() + "]", new SimpleStyler(ColorType.OBJECT_BRACKETS));
+			string.append("[" + jsonElement.asArray().size() + "]", new SimpleStyler(TokenType.OBJECT_BRACKETS));
 		}
 		else if (jsonElement.isPrimitive())
 		{
@@ -64,19 +64,19 @@ public class JsonLabelProvider extends ColumnLabelProvider implements IStyledLab
 			switch (type)
 			{
 				case NULL:
-					styler = new SimpleStyler(ColorType.NULL);
+					styler = new SimpleStyler(TokenType.NULL);
 					break;
 
 				case BOOLEAN:
-					styler = new SimpleStyler(ColorType.BOOLEANS);
+					styler = new SimpleStyler(TokenType.BOOLEANS);
 					break;
 
 				case NUMBER:
-					styler = new SimpleStyler(ColorType.NUMBERS);
+					styler = new SimpleStyler(TokenType.NUMBERS);
 					break;
 
 				case STRING:
-					styler = new SimpleStyler(ColorType.STRINGS);
+					styler = new SimpleStyler(TokenType.STRINGS);
 					break;
 			}
 
@@ -88,9 +88,9 @@ public class JsonLabelProvider extends ColumnLabelProvider implements IStyledLab
 
 	private static class SimpleStyler extends Styler
 	{
-		private ColorType mType;
+		private TokenType mType;
 
-		public SimpleStyler(ColorType type)
+		public SimpleStyler(TokenType type)
 		{
 			mType = type;
 		}

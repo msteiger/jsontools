@@ -9,7 +9,7 @@ import org.eclipse.jface.text.TextViewer;
 import org.eclipse.swt.graphics.Color;
 import org.sweetlemonade.eclipse.json.ColorManager;
 import org.sweetlemonade.eclipse.json.JsonPlugin;
-import org.sweetlemonade.eclipse.json.preference.JsonPreferencesInitializer.ColorType;
+import org.sweetlemonade.eclipse.json.preference.JsonPreferencesInitializer.TokenType;
 
 /**
  * 10 янв. 2014 г.
@@ -47,11 +47,11 @@ public class TextHighlighter
 	@SuppressWarnings("incomplete-switch")
 	public void update()
 	{
-		final ColorType[] types = ColorType.values();
+		final TokenType[] types = TokenType.values();
 
-		mViewer.setTextColor(mManager.getColor(ColorType.DEFAULT.getColor(mStore)));
+		mViewer.setTextColor(mManager.getColor(TokenType.DEFAULT.getColor(mStore)));
 
-		for (final ColorType type : types)
+		for (final TokenType type : types)
 		{
 			final Color color = mManager.getColor(type.getColor(mStore));
 			List<Integer> inds = null;

@@ -37,7 +37,7 @@ import org.sweetlemonade.eclipse.json.model.antlr.ParseUtils.ParseError;
 import org.sweetlemonade.eclipse.json.outline.JsonOutlinePage;
 import org.sweetlemonade.eclipse.json.outline.JsonQuickOutline;
 import org.sweetlemonade.eclipse.json.preference.JsonPreferencesInitializer;
-import org.sweetlemonade.eclipse.json.preference.JsonPreferencesInitializer.ColorType;
+import org.sweetlemonade.eclipse.json.preference.JsonPreferencesInitializer.TokenType;
 
 /**
  * 09 янв. 2014 г.
@@ -169,10 +169,10 @@ public class JsonEditor extends TextEditor
 	{
 		super.handlePreferenceStoreChanged(event);
 
-		final ColorType[] values = ColorType.values();
+		final TokenType[] values = TokenType.values();
 		final String property = event.getProperty();
 
-		for (final ColorType colorType : values)
+		for (final TokenType colorType : values)
 		{
 			if (colorType.getKey().equals(property) || colorType.getEnabledKey().equals(property))
 			{

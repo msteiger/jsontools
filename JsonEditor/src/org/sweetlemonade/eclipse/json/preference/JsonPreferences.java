@@ -5,7 +5,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.sweetlemonade.eclipse.json.ColorManager;
 import org.sweetlemonade.eclipse.json.JsonPlugin;
-import org.sweetlemonade.eclipse.json.preference.JsonPreferencesInitializer.ColorType;
+import org.sweetlemonade.eclipse.json.preference.JsonPreferencesInitializer.TokenType;
 
 /**
  * 10 янв. 2014 г.
@@ -23,12 +23,12 @@ public class JsonPreferences
 		mManager = JsonPlugin.getColorManager();
 	}
 
-	public RGB getRgb(ColorType type)
+	public RGB getRgb(TokenType type)
 	{
 		return type.getColor(mStore);
 	}
 
-	public Color getColor(ColorType type)
+	public Color getColor(TokenType type)
 	{
 		return mManager.getColor(getRgb(type));
 	}

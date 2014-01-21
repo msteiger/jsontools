@@ -1,14 +1,14 @@
 package org.sweetlemonade.eclipse.json.preference.colors;
 
 import org.eclipse.jface.viewers.LabelProvider;
-import org.sweetlemonade.eclipse.json.preference.JsonPreferencesInitializer.ColorType;
+import org.sweetlemonade.eclipse.json.preference.JsonPreferencesInitializer.TokenType;
 
 public class ColorsLabelProvider extends LabelProvider
 {
 	@Override
 	public String getText(Object element)
 	{
-		final ColorType type = (ColorType) element;
+		final TokenType type = (TokenType) element;
 
 		switch (type)
 		{
