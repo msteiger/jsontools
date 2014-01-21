@@ -1,3 +1,5 @@
 syntax: regexp
 ^JsonEditor/bin
 ^JsonEditor/export
+^features
+^plugins
