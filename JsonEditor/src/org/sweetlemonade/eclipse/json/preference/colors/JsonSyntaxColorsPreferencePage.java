@@ -4,6 +4,7 @@ import org.eclipse.jface.preference.ColorSelector;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.resource.StringConverter;
+import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -28,8 +29,9 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.sweetlemonade.eclipse.json.Container;
 import org.sweetlemonade.eclipse.json.JsonPlugin;
-import org.sweetlemonade.eclipse.json.preference.PseudoPreferenceStore;
+import org.sweetlemonade.eclipse.json.preference.JsonPreferences;
 import org.sweetlemonade.eclipse.json.preference.JsonPreferencesInitializer.TokenType;
+import org.sweetlemonade.eclipse.json.preference.PseudoPreferenceStore;
 
 /**
  * 10 янв. 2014 г.
@@ -43,6 +45,10 @@ public class JsonSyntaxColorsPreferencePage extends PreferencePage implements IW
 	private TokenType mSelection;
 	private ColorSelector mSelector;
 	private TextHighlighter mHighlighter;
+	private Button mBoldButton;
+	private Button mItalicButton;
+	private Button mUnderButton;
+	private Button mStrikeButton;
 
 	public JsonSyntaxColorsPreferencePage()
 	{
@@ -53,6 +59,7 @@ public class JsonSyntaxColorsPreferencePage extends PreferencePage implements IW
 		{
 			mPreferenceStore.setValue(colorType.getKey(), StringConverter.asString(colorType.getOwnColor(store)));
 			mPreferenceStore.setValue(colorType.getEnabledKey(), colorType.isEnabled(store));
+			mPreferenceStore.setValue(colorType.getStyleKey(), colorType.getOwnStyle(store));
 		}
 	}
 
@@ -100,6 +107,38 @@ public class JsonSyntaxColorsPreferencePage extends PreferencePage implements IW
 
 		mHighlighter = new TextHighlighter(textViewer, mPreferenceStore);
 
+		mBoldButton = new Button(appearanceComposite, SWT.CHECK);
+		FormData fd_button = new FormData();
+		fd_button.top = new FormAttachment(colorButton, 10);
+		fd_button.left = new FormAttachment(list, 10);
+		mBoldButton.setLayoutData(fd_button);
+		mBoldButton.setText("Bold");
+		mBoldButton.addSelectionListener(this);
+
+		mItalicButton = new Button(appearanceComposite, SWT.CHECK);
+		FormData fd_btnCheckButton0 = new FormData();
+		fd_btnCheckButton0.top = new FormAttachment(mBoldButton, 10);
+		fd_btnCheckButton0.left = new FormAttachment(list, 10);
+		mItalicButton.setLayoutData(fd_btnCheckButton0);
+		mItalicButton.setText("Italic");
+		mItalicButton.addSelectionListener(this);
+
+		mUnderButton = new Button(appearanceComposite, SWT.CHECK);
+		FormData fd_btnCheckButton_1 = new FormData();
+		fd_btnCheckButton_1.top = new FormAttachment(colorButton, 10);
+		fd_btnCheckButton_1.left = new FormAttachment(mItalicButton, 10);
+		mUnderButton.setLayoutData(fd_btnCheckButton_1);
+		mUnderButton.setText("Underline");
+		mUnderButton.addSelectionListener(this);
+
+		mStrikeButton = new Button(appearanceComposite, SWT.CHECK);
+		FormData fd_btnCheckButton_2 = new FormData();
+		fd_btnCheckButton_2.top = new FormAttachment(mUnderButton, 10);
+		fd_btnCheckButton_2.left = new FormAttachment(mItalicButton, 10);
+		mStrikeButton.setLayoutData(fd_btnCheckButton_2);
+		mStrikeButton.setText("Strikethrough");
+		mStrikeButton.addSelectionListener(this);
+
 		listViewer.setContentProvider(new ColorsContentProvider());
 		listViewer.setLabelProvider(new ColorsLabelProvider());
 		listViewer.addSelectionChangedListener(this);
@@ -138,7 +177,13 @@ public class JsonSyntaxColorsPreferencePage extends PreferencePage implements IW
 
 	private void updateSelection()
 	{
+		int style = mSelection.getOwnStyle(mPreferenceStore);
+
 		mSelector.setColorValue(mSelection.getOwnColor(mPreferenceStore));
+		mBoldButton.setSelection(JsonPreferences.isBold(style));
+		mItalicButton.setSelection(JsonPreferences.isItalic(style));
+		mUnderButton.setSelection(JsonPreferences.isUnderline(style));
+		mStrikeButton.setSelection(JsonPreferences.isStrike(style));
 
 		if (mSelection == TokenType.DEFAULT)
 		{
@@ -164,6 +209,7 @@ public class JsonSyntaxColorsPreferencePage extends PreferencePage implements IW
 		{
 			store.setValue(type.getEnabledKey(), type.isEnabled(mPreferenceStore));
 			store.setValue(type.getKey(), StringConverter.asString(type.getOwnColor(mPreferenceStore)));
+			store.setValue(type.getStyleKey(), type.getOwnStyle(mPreferenceStore));
 		}
 
 		return true;
@@ -175,10 +221,34 @@ public class JsonSyntaxColorsPreferencePage extends PreferencePage implements IW
 		setPreferenceStore(JsonPlugin.getDefault().getPreferenceStore());
 	}
 
+	private int collectStyle()
+	{
+		boolean bold = mBoldButton.getSelection();
+		boolean italic = mItalicButton.getSelection();
+		boolean under = mUnderButton.getSelection();
+		boolean strike = mStrikeButton.getSelection();
+
+		int style = SWT.NORMAL;
+
+		style |= bold ? SWT.BOLD : 0;
+		style |= italic ? SWT.ITALIC : 0;
+		style |= under ? TextAttribute.UNDERLINE : 0;
+		style |= strike ? TextAttribute.STRIKETHROUGH : 0;
+
+		return style;
+	}
+
 	@Override
 	public void widgetSelected(SelectionEvent e)
 	{
-		mPreferenceStore.setValue(mSelection.getEnabledKey(), mEnabledButton.getSelection());
+		if (e.widget == mEnabledButton)
+		{
+			mPreferenceStore.setValue(mSelection.getEnabledKey(), mEnabledButton.getSelection());
+		}
+		else
+		{
+			mPreferenceStore.setValue(mSelection.getStyleKey(), collectStyle());
+		}
 
 		mHighlighter.update();
 	}
@@ -186,7 +256,14 @@ public class JsonSyntaxColorsPreferencePage extends PreferencePage implements IW
 	@Override
 	public void widgetDefaultSelected(SelectionEvent e)
 	{
-		mPreferenceStore.setValue(mSelection.getEnabledKey(), mEnabledButton.getSelection());
+		if (e.widget == mEnabledButton)
+		{
+			mPreferenceStore.setValue(mSelection.getEnabledKey(), mEnabledButton.getSelection());
+		}
+		else
+		{
+			mPreferenceStore.setValue(mSelection.getStyleKey(), collectStyle());
+		}
 
 		mHighlighter.update();
 	}

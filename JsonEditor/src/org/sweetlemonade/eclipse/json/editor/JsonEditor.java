@@ -174,7 +174,7 @@ public class JsonEditor extends TextEditor
 
 		for (final TokenType colorType : values)
 		{
-			if (colorType.getKey().equals(property) || colorType.getEnabledKey().equals(property))
+			if (colorType.getKey().equals(property) || colorType.getEnabledKey().equals(property) || colorType.getStyleKey().equals(property))
 			{
 				updatePresentation();
 

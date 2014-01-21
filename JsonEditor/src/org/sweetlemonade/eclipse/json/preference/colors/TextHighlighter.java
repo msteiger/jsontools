@@ -6,9 +6,11 @@ import java.util.List;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.TextViewer;
+import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
 import org.sweetlemonade.eclipse.json.ColorManager;
 import org.sweetlemonade.eclipse.json.JsonPlugin;
+import org.sweetlemonade.eclipse.json.preference.JsonPreferences;
 import org.sweetlemonade.eclipse.json.preference.JsonPreferencesInitializer.TokenType;
 
 /**
@@ -54,6 +56,7 @@ public class TextHighlighter
 		for (final TokenType type : types)
 		{
 			final Color color = mManager.getColor(type.getColor(mStore));
+			final int style = type.getStyle(mStore);
 			List<Integer> inds = null;
 
 			switch (type)
@@ -94,7 +97,13 @@ public class TextHighlighter
 
 			for (int i = 0; i < inds.size(); i += 2)
 			{
-				mViewer.setTextColor(color, inds.get(i), inds.get(i + 1), true);
+				StyleRange textStyle = new StyleRange(inds.get(i), inds.get(i + 1), color, null);
+
+				textStyle.fontStyle = JsonPreferences.extractBoldItalic(style);
+				textStyle.underline = JsonPreferences.isUnderline(style);
+				textStyle.strikeout = JsonPreferences.isStrike(style);
+
+				mViewer.getTextWidget().setStyleRange(textStyle);
 			}
 		}
 	}

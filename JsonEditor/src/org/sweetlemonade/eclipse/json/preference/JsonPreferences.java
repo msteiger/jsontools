@@ -1,6 +1,8 @@
 package org.sweetlemonade.eclipse.json.preference;
 
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.text.TextAttribute;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.sweetlemonade.eclipse.json.ColorManager;
@@ -23,6 +25,11 @@ public class JsonPreferences
 		mManager = JsonPlugin.getColorManager();
 	}
 
+	public int getStyle(TokenType type)
+	{
+		return type.getStyle(mStore);
+	}
+
 	public RGB getRgb(TokenType type)
 	{
 		return type.getColor(mStore);
@@ -31,5 +38,30 @@ public class JsonPreferences
 	public Color getColor(TokenType type)
 	{
 		return mManager.getColor(getRgb(type));
+	}
+
+	public static int extractBoldItalic(int style)
+	{
+		return style & ~TextAttribute.STRIKETHROUGH & ~TextAttribute.UNDERLINE;
+	}
+
+	public static boolean isUnderline(int style)
+	{
+		return (style & TextAttribute.UNDERLINE) != 0;
+	}
+
+	public static boolean isStrike(int style)
+	{
+		return (style & TextAttribute.STRIKETHROUGH) != 0;
+	}
+
+	public static boolean isBold(int style)
+	{
+		return (style & SWT.BOLD) != 0;
+	}
+
+	public static boolean isItalic(int style)
+	{
+		return (style & SWT.ITALIC) != 0;
 	}
 }

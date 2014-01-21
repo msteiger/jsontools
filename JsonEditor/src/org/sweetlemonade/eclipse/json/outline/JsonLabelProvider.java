@@ -4,11 +4,13 @@ import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.StyledString.Styler;
+import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.TextStyle;
 import org.sweetlemonade.eclipse.json.JsonPlugin;
 import org.sweetlemonade.eclipse.json.model.JsonElement;
 import org.sweetlemonade.eclipse.json.model.JsonPrimitive;
 import org.sweetlemonade.eclipse.json.model.JsonPrimitive.PrimitiveType;
+import org.sweetlemonade.eclipse.json.preference.JsonPreferences;
 import org.sweetlemonade.eclipse.json.preference.JsonPreferencesInitializer.TokenType;
 
 /**
@@ -98,7 +100,19 @@ public class JsonLabelProvider extends ColumnLabelProvider implements IStyledLab
 		@Override
 		public void applyStyles(TextStyle textStyle)
 		{
-			textStyle.foreground = JsonPlugin.getPreferences().getColor(mType);
+			JsonPreferences preferences = JsonPlugin.getPreferences();
+			int style = preferences.getStyle(mType);
+
+			if (textStyle instanceof StyleRange)
+			{
+				StyleRange range = (StyleRange) textStyle;
+
+				range.fontStyle = JsonPreferences.extractBoldItalic(style);
+			}
+
+			textStyle.foreground = preferences.getColor(mType);
+			textStyle.underline = JsonPreferences.isUnderline(style);
+			textStyle.strikeout = JsonPreferences.isStrike(style);
 		}
 	}
 }

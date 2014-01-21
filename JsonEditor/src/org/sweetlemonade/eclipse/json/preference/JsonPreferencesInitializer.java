@@ -3,6 +3,7 @@ package org.sweetlemonade.eclipse.json.preference;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.StringConverter;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.RGB;
 import org.sweetlemonade.eclipse.json.JsonPlugin;
 
@@ -75,11 +76,22 @@ public class JsonPreferencesInitializer extends AbstractPreferenceInitializer
 	public static final String PREF_ENABLED_NULL = "colorNullEnabled";
 	public static final String PREF_ENABLED_DEFAULT = "colorDefaultEnabled";
 
+	public static final String PREF_MATCH_BRACKET_STYLE = "colorMatchBracketStyle";
+	public static final String PREF_BRACKET_STYLE = "colorBracketStyle";
+	public static final String PREF_OBJECT_BRACKET_STYLE = "colorObjectBracketStyle";
+	public static final String PREF_ARRAY_BRACKET_STYLE = "colorArrayBracketStyle";
+	public static final String PREF_KEY_STYLE = "colorKeyStyle";
+	public static final String PREF_STRING_STYLE = "colorStringStyle";
+	public static final String PREF_NUMBER_STYLE = "colorNumberStyle";
+	public static final String PREF_BOOLEAN_STYLE = "colorBooleanStyle";
+	public static final String PREF_NULL_STYLE = "colorNullStyle";
+	public static final String PREF_DEFAULT_STYLE = "colorDefaultStyle";
+
 	public enum TokenType
 	{
-		MATCHED_BRACKET(PREF_COLOR_MATCH_BRACKET, PREF_ENABLED_MATCH_BRACKET, new RGB(0, 0, 0), true),
-		BRACKETS(PREF_COLOR_BRACKET, PREF_ENABLED_BRACKET, new RGB(0, 0, 0), false),
-		OBJECT_BRACKETS(PREF_COLOR_OBJECT_BRACKET, PREF_ENABLED_OBJECT_BRACKET, new RGB(0, 0, 0), false)
+		MATCHED_BRACKET(PREF_COLOR_MATCH_BRACKET, PREF_ENABLED_MATCH_BRACKET, PREF_MATCH_BRACKET_STYLE, new RGB(0, 0, 0), true, SWT.NORMAL),
+		BRACKETS(PREF_COLOR_BRACKET, PREF_ENABLED_BRACKET, PREF_BRACKET_STYLE, new RGB(0, 0, 0), false, SWT.NORMAL),
+		OBJECT_BRACKETS(PREF_COLOR_OBJECT_BRACKET, PREF_ENABLED_OBJECT_BRACKET, PREF_OBJECT_BRACKET_STYLE, new RGB(0, 0, 0), false, SWT.NORMAL)
 		{
 			@Override
 			public RGB getColor(IPreferenceStore store)
@@ -92,7 +104,7 @@ public class JsonPreferencesInitializer extends AbstractPreferenceInitializer
 				return super.getColor(store);
 			}
 		},
-		ARRAY_BRACKETS(PREF_COLOR_ARRAY_BRACKET, PREF_ENABLED_ARRAY_BRACKET, new RGB(0, 0, 0), false)
+		ARRAY_BRACKETS(PREF_COLOR_ARRAY_BRACKET, PREF_ENABLED_ARRAY_BRACKET, PREF_ARRAY_BRACKET_STYLE, new RGB(0, 0, 0), false, SWT.NORMAL)
 		{
 			@Override
 			public RGB getColor(IPreferenceStore store)
@@ -105,7 +117,7 @@ public class JsonPreferencesInitializer extends AbstractPreferenceInitializer
 				return super.getColor(store);
 			}
 		},
-		KEYS(PREF_COLOR_KEY, PREF_ENABLED_KEY, new RGB(0, 128, 0), true)
+		KEYS(PREF_COLOR_KEY, PREF_ENABLED_KEY, PREF_KEY_STYLE, new RGB(0, 128, 0), true, SWT.NORMAL)
 		{
 			@Override
 			public RGB getColor(IPreferenceStore store)
@@ -118,23 +130,42 @@ public class JsonPreferencesInitializer extends AbstractPreferenceInitializer
 				return super.getColor(store);
 			}
 		},
-		STRINGS(PREF_COLOR_STRING, PREF_ENABLED_STRING, new RGB(0, 0, 255), true),
-		NUMBERS(PREF_COLOR_NUMBER, PREF_ENABLED_NUMBER, new RGB(128, 64, 64), true),
-		BOOLEANS(PREF_COLOR_BOOLEAN, PREF_ENABLED_BOOLEAN, new RGB(0, 0, 0), false),
-		NULL(PREF_COLOR_NULL, PREF_ENABLED_NULL, new RGB(0, 0, 0), false),
-		DEFAULT(PREF_COLOR_DEFAULT, PREF_ENABLED_DEFAULT, new RGB(0, 0, 0), true);
+		STRINGS(PREF_COLOR_STRING, PREF_ENABLED_STRING, PREF_STRING_STYLE, new RGB(0, 0, 255), true, SWT.NORMAL),
+		NUMBERS(PREF_COLOR_NUMBER, PREF_ENABLED_NUMBER, PREF_NUMBER_STYLE, new RGB(128, 64, 64), true, SWT.NORMAL),
+		BOOLEANS(PREF_COLOR_BOOLEAN, PREF_ENABLED_BOOLEAN, PREF_BOOLEAN_STYLE, new RGB(0, 0, 0), false, SWT.NORMAL),
+		NULL(PREF_COLOR_NULL, PREF_ENABLED_NULL, PREF_NULL_STYLE, new RGB(0, 0, 0), false, SWT.NORMAL),
+		DEFAULT(PREF_COLOR_DEFAULT, PREF_ENABLED_DEFAULT, PREF_DEFAULT_STYLE, new RGB(0, 0, 0), true, SWT.NORMAL);
 
 		private final String mKey;
 		private final RGB mDef;
 		private final boolean mEnabledDef;
 		private final String mEnabledKey;
+		private final String mStyleKey;
+		private final int mStyleDef;
 
-		private TokenType(String key, String enabledKey, RGB def, boolean enabledDef)
+		private TokenType(String key, String enabledKey, String styleKey, RGB def, boolean enabledDef, int styleDef)
 		{
 			mKey = key;
 			mEnabledKey = enabledKey;
 			mDef = def;
 			mEnabledDef = enabledDef;
+			mStyleDef = styleDef;
+			mStyleKey = styleKey;
+		}
+
+		public int getStyle(IPreferenceStore store)
+		{
+			if (!isEnabled(store))
+			{
+				return DEFAULT.getStyle(store);
+			}
+
+			return store.getInt(mStyleKey);
+		}
+
+		public int getOwnStyle(IPreferenceStore store)
+		{
+			return store.getInt(mStyleKey);
 		}
 
 		public RGB getColor(IPreferenceStore store)
@@ -165,6 +196,11 @@ public class JsonPreferencesInitializer extends AbstractPreferenceInitializer
 		public String getEnabledKey()
 		{
 			return mEnabledKey;
+		}
+
+		public String getStyleKey()
+		{
+			return mStyleKey;
 		}
 	}
 
@@ -198,7 +234,8 @@ public class JsonPreferencesInitializer extends AbstractPreferenceInitializer
 		for (final TokenType colorType : values)
 		{
 			store.setDefault(colorType.mKey, StringConverter.asString(colorType.mDef));
-			store.setDefault(colorType.mEnabledKey, StringConverter.asString(colorType.mEnabledDef));
+			store.setDefault(colorType.mEnabledKey, colorType.mEnabledDef);
+			store.setDefault(colorType.mStyleKey, colorType.mStyleDef);
 		}
 	}
 }
