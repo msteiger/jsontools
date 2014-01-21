@@ -277,6 +277,11 @@ public class JsonEditor extends TextEditor
 	{
 		IResource resource = ResourceUtil.getResource(getEditorInput());
 
+/*		if (resource == null)
+		{
+			resource = ResourcesPlugin.getWorkspace().getRoot();
+		}
+*/
 		if (resource != null)
 		{
 			try
@@ -304,7 +309,6 @@ public class JsonEditor extends TextEditor
 							marker.setAttribute(IMarker.CHAR_END, parseError.start + 1);
 						}
 					}
-
 				}
 			}
 			catch (CoreException e)
