@@ -1,16 +1,21 @@
 package org.sweetlemonade.eclipse.json.editor;
 
 import java.util.Collection;
+import java.util.IdentityHashMap;
+import java.util.Set;
 
 import org.eclipse.core.filebuffers.IDocumentSetupParticipant;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.Position;
+import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.AnnotationModel;
 import org.eclipse.jface.text.source.DefaultCharacterPairMatcher;
 import org.eclipse.jface.text.source.IAnnotationModel;
@@ -26,6 +31,7 @@ import org.eclipse.ui.ide.ResourceUtil;
 import org.eclipse.ui.texteditor.ChainedPreferenceStore;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
+import org.eclipse.ui.texteditor.MarkerAnnotation;
 import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.sweetlemonade.eclipse.json.Constants;
@@ -275,13 +281,19 @@ public class JsonEditor extends TextEditor
 		return super.getAdapter(required);
 	}
 
-	private void findDupKeys(JsonElement element, IResource resource)
+	private void findDupKeys(JsonElement element, IResource resource, boolean hasResource)
 	{
+		if (element == null)
+		{
+			return;
+		}
+
 		if (element.isObject())
 		{
 			JsonObject object = element.asObject();
 
 			Collection<Key> keys = object.keys();
+			IAnnotationModel annotationModel = getSourceViewer().getAnnotationModel();
 
 			for (Key key1 : keys)
 			{
@@ -300,28 +312,26 @@ public class JsonEditor extends TextEditor
 							int start = key1.getStart();
 							int stop = key1.getStop();
 
-							if (start != -1)
+							marker.setAttribute(IMarker.CHAR_START, start);
+							marker.setAttribute(IMarker.CHAR_END, stop);
+
+							if (!hasResource)
 							{
-								marker.setAttribute(IMarker.CHAR_START, start);
+								MarkerAnnotation annotation = new MarkerAnnotation(marker);
 
-								if (stop != -1)
-								{
-									marker.setAttribute(IMarker.CHAR_END, stop);
-								}
-								else
-								{
-									marker.setAttribute(IMarker.CHAR_END, start + 1);
-								}
+								annotationModel.addAnnotation(annotation, new Position(start, stop - start));
+
+								mProblems.put(marker, annotation);
 							}
-
 						}
 						catch (CoreException e)
 						{
+							e.printStackTrace();
 						}
 					}
 				}
 
-				findDupKeys(object.get(key1), resource);
+				findDupKeys(object.get(key1), resource, hasResource);
 			}
 		}
 		else if (element.isArray())
@@ -330,20 +340,36 @@ public class JsonEditor extends TextEditor
 
 			for (JsonElement jsonElement : childs)
 			{
-				findDupKeys(jsonElement, resource);
+				findDupKeys(jsonElement, resource, hasResource);
 			}
 		}
 	}
 
+	private IdentityHashMap<IMarker, Annotation> mProblems = new IdentityHashMap<>();
+
 	public void setJsonInput(JsonElement element, Collection<ParseError> errors)
 	{
 		IResource resource = ResourceUtil.getResource(getEditorInput());
+		boolean hasResource = true;
+
+		if (resource == null)
+		{
+			hasResource = false;
+			resource = ResourcesPlugin.getWorkspace().getRoot();
+		}
 
 		if (resource != null)
 		{
 			try
 			{
-				resource.deleteMarkers(Constants.MARKER_ERROR, false, 0);
+				if (hasResource)
+				{
+					resource.deleteMarkers(Constants.MARKER_ERROR, false, 0);
+				}
+
+				IAnnotationModel annotationModel = getSourceViewer().getAnnotationModel();
+
+				clearAnnos();
 
 				for (ParseError parseError : errors)
 				{
@@ -366,13 +392,22 @@ public class JsonEditor extends TextEditor
 							marker.setAttribute(IMarker.CHAR_END, parseError.start + 1);
 						}
 					}
+
+					if (!hasResource)
+					{
+						MarkerAnnotation annotation = new MarkerAnnotation(marker);
+
+						annotationModel.addAnnotation(annotation, new Position(parseError.start, 1));
+						mProblems.put(marker, annotation);
+					}
 				}
 			}
 			catch (CoreException e)
 			{
+				e.printStackTrace();
 			}
 
-			findDupKeys(element, resource);
+			findDupKeys(element, resource, hasResource);
 		}
 
 		mAnnotationer.update(element);
@@ -380,6 +415,32 @@ public class JsonEditor extends TextEditor
 		mElement = element;
 
 		getOutlinePage().setInput(element);
+	}
+
+	private void clearAnnos()
+	{
+		IAnnotationModel annotationModel = getSourceViewer().getAnnotationModel();
+
+		Set<IMarker> keySet = mProblems.keySet();
+
+		for (IMarker iMarker : keySet)
+		{
+			try
+			{
+				iMarker.delete();
+			}
+			catch (CoreException e)
+			{
+				e.printStackTrace();
+			}
+
+			if (annotationModel != null)
+			{
+				annotationModel.removeAnnotation(mProblems.get(iMarker));
+			}
+		}
+
+		mProblems.clear();
 	}
 
 	private JsonOutlinePage getOutlinePage()
@@ -400,6 +461,8 @@ public class JsonEditor extends TextEditor
 	@Override
 	public void dispose()
 	{
+		clearAnnos();
+
 		super.dispose();
 
 		mAnnotationer.dispose();
