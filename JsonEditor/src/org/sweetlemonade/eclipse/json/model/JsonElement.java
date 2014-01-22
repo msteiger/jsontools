@@ -140,7 +140,7 @@ public abstract class JsonElement
 
 	public int getIndex()
 	{
-		JsonElement parent = getParent();
+		final JsonElement parent = getParent();
 
 		if (parent == null || !parent.isArray())
 		{

@@ -62,7 +62,7 @@ public class JsonReconcileStrategy implements IReconcilingStrategy, IReconciling
 
 			return;
 		}
-		catch (IllegalParseStateException e)
+		catch (final IllegalParseStateException e)
 		{
 			e.getClass();
 

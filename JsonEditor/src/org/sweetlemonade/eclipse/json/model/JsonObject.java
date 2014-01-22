@@ -105,7 +105,7 @@ public class JsonObject extends JsonElement implements Map<Key, JsonElement>
 	@Override
 	public JsonElement get(Object key)
 	{
-		int indexOf = mKeys.indexOf(key);
+		final int indexOf = mKeys.indexOf(key);
 
 		return indexOf == -1 ? null : mValues.get(indexOf);
 	}
@@ -130,7 +130,7 @@ public class JsonObject extends JsonElement implements Map<Key, JsonElement>
 	@Override
 	public JsonElement put(Key key, JsonElement value)
 	{
-		JsonElement was = get(key);
+		final JsonElement was = get(key);
 
 		mKeys.add(key);
 		mValues.add(value);
@@ -146,9 +146,9 @@ public class JsonObject extends JsonElement implements Map<Key, JsonElement>
 	@Override
 	public void putAll(Map<? extends Key, ? extends JsonElement> m)
 	{
-		Set<? extends Key> keySet = m.keySet();
+		final Set<? extends Key> keySet = m.keySet();
 
-		for (Key key : keySet)
+		for (final Key key : keySet)
 		{
 			put(key, m.get(key));
 		}
@@ -157,7 +157,7 @@ public class JsonObject extends JsonElement implements Map<Key, JsonElement>
 	@Override
 	public JsonElement remove(Object key)
 	{
-		int indexOf = mKeys.indexOf(key);
+		final int indexOf = mKeys.indexOf(key);
 
 		if (indexOf == -1)
 		{
@@ -178,7 +178,7 @@ public class JsonObject extends JsonElement implements Map<Key, JsonElement>
 	@Override
 	public String toString()
 	{
-		StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = new StringBuilder();
 
 		builder.append('[');
 
@@ -189,8 +189,8 @@ public class JsonObject extends JsonElement implements Map<Key, JsonElement>
 				builder.append(", ");
 			}
 
-			Key key = mKeys.get(i);
-			JsonElement value = mValues.get(i);
+			final Key key = mKeys.get(i);
+			final JsonElement value = mValues.get(i);
 
 			builder.append(key.getValue());
 			builder.append('=');

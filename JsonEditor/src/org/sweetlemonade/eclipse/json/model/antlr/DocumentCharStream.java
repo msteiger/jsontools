@@ -8,9 +8,9 @@ import org.eclipse.jface.text.IDocument;
 
 public class DocumentCharStream implements CharStream
 {
-	private IDocument mDocument;
+	private final IDocument mDocument;
 	private int mPos = 0;
-	private LinkedList<Integer> mMarks = new LinkedList<>();
+	private final LinkedList<Integer> mMarks = new LinkedList<>();
 
 	public DocumentCharStream(IDocument document)
 	{
@@ -46,7 +46,7 @@ public class DocumentCharStream implements CharStream
 				return mDocument.getChar((mPos + i) - 1);
 			}
 		}
-		catch (BadLocationException e)
+		catch (final BadLocationException e)
 		{
 			return -1;
 		}
@@ -76,7 +76,7 @@ public class DocumentCharStream implements CharStream
 	@Override
 	public int mark()
 	{
-		int index = index();
+		final int index = index();
 
 		mMarks.addLast(index);
 
@@ -86,7 +86,7 @@ public class DocumentCharStream implements CharStream
 	@Override
 	public void release(int i)
 	{
-		int size = mMarks.size();
+		final int size = mMarks.size();
 
 		for (int j = size - 1; j > i; j++)
 		{
@@ -112,7 +112,7 @@ public class DocumentCharStream implements CharStream
 	{
 		mPos = i;
 
-		int length = mDocument.getLength();
+		final int length = mDocument.getLength();
 
 		if (mPos >= length)
 		{
@@ -139,7 +139,7 @@ public class DocumentCharStream implements CharStream
 		{
 			return mPos - mDocument.getLineInformationOfOffset(mPos).getOffset();
 		}
-		catch (BadLocationException e)
+		catch (final BadLocationException e)
 		{
 			throw new IllegalParseStateException();
 		}
@@ -152,7 +152,7 @@ public class DocumentCharStream implements CharStream
 		{
 			return mDocument.getLineOfOffset(mPos);
 		}
-		catch (BadLocationException e)
+		catch (final BadLocationException e)
 		{
 			throw new IllegalParseStateException();
 		}
@@ -177,7 +177,7 @@ public class DocumentCharStream implements CharStream
 		{
 			return mDocument.get(start, stop - start + 1);
 		}
-		catch (BadLocationException e)
+		catch (final BadLocationException e)
 		{
 			throw new IllegalParseStateException();
 		}

@@ -108,7 +108,7 @@ public class JsonSyntaxColorsPreferencePage extends PreferencePage implements IW
 		mHighlighter = new TextHighlighter(textViewer, mPreferenceStore);
 
 		mBoldButton = new Button(appearanceComposite, SWT.CHECK);
-		FormData fd_button = new FormData();
+		final FormData fd_button = new FormData();
 		fd_button.top = new FormAttachment(colorButton, 10);
 		fd_button.left = new FormAttachment(list, 10);
 		mBoldButton.setLayoutData(fd_button);
@@ -116,7 +116,7 @@ public class JsonSyntaxColorsPreferencePage extends PreferencePage implements IW
 		mBoldButton.addSelectionListener(this);
 
 		mItalicButton = new Button(appearanceComposite, SWT.CHECK);
-		FormData fd_btnCheckButton0 = new FormData();
+		final FormData fd_btnCheckButton0 = new FormData();
 		fd_btnCheckButton0.top = new FormAttachment(mBoldButton, 10);
 		fd_btnCheckButton0.left = new FormAttachment(list, 10);
 		mItalicButton.setLayoutData(fd_btnCheckButton0);
@@ -124,7 +124,7 @@ public class JsonSyntaxColorsPreferencePage extends PreferencePage implements IW
 		mItalicButton.addSelectionListener(this);
 
 		mUnderButton = new Button(appearanceComposite, SWT.CHECK);
-		FormData fd_btnCheckButton_1 = new FormData();
+		final FormData fd_btnCheckButton_1 = new FormData();
 		fd_btnCheckButton_1.top = new FormAttachment(colorButton, 10);
 		fd_btnCheckButton_1.left = new FormAttachment(mItalicButton, 10);
 		mUnderButton.setLayoutData(fd_btnCheckButton_1);
@@ -132,7 +132,7 @@ public class JsonSyntaxColorsPreferencePage extends PreferencePage implements IW
 		mUnderButton.addSelectionListener(this);
 
 		mStrikeButton = new Button(appearanceComposite, SWT.CHECK);
-		FormData fd_btnCheckButton_2 = new FormData();
+		final FormData fd_btnCheckButton_2 = new FormData();
 		fd_btnCheckButton_2.top = new FormAttachment(mUnderButton, 10);
 		fd_btnCheckButton_2.left = new FormAttachment(mItalicButton, 10);
 		mStrikeButton.setLayoutData(fd_btnCheckButton_2);
@@ -177,7 +177,7 @@ public class JsonSyntaxColorsPreferencePage extends PreferencePage implements IW
 
 	private void updateSelection()
 	{
-		int style = mSelection.getOwnStyle(mPreferenceStore);
+		final int style = mSelection.getOwnStyle(mPreferenceStore);
 
 		mSelector.setColorValue(mSelection.getOwnColor(mPreferenceStore));
 		mBoldButton.setSelection(JsonPreferences.isBold(style));
@@ -223,10 +223,10 @@ public class JsonSyntaxColorsPreferencePage extends PreferencePage implements IW
 
 	private int collectStyle()
 	{
-		boolean bold = mBoldButton.getSelection();
-		boolean italic = mItalicButton.getSelection();
-		boolean under = mUnderButton.getSelection();
-		boolean strike = mStrikeButton.getSelection();
+		final boolean bold = mBoldButton.getSelection();
+		final boolean italic = mItalicButton.getSelection();
+		final boolean under = mUnderButton.getSelection();
+		final boolean strike = mStrikeButton.getSelection();
 
 		int style = SWT.NORMAL;
 

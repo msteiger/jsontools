@@ -42,7 +42,7 @@ public class JsonOutlinePage extends ContentOutlinePage implements ISelectionLis
 		final TreeViewer viewer = getTreeViewer();
 		viewer.setContentProvider(new JsonOutlineContentProvider());
 
-		DelegatingStyledCellLabelProvider delegatingStyledCellLabelProvider = new DelegatingStyledCellLabelProvider(new JsonLabelProvider());
+		final DelegatingStyledCellLabelProvider delegatingStyledCellLabelProvider = new DelegatingStyledCellLabelProvider(new JsonLabelProvider());
 		viewer.setLabelProvider(delegatingStyledCellLabelProvider);
 
 		getSite().getPage().addPostSelectionListener(this);

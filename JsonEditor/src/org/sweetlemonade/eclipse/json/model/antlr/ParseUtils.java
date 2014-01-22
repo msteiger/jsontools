@@ -43,12 +43,12 @@ public class ParseUtils
 
 	private static ParseError fillError(RecognitionException e, BaseRecognizer recognizer, IDocument document)
 	{
-		ParseError error = new ParseError();
+		final ParseError error = new ParseError();
 
 		error.error = e;
 		error.line = e.line;
 
-		CommonToken token = (CommonToken) e.token;
+		final CommonToken token = (CommonToken) e.token;
 
 		if (token != null)
 		{
@@ -72,13 +72,13 @@ public class ParseUtils
 
 	public static ParseResult parse(final IDocument document) throws IllegalParseStateException
 	{
-		ParseResult result = new ParseResult();
+		final ParseResult result = new ParseResult();
 
 		final ArrayList<ParseError> errors = new ArrayList<>();
 
 		result.errors = errors;
 
-		JsonLexer lexer = new JsonLexer(new DocumentCharStream(document))
+		final JsonLexer lexer = new JsonLexer(new DocumentCharStream(document))
 		{
 			@Override
 			public void reportError(RecognitionException e)
@@ -88,8 +88,8 @@ public class ParseUtils
 				errors.add(fillError(e, this, document));
 			}
 		};
-		CommonTokenStream tokenStream = new CommonTokenStream(lexer);
-		JsonParser parser = new JsonParser(tokenStream)
+		final CommonTokenStream tokenStream = new CommonTokenStream(lexer);
+		final JsonParser parser = new JsonParser(tokenStream)
 		{
 			@Override
 			public void reportError(RecognitionException e)
@@ -117,14 +117,14 @@ public class ParseUtils
 			return null;
 		}
 
-		Token token = tree.getToken();
+		final Token token = tree.getToken();
 
 		if (token == null)
 		{
 			tree.getClass();
 		}
 
-		int type = token.getType();
+		final int type = token.getType();
 		String text = token.getText();
 		PrimitiveType type2 = null;
 
@@ -168,15 +168,15 @@ public class ParseUtils
 
 	private static JsonArray array(CommonTree t, JsonElement parent)
 	{
-		JsonArray array = fill(new JsonArray(parent), t);
+		final JsonArray array = fill(new JsonArray(parent), t);
 
-		List<? extends Object> children = t.getChildren();
+		final List<? extends Object> children = t.getChildren();
 
-		for (Object object : children)
+		for (final Object object : children)
 		{
-			CommonTree child = (CommonTree) object;
+			final CommonTree child = (CommonTree) object;
 
-			JsonElement element = element(child, array);
+			final JsonElement element = element(child, array);
 
 			if (element == null)
 			{
@@ -191,29 +191,29 @@ public class ParseUtils
 
 	public static JsonObject object(CommonTree t, JsonElement parent)
 	{
-		JsonObject object = fill(new JsonObject(parent), t);
+		final JsonObject object = fill(new JsonObject(parent), t);
 
-		List<? extends Object> children = t.getChildren();
+		final List<? extends Object> children = t.getChildren();
 
-		for (Object object2 : children)
+		for (final Object object2 : children)
 		{
-			CommonTree child = (CommonTree) object2;
+			final CommonTree child = (CommonTree) object2;
 
 			if (child.getType() != JsonParser.STRING)
 			{
 				continue;
 			}
 
-			CommonToken token = (CommonToken) child.getToken();
+			final CommonToken token = (CommonToken) child.getToken();
 			String text = token.getText();
 			text = dequote(text);
 
-			Key key = new Key(text);
+			final Key key = new Key(text);
 			key.setStart(token.getStartIndex());
 			key.setStop(token.getStopIndex() + 1);
 			key.setLine(token.getLine());
 
-			JsonElement element = element((CommonTree) child.getChild(0), object);
+			final JsonElement element = element((CommonTree) child.getChild(0), object);
 
 			if (element == null)
 			{
@@ -228,10 +228,10 @@ public class ParseUtils
 
 	private static <T extends JsonElement> T fill(T element, CommonTree tree)
 	{
-		CommonToken startToken = (CommonToken) tree.getToken();
+		final CommonToken startToken = (CommonToken) tree.getToken();
 		CommonToken lastToken = startToken;
 
-		int childCount = tree.getChildCount();
+		final int childCount = tree.getChildCount();
 
 		if (childCount > 0)
 		{

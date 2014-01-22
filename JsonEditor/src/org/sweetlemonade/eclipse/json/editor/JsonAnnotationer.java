@@ -32,7 +32,7 @@ public class JsonAnnotationer implements ISelectionListener, IDisposable
 	private final SelectionsFinder mFinder = new SelectionsFinder();
 	private Map<JsonElement, ProjectionAnnotation> mAnnos;
 	private final Map<ProjectionAnnotation, Boolean> mState = new IdentityHashMap<>();
-	private ISourceViewer mViewer;
+	private final ISourceViewer mViewer;
 
 	public JsonAnnotationer(ProjectionAnnotationModel projectionModel, JsonEditor editor, ISourceViewer viewer)
 	{
@@ -185,7 +185,7 @@ public class JsonAnnotationer implements ISelectionListener, IDisposable
 
 			outer: for (final Key wasKey : wasSet)
 			{
-				for (Key nowKey : nowSet)
+				for (final Key nowKey : nowSet)
 				{
 					if (nowKey.getValue().equals(wasKey.getValue()))
 					{

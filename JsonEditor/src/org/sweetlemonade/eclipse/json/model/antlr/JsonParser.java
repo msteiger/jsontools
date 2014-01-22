@@ -95,7 +95,7 @@ public class JsonParser extends Parser
 	// C:\\Users\\bimeg\\workspaceRCP\\JsonToolsRepo\\JsonEditor\\Json.g:8:1: jsonText : ( jsonObject | jsonArray ) EOF !;
 	public final JsonParser.jsonText_return jsonText()
 	{
-		JsonParser.jsonText_return retval = new JsonParser.jsonText_return();
+		final JsonParser.jsonText_return retval = new JsonParser.jsonText_return();
 		retval.start = input.LT(1);
 
 		Object root_0 = null;
@@ -104,7 +104,7 @@ public class JsonParser extends Parser
 		ParserRuleReturnScope jsonObject1 = null;
 		ParserRuleReturnScope jsonArray2 = null;
 
-		Object EOF3_tree = null;
+		final Object EOF3_tree = null;
 
 		try
 		{
@@ -115,7 +115,7 @@ public class JsonParser extends Parser
 
 				// C:\\Users\\bimeg\\workspaceRCP\\JsonToolsRepo\\JsonEditor\\Json.g:9:11: ( jsonObject | jsonArray )
 				int alt1 = 2;
-				int LA1_0 = input.LA(1);
+				final int LA1_0 = input.LA(1);
 				if ((LA1_0 == OBJECT))
 				{
 					alt1 = 1;
@@ -127,7 +127,7 @@ public class JsonParser extends Parser
 
 				else
 				{
-					NoViableAltException nvae = new NoViableAltException("", 1, 0, input);
+					final NoViableAltException nvae = new NoViableAltException("", 1, 0, input);
 					throw nvae;
 				}
 
@@ -167,7 +167,7 @@ public class JsonParser extends Parser
 			adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
 
 		}
-		catch (RecognitionException re)
+		catch (final RecognitionException re)
 		{
 			reportError(re);
 			recover(input, re);
@@ -197,7 +197,7 @@ public class JsonParser extends Parser
 	// C:\\Users\\bimeg\\workspaceRCP\\JsonToolsRepo\\JsonEditor\\Json.g:13:1: jsonValue : ( FALSE | TRUE | NULL | jsonObject | jsonArray | jsonNumber | jsonString );
 	public final JsonParser.jsonValue_return jsonValue()
 	{
-		JsonParser.jsonValue_return retval = new JsonParser.jsonValue_return();
+		final JsonParser.jsonValue_return retval = new JsonParser.jsonValue_return();
 		retval.start = input.LT(1);
 
 		Object root_0 = null;
@@ -256,7 +256,7 @@ public class JsonParser extends Parser
 				}
 					break;
 				default:
-					NoViableAltException nvae = new NoViableAltException("", 2, 0, input);
+					final NoViableAltException nvae = new NoViableAltException("", 2, 0, input);
 					throw nvae;
 			}
 			switch (alt2)
@@ -354,7 +354,7 @@ public class JsonParser extends Parser
 			adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
 
 		}
-		catch (RecognitionException re)
+		catch (final RecognitionException re)
 		{
 			reportError(re);
 			recover(input, re);
@@ -384,7 +384,7 @@ public class JsonParser extends Parser
 	// C:\\Users\\bimeg\\workspaceRCP\\JsonToolsRepo\\JsonEditor\\Json.g:23:1: jsonNumber : NUMBER ;
 	public final JsonParser.jsonNumber_return jsonNumber()
 	{
-		JsonParser.jsonNumber_return retval = new JsonParser.jsonNumber_return();
+		final JsonParser.jsonNumber_return retval = new JsonParser.jsonNumber_return();
 		retval.start = input.LT(1);
 
 		Object root_0 = null;
@@ -412,7 +412,7 @@ public class JsonParser extends Parser
 			adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
 
 		}
-		catch (RecognitionException re)
+		catch (final RecognitionException re)
 		{
 			reportError(re);
 			recover(input, re);
@@ -442,7 +442,7 @@ public class JsonParser extends Parser
 	// C:\\Users\\bimeg\\workspaceRCP\\JsonToolsRepo\\JsonEditor\\Json.g:27:1: jsonString : STRING ;
 	public final JsonParser.jsonString_return jsonString()
 	{
-		JsonParser.jsonString_return retval = new JsonParser.jsonString_return();
+		final JsonParser.jsonString_return retval = new JsonParser.jsonString_return();
 		retval.start = input.LT(1);
 
 		Object root_0 = null;
@@ -470,7 +470,7 @@ public class JsonParser extends Parser
 			adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
 
 		}
-		catch (RecognitionException re)
+		catch (final RecognitionException re)
 		{
 			reportError(re);
 			recover(input, re);
@@ -500,7 +500,7 @@ public class JsonParser extends Parser
 	// C:\\Users\\bimeg\\workspaceRCP\\JsonToolsRepo\\JsonEditor\\Json.g:31:1: member : STRING ^ ':' ! jsonValue ;
 	public final JsonParser.member_return member()
 	{
-		JsonParser.member_return retval = new JsonParser.member_return();
+		final JsonParser.member_return retval = new JsonParser.member_return();
 		retval.start = input.LT(1);
 
 		Object root_0 = null;
@@ -510,7 +510,7 @@ public class JsonParser extends Parser
 		ParserRuleReturnScope jsonValue15 = null;
 
 		Object STRING13_tree = null;
-		Object char_literal14_tree = null;
+		final Object char_literal14_tree = null;
 
 		try
 		{
@@ -538,7 +538,7 @@ public class JsonParser extends Parser
 			adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
 
 		}
-		catch (RecognitionException re)
+		catch (final RecognitionException re)
 		{
 			reportError(re);
 			recover(input, re);
@@ -568,7 +568,7 @@ public class JsonParser extends Parser
 	// C:\\Users\\bimeg\\workspaceRCP\\JsonToolsRepo\\JsonEditor\\Json.g:35:1: jsonObject : OBJECT ^ ( member ( ',' ! member )* )? '}' ;
 	public final JsonParser.jsonObject_return jsonObject()
 	{
-		JsonParser.jsonObject_return retval = new JsonParser.jsonObject_return();
+		final JsonParser.jsonObject_return retval = new JsonParser.jsonObject_return();
 		retval.start = input.LT(1);
 
 		Object root_0 = null;
@@ -580,7 +580,7 @@ public class JsonParser extends Parser
 		ParserRuleReturnScope member19 = null;
 
 		Object OBJECT16_tree = null;
-		Object char_literal18_tree = null;
+		final Object char_literal18_tree = null;
 		Object char_literal20_tree = null;
 
 		try
@@ -596,7 +596,7 @@ public class JsonParser extends Parser
 
 				// C:\\Users\\bimeg\\workspaceRCP\\JsonToolsRepo\\JsonEditor\\Json.g:36:19: ( member ( ',' ! member )* )?
 				int alt4 = 2;
-				int LA4_0 = input.LA(1);
+				final int LA4_0 = input.LA(1);
 				if ((LA4_0 == STRING))
 				{
 					alt4 = 1;
@@ -616,7 +616,7 @@ public class JsonParser extends Parser
 						loop3: while (true)
 						{
 							int alt3 = 2;
-							int LA3_0 = input.LA(1);
+							final int LA3_0 = input.LA(1);
 							if ((LA3_0 == 17))
 							{
 								alt3 = 1;
@@ -659,7 +659,7 @@ public class JsonParser extends Parser
 			adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
 
 		}
-		catch (RecognitionException re)
+		catch (final RecognitionException re)
 		{
 			reportError(re);
 			recover(input, re);
@@ -689,7 +689,7 @@ public class JsonParser extends Parser
 	// C:\\Users\\bimeg\\workspaceRCP\\JsonToolsRepo\\JsonEditor\\Json.g:40:1: jsonArray : ARRAY ^ ( jsonValue ( ',' ! jsonValue )* )? ']' ;
 	public final JsonParser.jsonArray_return jsonArray()
 	{
-		JsonParser.jsonArray_return retval = new JsonParser.jsonArray_return();
+		final JsonParser.jsonArray_return retval = new JsonParser.jsonArray_return();
 		retval.start = input.LT(1);
 
 		Object root_0 = null;
@@ -701,7 +701,7 @@ public class JsonParser extends Parser
 		ParserRuleReturnScope jsonValue24 = null;
 
 		Object ARRAY21_tree = null;
-		Object char_literal23_tree = null;
+		final Object char_literal23_tree = null;
 		Object char_literal25_tree = null;
 
 		try
@@ -717,7 +717,7 @@ public class JsonParser extends Parser
 
 				// C:\\Users\\bimeg\\workspaceRCP\\JsonToolsRepo\\JsonEditor\\Json.g:41:18: ( jsonValue ( ',' ! jsonValue )* )?
 				int alt6 = 2;
-				int LA6_0 = input.LA(1);
+				final int LA6_0 = input.LA(1);
 				if ((LA6_0 == ARRAY || LA6_0 == FALSE || (LA6_0 >= NULL && LA6_0 <= TRUE)))
 				{
 					alt6 = 1;
@@ -737,7 +737,7 @@ public class JsonParser extends Parser
 						loop5: while (true)
 						{
 							int alt5 = 2;
-							int LA5_0 = input.LA(1);
+							final int LA5_0 = input.LA(1);
 							if ((LA5_0 == 17))
 							{
 								alt5 = 1;
@@ -780,7 +780,7 @@ public class JsonParser extends Parser
 			adaptor.setTokenBoundaries(retval.tree, retval.start, retval.stop);
 
 		}
-		catch (RecognitionException re)
+		catch (final RecognitionException re)
 		{
 			reportError(re);
 			recover(input, re);

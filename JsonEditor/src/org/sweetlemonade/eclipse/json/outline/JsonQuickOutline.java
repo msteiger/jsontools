@@ -164,7 +164,7 @@ public class JsonQuickOutline extends AbstractInformationControl implements ISel
 		mTreeViewer = new TreeViewer(composite, getTreeStyle());
 		mTreeViewer.setContentProvider(new JsonOutlineContentProvider());
 
-		DelegatingStyledCellLabelProvider delegatingStyledCellLabelProvider = new DelegatingStyledCellLabelProvider(new JsonLabelProvider());
+		final DelegatingStyledCellLabelProvider delegatingStyledCellLabelProvider = new DelegatingStyledCellLabelProvider(new JsonLabelProvider());
 		mTreeViewer.setLabelProvider(delegatingStyledCellLabelProvider);
 
 		mTreeViewer.setFilters(new ViewerFilter[] { new QuickOutlineFilter(mFilter) });

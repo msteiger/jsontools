@@ -97,7 +97,7 @@ public class TextHighlighter
 
 			for (int i = 0; i < inds.size(); i += 2)
 			{
-				StyleRange textStyle = new StyleRange(inds.get(i), inds.get(i + 1), color, null);
+				final StyleRange textStyle = new StyleRange(inds.get(i), inds.get(i + 1), color, null);
 
 				textStyle.fontStyle = JsonPreferences.extractBoldItalic(style);
 				textStyle.underline = JsonPreferences.isUnderline(style);

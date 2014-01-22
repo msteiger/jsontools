@@ -29,11 +29,11 @@ public class JsonLabelProvider extends ColumnLabelProvider implements IStyledLab
 	@Override
 	public StyledString getStyledText(Object element)
 	{
-		JsonElement jsonElement = (JsonElement) element;
+		final JsonElement jsonElement = (JsonElement) element;
 
-		StyledString string = new StyledString();
+		final StyledString string = new StyledString();
 
-		String key = jsonElement.getKey();
+		final String key = jsonElement.getKey();
 
 		if (key != null && key.length() > 0)
 		{
@@ -41,7 +41,7 @@ public class JsonLabelProvider extends ColumnLabelProvider implements IStyledLab
 			string.append(" : ", new SimpleStyler(TokenType.DEFAULT));
 		}
 
-		int index = jsonElement.getIndex();
+		final int index = jsonElement.getIndex();
 
 		if (index != -1)
 		{
@@ -58,9 +58,9 @@ public class JsonLabelProvider extends ColumnLabelProvider implements IStyledLab
 		}
 		else if (jsonElement.isPrimitive())
 		{
-			JsonPrimitive primitive = (JsonPrimitive) jsonElement;
+			final JsonPrimitive primitive = (JsonPrimitive) jsonElement;
 
-			PrimitiveType type = primitive.getType();
+			final PrimitiveType type = primitive.getType();
 			SimpleStyler styler = null;
 
 			switch (type)
@@ -90,7 +90,7 @@ public class JsonLabelProvider extends ColumnLabelProvider implements IStyledLab
 
 	private static class SimpleStyler extends Styler
 	{
-		private TokenType mType;
+		private final TokenType mType;
 
 		public SimpleStyler(TokenType type)
 		{
@@ -100,12 +100,12 @@ public class JsonLabelProvider extends ColumnLabelProvider implements IStyledLab
 		@Override
 		public void applyStyles(TextStyle textStyle)
 		{
-			JsonPreferences preferences = JsonPlugin.getPreferences();
-			int style = preferences.getStyle(mType);
+			final JsonPreferences preferences = JsonPlugin.getPreferences();
+			final int style = preferences.getStyle(mType);
 
 			if (textStyle instanceof StyleRange)
 			{
-				StyleRange range = (StyleRange) textStyle;
+				final StyleRange range = (StyleRange) textStyle;
 
 				range.fontStyle = JsonPreferences.extractBoldItalic(style);
 			}

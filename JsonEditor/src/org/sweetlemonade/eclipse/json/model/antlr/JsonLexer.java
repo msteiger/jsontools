@@ -65,8 +65,8 @@ public class JsonLexer extends Lexer
 	{
 		try
 		{
-			int _type = T__17;
-			int _channel = DEFAULT_TOKEN_CHANNEL;
+			final int _type = T__17;
+			final int _channel = DEFAULT_TOKEN_CHANNEL;
 			// C:\\Users\\bimeg\\workspaceRCP\\JsonToolsRepo\\JsonEditor\\Json.g:2:7: ( ',' )
 			// C:\\Users\\bimeg\\workspaceRCP\\JsonToolsRepo\\JsonEditor\\Json.g:2:9: ','
 			{
@@ -89,8 +89,8 @@ public class JsonLexer extends Lexer
 	{
 		try
 		{
-			int _type = T__18;
-			int _channel = DEFAULT_TOKEN_CHANNEL;
+			final int _type = T__18;
+			final int _channel = DEFAULT_TOKEN_CHANNEL;
 			// C:\\Users\\bimeg\\workspaceRCP\\JsonToolsRepo\\JsonEditor\\Json.g:3:7: ( ':' )
 			// C:\\Users\\bimeg\\workspaceRCP\\JsonToolsRepo\\JsonEditor\\Json.g:3:9: ':'
 			{
@@ -113,8 +113,8 @@ public class JsonLexer extends Lexer
 	{
 		try
 		{
-			int _type = T__19;
-			int _channel = DEFAULT_TOKEN_CHANNEL;
+			final int _type = T__19;
+			final int _channel = DEFAULT_TOKEN_CHANNEL;
 			// C:\\Users\\bimeg\\workspaceRCP\\JsonToolsRepo\\JsonEditor\\Json.g:4:7: ( ']' )
 			// C:\\Users\\bimeg\\workspaceRCP\\JsonToolsRepo\\JsonEditor\\Json.g:4:9: ']'
 			{
@@ -137,8 +137,8 @@ public class JsonLexer extends Lexer
 	{
 		try
 		{
-			int _type = T__20;
-			int _channel = DEFAULT_TOKEN_CHANNEL;
+			final int _type = T__20;
+			final int _channel = DEFAULT_TOKEN_CHANNEL;
 			// C:\\Users\\bimeg\\workspaceRCP\\JsonToolsRepo\\JsonEditor\\Json.g:5:7: ( '}' )
 			// C:\\Users\\bimeg\\workspaceRCP\\JsonToolsRepo\\JsonEditor\\Json.g:5:9: '}'
 			{
@@ -161,8 +161,8 @@ public class JsonLexer extends Lexer
 	{
 		try
 		{
-			int _type = ARRAY;
-			int _channel = DEFAULT_TOKEN_CHANNEL;
+			final int _type = ARRAY;
+			final int _channel = DEFAULT_TOKEN_CHANNEL;
 			// C:\\Users\\bimeg\\workspaceRCP\\JsonToolsRepo\\JsonEditor\\Json.g:45:2: ( '[' )
 			// C:\\Users\\bimeg\\workspaceRCP\\JsonToolsRepo\\JsonEditor\\Json.g:45:4: '['
 			{
@@ -185,8 +185,8 @@ public class JsonLexer extends Lexer
 	{
 		try
 		{
-			int _type = OBJECT;
-			int _channel = DEFAULT_TOKEN_CHANNEL;
+			final int _type = OBJECT;
+			final int _channel = DEFAULT_TOKEN_CHANNEL;
 			// C:\\Users\\bimeg\\workspaceRCP\\JsonToolsRepo\\JsonEditor\\Json.g:48:2: ( '{' )
 			// C:\\Users\\bimeg\\workspaceRCP\\JsonToolsRepo\\JsonEditor\\Json.g:48:4: '{'
 			{
@@ -217,7 +217,7 @@ public class JsonLexer extends Lexer
 				loop1: while (true)
 				{
 					int alt1 = 2;
-					int LA1_0 = input.LA(1);
+					final int LA1_0 = input.LA(1);
 					if (((LA1_0 >= '0' && LA1_0 <= '9')))
 					{
 						alt1 = 1;
@@ -234,7 +234,7 @@ public class JsonLexer extends Lexer
 							}
 							else
 							{
-								MismatchedSetException mse = new MismatchedSetException(null, input);
+								final MismatchedSetException mse = new MismatchedSetException(null, input);
 								recover(mse);
 								throw mse;
 							}
@@ -246,7 +246,7 @@ public class JsonLexer extends Lexer
 							{
 								break loop1;
 							}
-							EarlyExitException eee = new EarlyExitException(1, input);
+							final EarlyExitException eee = new EarlyExitException(1, input);
 							throw eee;
 					}
 					cnt1++;
@@ -268,8 +268,8 @@ public class JsonLexer extends Lexer
 	{
 		try
 		{
-			int _type = NULL;
-			int _channel = DEFAULT_TOKEN_CHANNEL;
+			final int _type = NULL;
+			final int _channel = DEFAULT_TOKEN_CHANNEL;
 			// C:\\Users\\bimeg\\workspaceRCP\\JsonToolsRepo\\JsonEditor\\Json.g:56:2: ( 'null' )
 			// C:\\Users\\bimeg\\workspaceRCP\\JsonToolsRepo\\JsonEditor\\Json.g:56:4: 'null'
 			{
@@ -293,8 +293,8 @@ public class JsonLexer extends Lexer
 	{
 		try
 		{
-			int _type = TRUE;
-			int _channel = DEFAULT_TOKEN_CHANNEL;
+			final int _type = TRUE;
+			final int _channel = DEFAULT_TOKEN_CHANNEL;
 			// C:\\Users\\bimeg\\workspaceRCP\\JsonToolsRepo\\JsonEditor\\Json.g:59:2: ( 'true' )
 			// C:\\Users\\bimeg\\workspaceRCP\\JsonToolsRepo\\JsonEditor\\Json.g:59:4: 'true'
 			{
@@ -318,8 +318,8 @@ public class JsonLexer extends Lexer
 	{
 		try
 		{
-			int _type = FALSE;
-			int _channel = DEFAULT_TOKEN_CHANNEL;
+			final int _type = FALSE;
+			final int _channel = DEFAULT_TOKEN_CHANNEL;
 			// C:\\Users\\bimeg\\workspaceRCP\\JsonToolsRepo\\JsonEditor\\Json.g:62:2: ( 'false' )
 			// C:\\Users\\bimeg\\workspaceRCP\\JsonToolsRepo\\JsonEditor\\Json.g:62:4: 'false'
 			{
@@ -343,14 +343,14 @@ public class JsonLexer extends Lexer
 	{
 		try
 		{
-			int _type = NUMBER;
-			int _channel = DEFAULT_TOKEN_CHANNEL;
+			final int _type = NUMBER;
+			final int _channel = DEFAULT_TOKEN_CHANNEL;
 			// C:\\Users\\bimeg\\workspaceRCP\\JsonToolsRepo\\JsonEditor\\Json.g:65:9: ( ( '-' )? ( '0' | ( '1' .. '9' ( INT )* ) ) ( '.' ( INT )+ )? ( EXPONENT )? )
 			// C:\\Users\\bimeg\\workspaceRCP\\JsonToolsRepo\\JsonEditor\\Json.g:65:11: ( '-' )? ( '0' | ( '1' .. '9' ( INT )* ) ) ( '.' ( INT )+ )? ( EXPONENT )?
 			{
 				// C:\\Users\\bimeg\\workspaceRCP\\JsonToolsRepo\\JsonEditor\\Json.g:65:11: ( '-' )?
 				int alt2 = 2;
-				int LA2_0 = input.LA(1);
+				final int LA2_0 = input.LA(1);
 				if ((LA2_0 == '-'))
 				{
 					alt2 = 1;
@@ -368,7 +368,7 @@ public class JsonLexer extends Lexer
 
 				// C:\\Users\\bimeg\\workspaceRCP\\JsonToolsRepo\\JsonEditor\\Json.g:65:16: ( '0' | ( '1' .. '9' ( INT )* ) )
 				int alt4 = 2;
-				int LA4_0 = input.LA(1);
+				final int LA4_0 = input.LA(1);
 				if ((LA4_0 == '0'))
 				{
 					alt4 = 1;
@@ -380,7 +380,7 @@ public class JsonLexer extends Lexer
 
 				else
 				{
-					NoViableAltException nvae = new NoViableAltException("", 4, 0, input);
+					final NoViableAltException nvae = new NoViableAltException("", 4, 0, input);
 					throw nvae;
 				}
 
@@ -403,7 +403,7 @@ public class JsonLexer extends Lexer
 							loop3: while (true)
 							{
 								int alt3 = 2;
-								int LA3_0 = input.LA(1);
+								final int LA3_0 = input.LA(1);
 								if (((LA3_0 >= '0' && LA3_0 <= '9')))
 								{
 									alt3 = 1;
@@ -433,7 +433,7 @@ public class JsonLexer extends Lexer
 
 				// C:\\Users\\bimeg\\workspaceRCP\\JsonToolsRepo\\JsonEditor\\Json.g:65:42: ( '.' ( INT )+ )?
 				int alt6 = 2;
-				int LA6_0 = input.LA(1);
+				final int LA6_0 = input.LA(1);
 				if ((LA6_0 == '.'))
 				{
 					alt6 = 1;
@@ -449,7 +449,7 @@ public class JsonLexer extends Lexer
 						loop5: while (true)
 						{
 							int alt5 = 2;
-							int LA5_0 = input.LA(1);
+							final int LA5_0 = input.LA(1);
 							if (((LA5_0 >= '0' && LA5_0 <= '9')))
 							{
 								alt5 = 1;
@@ -470,7 +470,7 @@ public class JsonLexer extends Lexer
 									{
 										break loop5;
 									}
-									EarlyExitException eee = new EarlyExitException(5, input);
+									final EarlyExitException eee = new EarlyExitException(5, input);
 									throw eee;
 							}
 							cnt5++;
@@ -483,7 +483,7 @@ public class JsonLexer extends Lexer
 
 				// C:\\Users\\bimeg\\workspaceRCP\\JsonToolsRepo\\JsonEditor\\Json.g:65:54: ( EXPONENT )?
 				int alt7 = 2;
-				int LA7_0 = input.LA(1);
+				final int LA7_0 = input.LA(1);
 				if ((LA7_0 == 'E' || LA7_0 == 'e'))
 				{
 					alt7 = 1;
@@ -518,7 +518,7 @@ public class JsonLexer extends Lexer
 	{
 		try
 		{
-			int _type = WS;
+			final int _type = WS;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
 			// C:\\Users\\bimeg\\workspaceRCP\\JsonToolsRepo\\JsonEditor\\Json.g:69:9: ( ( ' ' | '\\t' | '\\n' | '\\r' ) )
 			// C:\\Users\\bimeg\\workspaceRCP\\JsonToolsRepo\\JsonEditor\\Json.g:69:11: ( ' ' | '\\t' | '\\n' | '\\r' )
@@ -529,7 +529,7 @@ public class JsonLexer extends Lexer
 				}
 				else
 				{
-					MismatchedSetException mse = new MismatchedSetException(null, input);
+					final MismatchedSetException mse = new MismatchedSetException(null, input);
 					recover(mse);
 					throw mse;
 				}
@@ -552,8 +552,8 @@ public class JsonLexer extends Lexer
 	{
 		try
 		{
-			int _type = STRING;
-			int _channel = DEFAULT_TOKEN_CHANNEL;
+			final int _type = STRING;
+			final int _channel = DEFAULT_TOKEN_CHANNEL;
 			// C:\\Users\\bimeg\\workspaceRCP\\JsonToolsRepo\\JsonEditor\\Json.g:77:9: ( '\"' ( ESC_SEQ |~ ( '\\\\' | '\"' ) )* '\"' )
 			// C:\\Users\\bimeg\\workspaceRCP\\JsonToolsRepo\\JsonEditor\\Json.g:77:11: '\"' ( ESC_SEQ |~ ( '\\\\' | '\"' ) )* '\"'
 			{
@@ -562,7 +562,7 @@ public class JsonLexer extends Lexer
 				loop8: while (true)
 				{
 					int alt8 = 3;
-					int LA8_0 = input.LA(1);
+					final int LA8_0 = input.LA(1);
 					if ((LA8_0 == '\\'))
 					{
 						alt8 = 1;
@@ -590,7 +590,7 @@ public class JsonLexer extends Lexer
 							}
 							else
 							{
-								MismatchedSetException mse = new MismatchedSetException(null, input);
+								final MismatchedSetException mse = new MismatchedSetException(null, input);
 								recover(mse);
 								throw mse;
 							}
@@ -630,13 +630,13 @@ public class JsonLexer extends Lexer
 				}
 				else
 				{
-					MismatchedSetException mse = new MismatchedSetException(null, input);
+					final MismatchedSetException mse = new MismatchedSetException(null, input);
 					recover(mse);
 					throw mse;
 				}
 				// C:\\Users\\bimeg\\workspaceRCP\\JsonToolsRepo\\JsonEditor\\Json.g:83:21: ( '+' | '-' )?
 				int alt9 = 2;
-				int LA9_0 = input.LA(1);
+				final int LA9_0 = input.LA(1);
 				if ((LA9_0 == '+' || LA9_0 == '-'))
 				{
 					alt9 = 1;
@@ -652,7 +652,7 @@ public class JsonLexer extends Lexer
 						}
 						else
 						{
-							MismatchedSetException mse = new MismatchedSetException(null, input);
+							final MismatchedSetException mse = new MismatchedSetException(null, input);
 							recover(mse);
 							throw mse;
 						}
@@ -666,7 +666,7 @@ public class JsonLexer extends Lexer
 				loop10: while (true)
 				{
 					int alt10 = 2;
-					int LA10_0 = input.LA(1);
+					final int LA10_0 = input.LA(1);
 					if (((LA10_0 >= '0' && LA10_0 <= '9')))
 					{
 						alt10 = 1;
@@ -683,7 +683,7 @@ public class JsonLexer extends Lexer
 							}
 							else
 							{
-								MismatchedSetException mse = new MismatchedSetException(null, input);
+								final MismatchedSetException mse = new MismatchedSetException(null, input);
 								recover(mse);
 								throw mse;
 							}
@@ -695,7 +695,7 @@ public class JsonLexer extends Lexer
 							{
 								break loop10;
 							}
-							EarlyExitException eee = new EarlyExitException(10, input);
+							final EarlyExitException eee = new EarlyExitException(10, input);
 							throw eee;
 					}
 					cnt10++;
@@ -726,7 +726,7 @@ public class JsonLexer extends Lexer
 				}
 				else
 				{
-					MismatchedSetException mse = new MismatchedSetException(null, input);
+					final MismatchedSetException mse = new MismatchedSetException(null, input);
 					recover(mse);
 					throw mse;
 				}
@@ -748,10 +748,10 @@ public class JsonLexer extends Lexer
 		{
 			// C:\\Users\\bimeg\\workspaceRCP\\JsonToolsRepo\\JsonEditor\\Json.g:93:9: ( '\\\\' ( '\\\"' | '\\\\' | '/' | 'b' | 'f' | 'n' | 'r' | 't' ) | UNICODE_ESC )
 			int alt11 = 2;
-			int LA11_0 = input.LA(1);
+			final int LA11_0 = input.LA(1);
 			if ((LA11_0 == '\\'))
 			{
-				int LA11_1 = input.LA(2);
+				final int LA11_1 = input.LA(2);
 				if ((LA11_1 == '\"' || LA11_1 == '/' || LA11_1 == '\\' || LA11_1 == 'b' || LA11_1 == 'f' || LA11_1 == 'n' || LA11_1 == 'r' || LA11_1 == 't'))
 				{
 					alt11 = 1;
@@ -763,11 +763,11 @@ public class JsonLexer extends Lexer
 
 				else
 				{
-					int nvaeMark = input.mark();
+					final int nvaeMark = input.mark();
 					try
 					{
 						input.consume();
-						NoViableAltException nvae = new NoViableAltException("", 11, 1, input);
+						final NoViableAltException nvae = new NoViableAltException("", 11, 1, input);
 						throw nvae;
 					}
 					finally
@@ -780,7 +780,7 @@ public class JsonLexer extends Lexer
 
 			else
 			{
-				NoViableAltException nvae = new NoViableAltException("", 11, 0, input);
+				final NoViableAltException nvae = new NoViableAltException("", 11, 0, input);
 				throw nvae;
 			}
 
@@ -796,7 +796,7 @@ public class JsonLexer extends Lexer
 					}
 					else
 					{
-						MismatchedSetException mse = new MismatchedSetException(null, input);
+						final MismatchedSetException mse = new MismatchedSetException(null, input);
 						recover(mse);
 						throw mse;
 					}
@@ -930,7 +930,7 @@ public class JsonLexer extends Lexer
 			}
 				break;
 			default:
-				NoViableAltException nvae = new NoViableAltException("", 12, 0, input);
+				final NoViableAltException nvae = new NoViableAltException("", 12, 0, input);
 				throw nvae;
 		}
 		switch (alt12)

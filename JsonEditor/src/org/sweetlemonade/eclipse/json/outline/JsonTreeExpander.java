@@ -125,7 +125,7 @@ public class JsonTreeExpander
 
 			outer: for (final Key wasKey : wasSet)
 			{
-				for (Key nowKey : nowSet)
+				for (final Key nowKey : nowSet)
 				{
 					if (nowKey.getValue().equals(wasKey.getValue()))
 					{

@@ -228,7 +228,7 @@ public class JsonEditor extends TextEditor
 	@Override
 	public IDocumentProvider getDocumentProvider()
 	{
-		IDocumentProvider provider = super.getDocumentProvider();
+		final IDocumentProvider provider = super.getDocumentProvider();
 
 		if (provider == null)
 		{
@@ -290,41 +290,41 @@ public class JsonEditor extends TextEditor
 
 		if (element.isObject())
 		{
-			JsonObject object = element.asObject();
+			final JsonObject object = element.asObject();
 
-			Collection<Key> keys = object.keys();
-			IAnnotationModel annotationModel = getSourceViewer().getAnnotationModel();
+			final Collection<Key> keys = object.keys();
+			final IAnnotationModel annotationModel = getSourceViewer().getAnnotationModel();
 
-			for (Key key1 : keys)
+			for (final Key key1 : keys)
 			{
-				for (Key key2 : keys)
+				for (final Key key2 : keys)
 				{
 					if (key1 != key2 && key1.getValue().equals(key2.getValue()))
 					{
 						try
 						{
-							IMarker marker = resource.createMarker(Constants.MARKER_ERROR);
+							final IMarker marker = resource.createMarker(Constants.MARKER_ERROR);
 
 							marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_WARNING);
 							marker.setAttribute(IMarker.LOCATION, "Line " + key1.getLine());
 							marker.setAttribute(IMarker.MESSAGE, "Duplicate keys");
 
-							int start = key1.getStart();
-							int stop = key1.getStop();
+							final int start = key1.getStart();
+							final int stop = key1.getStop();
 
 							marker.setAttribute(IMarker.CHAR_START, start);
 							marker.setAttribute(IMarker.CHAR_END, stop);
 
 							if (!hasResource)
 							{
-								MarkerAnnotation annotation = new MarkerAnnotation(marker);
+								final MarkerAnnotation annotation = new MarkerAnnotation(marker);
 
 								annotationModel.addAnnotation(annotation, new Position(start, stop - start));
 
 								mProblems.put(marker, annotation);
 							}
 						}
-						catch (CoreException e)
+						catch (final CoreException e)
 						{
 							e.printStackTrace();
 						}
@@ -336,16 +336,16 @@ public class JsonEditor extends TextEditor
 		}
 		else if (element.isArray())
 		{
-			Collection<JsonElement> childs = element.getChilds();
+			final Collection<JsonElement> childs = element.getChilds();
 
-			for (JsonElement jsonElement : childs)
+			for (final JsonElement jsonElement : childs)
 			{
 				findDupKeys(jsonElement, resource, hasResource);
 			}
 		}
 	}
 
-	private IdentityHashMap<IMarker, Annotation> mProblems = new IdentityHashMap<>();
+	private final IdentityHashMap<IMarker, Annotation> mProblems = new IdentityHashMap<>();
 
 	public void setJsonInput(JsonElement element, Collection<ParseError> errors)
 	{
@@ -367,13 +367,13 @@ public class JsonEditor extends TextEditor
 					resource.deleteMarkers(Constants.MARKER_ERROR, false, 0);
 				}
 
-				IAnnotationModel annotationModel = getSourceViewer().getAnnotationModel();
+				final IAnnotationModel annotationModel = getSourceViewer().getAnnotationModel();
 
 				clearAnnos();
 
-				for (ParseError parseError : errors)
+				for (final ParseError parseError : errors)
 				{
-					IMarker marker = resource.createMarker(Constants.MARKER_ERROR);
+					final IMarker marker = resource.createMarker(Constants.MARKER_ERROR);
 
 					marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
 					marker.setAttribute(IMarker.LOCATION, "Line " + parseError.line);
@@ -395,14 +395,14 @@ public class JsonEditor extends TextEditor
 
 					if (!hasResource)
 					{
-						MarkerAnnotation annotation = new MarkerAnnotation(marker);
+						final MarkerAnnotation annotation = new MarkerAnnotation(marker);
 
 						annotationModel.addAnnotation(annotation, new Position(parseError.start, 1));
 						mProblems.put(marker, annotation);
 					}
 				}
 			}
-			catch (CoreException e)
+			catch (final CoreException e)
 			{
 				e.printStackTrace();
 			}
@@ -419,17 +419,17 @@ public class JsonEditor extends TextEditor
 
 	private void clearAnnos()
 	{
-		IAnnotationModel annotationModel = getSourceViewer().getAnnotationModel();
+		final IAnnotationModel annotationModel = getSourceViewer().getAnnotationModel();
 
-		Set<IMarker> keySet = mProblems.keySet();
+		final Set<IMarker> keySet = mProblems.keySet();
 
-		for (IMarker iMarker : keySet)
+		for (final IMarker iMarker : keySet)
 		{
 			try
 			{
 				iMarker.delete();
 			}
-			catch (CoreException e)
+			catch (final CoreException e)
 			{
 				e.printStackTrace();
 			}
