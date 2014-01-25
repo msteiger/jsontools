@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Json Tools
 Bundle-SymbolicName: org.sweetlemonade.eclipse.json;singleton:=true
-Bundle-Version: 1.0.1
+Bundle-Version: 1.0.3
 Bundle-Activator: org.sweetlemonade.eclipse.json.JsonPlugin
 Bundle-Vendor: Sweet Lemonade
 Require-Bundle: org.eclipse.ui,
