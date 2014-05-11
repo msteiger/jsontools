@@ -127,11 +127,18 @@ public class JsonEditor extends TextEditor
 	@Override
 	public void doSave(IProgressMonitor progressMonitor)
 	{
-		super.doSave(progressMonitor);
-
-		if (JsonPlugin.getDefault().getPreferenceStore().getBoolean(JsonPreferencesInitializer.PREF_AUTO_FORMAT_ON_SAVE))
+		if (JsonPlugin.getDefault().getPreferenceStore().getBoolean(JsonPreferencesInitializer.PREF_SAVE_AS_ON_SAVE) && getEditorInput() instanceof StringInput)
 		{
-			format();
+			doSaveAs();
+		}
+		else
+		{
+			super.doSave(progressMonitor);
+
+			if (JsonPlugin.getDefault().getPreferenceStore().getBoolean(JsonPreferencesInitializer.PREF_AUTO_FORMAT_ON_SAVE))
+			{
+				format();
+			}
 		}
 	}
 
@@ -139,7 +146,7 @@ public class JsonEditor extends TextEditor
 	{
 		if (!mDirty)
 		{
-			super.doSave(null);
+			super.doSave(getProgressMonitor());
 		}
 	}
 

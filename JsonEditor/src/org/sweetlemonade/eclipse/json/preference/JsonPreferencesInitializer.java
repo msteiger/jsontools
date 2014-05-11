@@ -14,6 +14,10 @@ import org.sweetlemonade.eclipse.json.JsonPlugin;
  */
 public class JsonPreferencesInitializer extends AbstractPreferenceInitializer
 {
+	public static final String PREF_SAVE_AS_ON_SAVE = "saveAsOnSave";
+
+	//=========
+
 	public static final String PREF_VALIDATE = "validate";
 	public static final String PREF_MAX_ERROR = "maxError";
 
@@ -213,6 +217,8 @@ public class JsonPreferencesInitializer extends AbstractPreferenceInitializer
 	public void initializeDefaultPreferences()
 	{
 		final IPreferenceStore store = JsonPlugin.getDefault().getPreferenceStore();
+
+		store.setDefault(PREF_SAVE_AS_ON_SAVE, false);
 
 		store.setDefault(PREF_VALIDATE, true);
 		store.setDefault(PREF_MAX_ERROR, 0);
