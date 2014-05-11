@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/org.sweetlemonade.eclipse.json.feature_1.0.3.jar" id="org.sweetlemonade.eclipse.json.feature" version="1.0.3">
+   <feature url="features/org.sweetlemonade.eclipse.json.feature_1.0.4.jar" id="org.sweetlemonade.eclipse.json.feature" version="1.0.4">
       <category name="org.sweetlemonade.eclispe.json.site.category.tools"/>
    </feature>
    <category-def name="org.sweetlemonade.eclispe.json.site.category.tools" label="Json Tools"/>
