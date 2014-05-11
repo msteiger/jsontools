@@ -69,24 +69,8 @@ public class JsonReconcileStrategy implements IReconcilingStrategy, IReconciling
 			return;
 		}
 
-/*		final JsonElement parse = parse();
-
-		Display.getDefault().asyncExec(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				mEditor.setJsonInput(parse);
-			}
-
-		});
-*/	}
-
-/*	private JsonElement parse()
-	{
-		return new JsonParserMy(mDocument).parse();
 	}
-*/
+
 	@Override
 	public void setProgressMonitor(IProgressMonitor monitor)
 	{

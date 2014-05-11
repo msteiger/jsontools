@@ -68,20 +68,26 @@
 	<extension point="org.eclipse.ui.preferencePages">
 		<page
 			class="org.sweetlemonade.eclipse.json.preference.JsonRootPreferencePage"
-			id="org.sweetlemonade.eclipse.json.pregerence.RootPage"
+			id="org.sweetlemonade.eclipse.json.preference.RootPage"
 			name="JSON">
 		</page>
 		<page
 			class="org.sweetlemonade.eclipse.json.preference.colors.JsonSyntaxColorsPreferencePage"
-			id="org.sweetlemonade.eclipse.json.pregerence.SyntaxColorPage"
-			category="org.sweetlemonade.eclipse.json.pregerence.RootPage"
+			id="org.sweetlemonade.eclipse.json.preference.SyntaxColorPage"
+			category="org.sweetlemonade.eclipse.json.preference.RootPage"
 			name="Syntax Coloring">
 		</page>
 		<page
 			class="org.sweetlemonade.eclipse.json.preference.format.JsonFormatPreferencePage"
-			id="org.sweetlemonade.eclipse.json.pregerence.FormatterPAge"
-			category="org.sweetlemonade.eclipse.json.pregerence.RootPage"
+			id="org.sweetlemonade.eclipse.json.preference.FormatterPage"
+			category="org.sweetlemonade.eclipse.json.preference.RootPage"
 			name="Formatter">
+		</page>
+		<page
+			class="org.sweetlemonade.eclipse.json.preference.validation.JsonValidationPreferencePage"
+			id="org.sweetlemonade.eclipse.json.preference.ValidationPage"
+			category="org.sweetlemonade.eclipse.json.preference.RootPage"
+			name="Validation">
 		</page>
 	</extension>
 	<extension point="org.eclipse.ui.newWizards">

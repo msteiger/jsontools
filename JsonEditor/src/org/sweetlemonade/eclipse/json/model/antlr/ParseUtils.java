@@ -11,13 +11,16 @@ import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.Token;
 import org.antlr.runtime.tree.CommonErrorNode;
 import org.antlr.runtime.tree.CommonTree;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
+import org.sweetlemonade.eclipse.json.JsonPlugin;
 import org.sweetlemonade.eclipse.json.model.JsonArray;
 import org.sweetlemonade.eclipse.json.model.JsonElement;
 import org.sweetlemonade.eclipse.json.model.JsonObject;
 import org.sweetlemonade.eclipse.json.model.JsonObject.Key;
 import org.sweetlemonade.eclipse.json.model.JsonPrimitive;
 import org.sweetlemonade.eclipse.json.model.JsonPrimitive.PrimitiveType;
+import org.sweetlemonade.eclipse.json.preference.JsonPreferencesInitializer;
 
 /**
  * 20 янв. 2014 г.
@@ -39,6 +42,7 @@ public class ParseUtils
 	{
 		public Object tree;
 		public Collection<ParseError> errors;
+		private int currErrors;
 	}
 
 	private static ParseError fillError(RecognitionException e, BaseRecognizer recognizer, IDocument document)
@@ -72,31 +76,70 @@ public class ParseUtils
 
 	public static ParseResult parse(final IDocument document) throws IllegalParseStateException
 	{
+		IPreferenceStore store = JsonPlugin.getDefault().getPreferenceStore();
+
+		final boolean validate = store.getBoolean(JsonPreferencesInitializer.PREF_VALIDATE);
+		final int maxErrorsPrefs = store.getInt(JsonPreferencesInitializer.PREF_MAX_ERROR);
+		final int maxErrors;
+
+		if (maxErrorsPrefs == 0)
+		{
+			maxErrors = Integer.MAX_VALUE;
+		}
+		else
+		{
+			maxErrors = maxErrorsPrefs;
+		}
+
 		final ParseResult result = new ParseResult();
+
+		result.currErrors = 0;
 
 		final ArrayList<ParseError> errors = new ArrayList<>();
 
 		result.errors = errors;
 
-		final JsonLexer lexer = new JsonLexer(new DocumentCharStream(document))
+		final DocumentCharStream charStream = new DocumentCharStream(document);
+
+		final JsonLexer lexer = new JsonLexer(charStream)
 		{
 			@Override
 			public void reportError(RecognitionException e)
 			{
-				super.reportError(e);
+				if (!validate || result.currErrors >= maxErrors)
+				{
+					charStream.seek(charStream.size() - 1);
+				}
+				else
+				{
+					result.currErrors++;
 
-				errors.add(fillError(e, this, document));
+					super.reportError(e);
+
+					errors.add(fillError(e, this, document));
+				}
 			}
 		};
+
 		final CommonTokenStream tokenStream = new CommonTokenStream(lexer);
+
 		final JsonParser parser = new JsonParser(tokenStream)
 		{
 			@Override
 			public void reportError(RecognitionException e)
 			{
-				super.reportError(e);
+				if (!validate || result.currErrors >= maxErrors)
+				{
+					tokenStream.seek(tokenStream.size() - 1);
+				}
+				else
+				{
+					result.currErrors++;
 
-				errors.add(fillError(e, this, document));
+					super.reportError(e);
+
+					errors.add(fillError(e, this, document));
+				}
 			}
 		};
 
