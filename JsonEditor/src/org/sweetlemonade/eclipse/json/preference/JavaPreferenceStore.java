@@ -1,18 +1,23 @@
 package org.sweetlemonade.eclipse.json.preference;
 
-import java.util.HashMap;
-
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 
 /**
- * 11 янв. 2014 г.
- * 
+ * Feb 25, 2015
+ *
  * @author denis.mirochnik
  */
-public class PseudoPreferenceStore implements IPreferenceStore
+public class JavaPreferenceStore implements IPreferenceStore
 {
-	private final HashMap<String, Object> mMap = new HashMap<>();
+	private final IPreferencesService mService;
+
+	public JavaPreferenceStore()
+	{
+		mService = Platform.getPreferencesService();
+	}
 
 	@Override
 	public void addPropertyChangeListener(IPropertyChangeListener listener)
@@ -22,7 +27,7 @@ public class PseudoPreferenceStore implements IPreferenceStore
 	@Override
 	public boolean contains(String name)
 	{
-		return mMap.containsKey(name);
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -69,67 +74,37 @@ public class PseudoPreferenceStore implements IPreferenceStore
 	@Override
 	public boolean getBoolean(String name)
 	{
-		if (!mMap.containsKey(name))
-		{
-			return false;
-		}
-
-		return (Boolean) mMap.get(name);
+		return mService.getBoolean(JavaColorPrefsCopier.JDT_UI_ID, name, false, null);
 	}
 
 	@Override
 	public double getDouble(String name)
 	{
-		if (!mMap.containsKey(name))
-		{
-			return 0.0;
-		}
-
-		return (Double) mMap.get(name);
+		return mService.getDouble(JavaColorPrefsCopier.JDT_UI_ID, name, 0.0, null);
 	}
 
 	@Override
 	public float getFloat(String name)
 	{
-		if (!mMap.containsKey(name))
-		{
-			return 0.0f;
-		}
-
-		return (Float) mMap.get(name);
+		return mService.getFloat(JavaColorPrefsCopier.JDT_UI_ID, name, 0.0f, null);
 	}
 
 	@Override
 	public int getInt(String name)
 	{
-		if (!mMap.containsKey(name))
-		{
-			return 0;
-		}
-
-		return (Integer) mMap.get(name);
+		return mService.getInt(JavaColorPrefsCopier.JDT_UI_ID, name, 0, null);
 	}
 
 	@Override
 	public long getLong(String name)
 	{
-		if (!mMap.containsKey(name))
-		{
-			return 0L;
-		}
-
-		return (Long) mMap.get(name);
+		return mService.getLong(JavaColorPrefsCopier.JDT_UI_ID, name, 0L, null);
 	}
 
 	@Override
 	public String getString(String name)
 	{
-		if (!mMap.containsKey(name))
-		{
-			return "";
-		}
-
-		return (String) mMap.get(name);
+		return mService.getString(JavaColorPrefsCopier.JDT_UI_ID, name, "", null);
 	}
 
 	@Override
@@ -147,7 +122,6 @@ public class PseudoPreferenceStore implements IPreferenceStore
 	@Override
 	public void putValue(String name, String value)
 	{
-		mMap.put(name, value);
 	}
 
 	@Override
@@ -158,79 +132,66 @@ public class PseudoPreferenceStore implements IPreferenceStore
 	@Override
 	public void setDefault(String name, double value)
 	{
-
 	}
 
 	@Override
 	public void setDefault(String name, float value)
 	{
-
 	}
 
 	@Override
 	public void setDefault(String name, int value)
 	{
-
 	}
 
 	@Override
 	public void setDefault(String name, long value)
 	{
-
 	}
 
 	@Override
 	public void setDefault(String name, String defaultObject)
 	{
-
 	}
 
 	@Override
 	public void setDefault(String name, boolean value)
 	{
-
 	}
 
 	@Override
 	public void setToDefault(String name)
 	{
-
 	}
 
 	@Override
 	public void setValue(String name, double value)
 	{
-		mMap.put(name, value);
 	}
 
 	@Override
 	public void setValue(String name, float value)
 	{
-		mMap.put(name, value);
 	}
 
 	@Override
 	public void setValue(String name, int value)
 	{
-		mMap.put(name, value);
 	}
 
 	@Override
 	public void setValue(String name, long value)
 	{
-		mMap.put(name, value);
 	}
 
 	@Override
 	public void setValue(String name, String value)
 	{
-		mMap.put(name, value);
 	}
 
 	@Override
 	public void setValue(String name, boolean value)
 	{
-		mMap.put(name, value);
 	}
 
 }

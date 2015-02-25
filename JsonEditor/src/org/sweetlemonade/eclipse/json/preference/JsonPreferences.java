@@ -64,4 +64,16 @@ public class JsonPreferences
 	{
 		return (style & SWT.ITALIC) != 0;
 	}
+
+	public static int mergeStyles(final boolean bold, final boolean italic, final boolean under, final boolean strike)
+	{
+		int style = SWT.NORMAL;
+
+		style |= bold ? SWT.BOLD : 0;
+		style |= italic ? SWT.ITALIC : 0;
+		style |= under ? TextAttribute.UNDERLINE : 0;
+		style |= strike ? TextAttribute.STRIKETHROUGH : 0;
+
+		return style;
+	}
 }
