@@ -2,12 +2,10 @@ package org.sweetlemonade.eclipse.json.editor;
 
 import java.util.LinkedList;
 
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.formatter.ContextBasedFormattingStrategy;
 import org.eclipse.jface.text.formatter.FormattingContextProperties;
 import org.eclipse.jface.text.formatter.IFormattingContext;
-import org.sweetlemonade.eclipse.json.JsonPlugin;
 import org.sweetlemonade.eclipse.json.model.JsonElement;
 import org.sweetlemonade.eclipse.json.model.JsonParserMy;
 
@@ -33,12 +31,10 @@ public class JsonFormatStrategy extends ContextBasedFormattingStrategy
 	{
 		super.formatterStarts(context);
 
-		final IPreferenceStore store = JsonPlugin.getDefault().getPreferenceStore();
-
 		final IDocument document = (IDocument) context.getProperty(FormattingContextProperties.CONTEXT_MEDIUM);
 
 		mElement = new JsonParserMy(document).parse(); //TODO do it right sometime...
-		mFormatter = new JsonFormatter(mElement, store);
+		mFormatter = new JsonFormatter(mElement, mEditor.getMergedPreferenceStore());
 
 		mDocuments.addLast(document);
 	}

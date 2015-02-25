@@ -3,6 +3,7 @@ package org.sweetlemonade.eclipse.json.editor;
 import java.util.Collection;
 
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.sweetlemonade.eclipse.json.model.JsonArray;
 import org.sweetlemonade.eclipse.json.model.JsonElement;
 import org.sweetlemonade.eclipse.json.model.JsonObject;
@@ -38,6 +39,9 @@ public class JsonFormatter
 	private boolean mSpaceAfterArrayOpen;
 	private boolean mSpaceBeforeArrayClose;
 
+	private boolean mSpaces;
+	private int mTabSize;
+
 	private final IPreferenceStore mStore;
 
 	public JsonFormatter(JsonElement element, IPreferenceStore store)
@@ -61,6 +65,8 @@ public class JsonFormatter
 		mSpaceBeforeObjectClose = mStore.getBoolean(JsonPreferencesInitializer.PREF_SPACE_BEFORE_OBJECT_CLOSE);
 		mSpaceAfterArrayOpen = mStore.getBoolean(JsonPreferencesInitializer.PREF_SPACE_AFTER_ARRAY_OPEN);
 		mSpaceBeforeArrayClose = mStore.getBoolean(JsonPreferencesInitializer.PREF_SPACE_BEFORE_ARRAY_CLOSE);
+		mSpaces = mStore.getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_SPACES_FOR_TABS);
+		mTabSize = mStore.getInt(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_TAB_WIDTH);
 
 		final StringBuilder builder = new StringBuilder(initialCapacity);
 
@@ -254,11 +260,21 @@ public class JsonFormatter
 		}
 	}
 
-	private static void indent(StringBuilder builder, int indent)
+	private void indent(StringBuilder builder, int indent)
 	{
-		for (int i = 0; i < indent; i++)
+		if (mSpaces)
 		{
-			builder.append('\t');
+			for (int i = 0; i < indent * mTabSize; i++)
+			{
+				builder.append(' ');
+			}
+		}
+		else
+		{
+			for (int i = 0; i < indent; i++)
+			{
+				builder.append('\t');
+			}
 		}
 	}
 }

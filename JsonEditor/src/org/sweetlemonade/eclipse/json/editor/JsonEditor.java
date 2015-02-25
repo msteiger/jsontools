@@ -159,6 +159,11 @@ public class JsonEditor extends TextEditor
 		addAction(menu, ITextEditorActionConstants.GROUP_OPEN, Constants.COMMAND_QUICK_OUTLINE_ID);
 	}
 
+	public IPreferenceStore getMergedPreferenceStore()
+	{
+		return getPreferenceStore();
+	}
+
 	@Override
 	protected void initializeEditor()
 	{
