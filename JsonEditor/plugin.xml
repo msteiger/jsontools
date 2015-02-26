@@ -7,7 +7,7 @@
 			default="true"
 			extensions="json"
 			id="org.sweetlemonade.eclipse.json.editor"
-			name="JSON Editor">
+			name="Json Tools Editor">
 		</editor>
 	</extension>
 	<extension point="org.eclipse.core.runtime.preferences">
