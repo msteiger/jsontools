@@ -28,7 +28,6 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.sweetlemonade.eclipse.json.Container;
 import org.sweetlemonade.eclipse.json.JsonPlugin;
-import org.sweetlemonade.eclipse.json.preference.JavaColorPrefsCopier;
 import org.sweetlemonade.eclipse.json.preference.JsonPreferences;
 import org.sweetlemonade.eclipse.json.preference.JsonPreferencesInitializer.TokenType;
 import org.sweetlemonade.eclipse.json.preference.PseudoPreferenceStore;

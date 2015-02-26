@@ -1,4 +1,4 @@
-package org.sweetlemonade.eclipse.json.preference;
+package org.sweetlemonade.eclipse.json.preference.colors;
 
 import static org.eclipse.jdt.ui.PreferenceConstants.EDITOR_JAVA_BRACKET_BOLD;
 import static org.eclipse.jdt.ui.PreferenceConstants.EDITOR_JAVA_BRACKET_COLOR;
@@ -28,6 +28,8 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.internal.ui.javaeditor.SemanticHighlighting;
 import org.eclipse.jdt.internal.ui.javaeditor.SemanticHighlightings;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.sweetlemonade.eclipse.json.preference.JavaPreferenceStore;
+import org.sweetlemonade.eclipse.json.preference.JsonPreferences;
 import org.sweetlemonade.eclipse.json.preference.JsonPreferencesInitializer.TokenType;
 
 /**

@@ -4,6 +4,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
+import org.sweetlemonade.eclipse.json.preference.colors.JavaColorPrefsCopier;
 
 /**
  * Feb 25, 2015
