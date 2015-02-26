@@ -60,9 +60,8 @@ public class JavaColorPrefsCopier
 		}
 	}
 
-	private static final EnumMap<TokenType, JdtKeys> KEYS;
+	private final EnumMap<TokenType, JdtKeys> KEYS;
 
-	static
 	{
 		KEYS = new EnumMap<>(TokenType.class);
 
@@ -123,9 +122,9 @@ public class JavaColorPrefsCopier
 
 	}
 
-	private static final IPreferenceStore JDT_PREFS = new JavaPreferenceStore();
+	private JavaPreferenceStore mJavaStore = new JavaPreferenceStore();
 
-	public static void copyPrefs(IPreferenceStore targetStore)
+	public void copyPrefs(IPreferenceStore targetStore)
 	{
 		final TokenType[] types = TokenType.values();
 
@@ -133,15 +132,15 @@ public class JavaColorPrefsCopier
 		{
 			JdtKeys jdtKeys = KEYS.get(colorType);
 
-			targetStore.setValue(colorType.getKey(), JDT_PREFS.getString(jdtKeys.colorKey));
+			targetStore.setValue(colorType.getKey(), mJavaStore.getString(jdtKeys.colorKey));
 
 			String enabledKey = jdtKeys.enabledKey;
-			targetStore.setValue(colorType.getEnabledKey(), enabledKey == null ? true : JDT_PREFS.getBoolean(enabledKey));
+			targetStore.setValue(colorType.getEnabledKey(), enabledKey == null ? true : mJavaStore.getBoolean(enabledKey));
 
-			boolean bold = JDT_PREFS.getBoolean(jdtKeys.boldKey);
-			boolean italic = JDT_PREFS.getBoolean(jdtKeys.italicKey);
-			boolean under = JDT_PREFS.getBoolean(jdtKeys.underlineKey);
-			boolean strike = JDT_PREFS.getBoolean(jdtKeys.strikeKey);
+			boolean bold = mJavaStore.getBoolean(jdtKeys.boldKey);
+			boolean italic = mJavaStore.getBoolean(jdtKeys.italicKey);
+			boolean under = mJavaStore.getBoolean(jdtKeys.underlineKey);
+			boolean strike = mJavaStore.getBoolean(jdtKeys.strikeKey);
 
 			targetStore.setValue(colorType.getStyleKey(), JsonPreferences.mergeStyles(bold, italic, under, strike));
 		}

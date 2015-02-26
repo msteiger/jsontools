@@ -51,6 +51,8 @@ public class JsonSyntaxColorsPreferencePage extends PreferencePage implements IW
 	private Button mStrikeButton;
 	private Button mCopyJavaPrefsButton;
 
+	private JavaColorPrefsCopier mCopier;
+
 	public JsonSyntaxColorsPreferencePage()
 	{
 		final IPreferenceStore store = JsonPlugin.getDefault().getPreferenceStore();
@@ -271,7 +273,13 @@ public class JsonSyntaxColorsPreferencePage extends PreferencePage implements IW
 		}
 		else if (mCopyJavaPrefsButton != null && e.widget == mCopyJavaPrefsButton)
 		{
-			JavaColorPrefsCopier.copyPrefs(mPreferenceStore);
+			if (mCopier == null)
+			{
+				mCopier = new JavaColorPrefsCopier();
+			}
+
+			mCopier.copyPrefs(mPreferenceStore);
+
 			updateSelection();
 		}
 		else
