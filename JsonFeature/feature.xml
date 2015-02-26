@@ -2,7 +2,7 @@
 <feature
       id="org.sweetlemonade.eclipse.json.feature"
       label="Json Tools"
-      version="1.0.4"
+      version="1.1.0"
       provider-name="Sweet Lemonade">
 
    <description>
@@ -93,7 +93,7 @@ All Recipient&apos;s rights under this Agreement shall terminate if it fails
          id="org.sweetlemonade.eclipse.json"
          download-size="0"
          install-size="0"
-         version="1.0.4"
+         version="1.1.0"
          unpack="false"/>
 
 </feature>
