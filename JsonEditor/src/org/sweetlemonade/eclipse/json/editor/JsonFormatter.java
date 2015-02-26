@@ -1,6 +1,6 @@
 package org.sweetlemonade.eclipse.json.editor;
 
-import java.util.Collection;
+import java.util.Set;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
@@ -161,7 +161,7 @@ public class JsonFormatter
 				indent(builder, indent + 1);
 			}
 
-			final Collection<Key> keySet = object.keys();
+			final Set<Key> keySet = object.keySet();
 
 			boolean first = true;
 			boolean wasComplex = true;

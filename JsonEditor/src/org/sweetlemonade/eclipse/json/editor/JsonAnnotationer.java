@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.Position;
@@ -180,8 +181,8 @@ public class JsonAnnotationer implements ISelectionListener, IDisposable
 			final JsonObject wasObj = elementWas.asObject();
 			final JsonObject nowObj = elementNow.asObject();
 
-			final Collection<Key> wasSet = wasObj.keys();
-			final Collection<Key> nowSet = nowObj.keys();
+			final Set<Key> wasSet = wasObj.keySet();
+			final Set<Key> nowSet = nowObj.keySet();
 
 			outer: for (final Key wasKey : wasSet)
 			{

@@ -304,7 +304,7 @@ public class JsonEditor extends TextEditor
 		{
 			final JsonObject object = element.asObject();
 
-			final Collection<Key> keys = object.keys();
+			final Set<Key> keys = object.keySet();
 			final IAnnotationModel annotationModel = getSourceViewer().getAnnotationModel();
 
 			for (final Key key1 : keys)

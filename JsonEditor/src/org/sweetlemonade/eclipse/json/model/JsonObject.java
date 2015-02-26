@@ -1,8 +1,7 @@
 package org.sweetlemonade.eclipse.json.model;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -69,8 +68,8 @@ public class JsonObject extends JsonElement implements Map<Key, JsonElement>
 		}
 	}
 
-	private final ArrayList<Key> mKeys = new ArrayList<>();
-	private final ArrayList<JsonElement> mValues = new ArrayList<>();
+	//FIXME do LinkedIdentityHashMap
+	private final Map<Key, JsonElement> mMap = new LinkedHashMap<>();
 
 	public JsonObject(JsonElement parent)
 	{
@@ -78,64 +77,87 @@ public class JsonObject extends JsonElement implements Map<Key, JsonElement>
 	}
 
 	@Override
-	public void clear()
+	public int size()
 	{
-		mKeys.clear();
-		mValues.clear();
-	}
-
-	@Override
-	public boolean containsKey(Object key)
-	{
-		return mKeys.contains(key);
-	}
-
-	@Override
-	public boolean containsValue(Object value)
-	{
-		return mValues.contains(value);
-	}
-
-	@Override
-	public Set<java.util.Map.Entry<Key, JsonElement>> entrySet()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public JsonElement get(Object key)
-	{
-		final int indexOf = mKeys.indexOf(key);
-
-		return indexOf == -1 ? null : mValues.get(indexOf);
+		return mMap.size();
 	}
 
 	@Override
 	public boolean isEmpty()
 	{
-		return mKeys.isEmpty();
-	}
-
-	public Collection<Key> keys()
-	{
-		return Collections.unmodifiableList(mKeys);
+		return mMap.isEmpty();
 	}
 
 	@Override
-	public Set<Key> keySet()
+	public boolean containsKey(Object key)
 	{
-		throw new UnsupportedOperationException();
+		return mMap.containsKey(key);
+	}
+
+	@Override
+	public boolean containsValue(Object value)
+	{
+		return mMap.containsValue(value);
+	}
+
+	@Override
+	public JsonElement get(Object key)
+	{
+		return mMap.get(key);
 	}
 
 	@Override
 	public JsonElement put(Key key, JsonElement value)
 	{
-		final JsonElement was = get(key);
+		return mMap.put(key, value);
+	}
 
-		mKeys.add(key);
-		mValues.add(value);
+	@Override
+	public JsonElement remove(Object key)
+	{
+		return mMap.remove(key);
+	}
 
-		return was;
+	@Override
+	public void putAll(Map<? extends Key, ? extends JsonElement> m)
+	{
+		mMap.putAll(m);
+	}
+
+	@Override
+	public void clear()
+	{
+		mMap.clear();
+	}
+
+	@Override
+	public Set<Key> keySet()
+	{
+		return mMap.keySet();
+	}
+
+	@Override
+	public Collection<JsonElement> values()
+	{
+		return mMap.values();
+	}
+
+	@Override
+	public Set<java.util.Map.Entry<Key, JsonElement>> entrySet()
+	{
+		return mMap.entrySet();
+	}
+
+	@Override
+	public boolean equals(Object o)
+	{
+		return mMap.equals(o);
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return mMap.hashCode();
 	}
 
 	public JsonElement put(String key, JsonElement value)
@@ -144,76 +166,9 @@ public class JsonObject extends JsonElement implements Map<Key, JsonElement>
 	}
 
 	@Override
-	public void putAll(Map<? extends Key, ? extends JsonElement> m)
-	{
-		final Set<? extends Key> keySet = m.keySet();
-
-		for (final Key key : keySet)
-		{
-			put(key, m.get(key));
-		}
-	}
-
-	@Override
-	public JsonElement remove(Object key)
-	{
-		final int indexOf = mKeys.indexOf(key);
-
-		if (indexOf == -1)
-		{
-			return null;
-		}
-
-		mKeys.remove(key);
-
-		return mValues.remove(indexOf);
-	}
-
-	@Override
-	public int size()
-	{
-		return mKeys.size();
-	}
-
-	@Override
 	public String toString()
 	{
-		final StringBuilder builder = new StringBuilder();
-
-		builder.append('[');
-
-		for (int i = 0; i < mKeys.size(); i++)
-		{
-			if (i > 0)
-			{
-				builder.append(", ");
-			}
-
-			final Key key = mKeys.get(i);
-			final JsonElement value = mValues.get(i);
-
-			builder.append(key.getValue());
-			builder.append('=');
-
-			if (value == this)
-			{
-				builder.append("this object");
-			}
-			else
-			{
-				builder.append(value);
-			}
-		}
-
-		builder.append(']');
-
-		return builder.toString();
-	}
-
-	@Override
-	public Collection<JsonElement> values()
-	{
-		return Collections.unmodifiableList(mValues);
+		return mMap.toString();
 	}
 
 	@Override

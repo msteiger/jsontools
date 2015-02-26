@@ -2,8 +2,8 @@ package org.sweetlemonade.eclipse.json.outline;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.jface.viewers.IElementComparer;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -120,8 +120,8 @@ public class JsonTreeExpander
 			final JsonObject wasObj = elementWas.asObject();
 			final JsonObject nowObj = elementNow.asObject();
 
-			final Collection<Key> wasSet = wasObj.keys();
-			final Collection<Key> nowSet = nowObj.keys();
+			final Set<Key> wasSet = wasObj.keySet();
+			final Set<Key> nowSet = nowObj.keySet();
 
 			outer: for (final Key wasKey : wasSet)
 			{

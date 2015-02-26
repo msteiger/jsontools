@@ -1,6 +1,8 @@
 package org.sweetlemonade.eclipse.json.model;
 
 import java.util.Collection;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.sweetlemonade.eclipse.json.model.JsonObject.Key;
 
@@ -161,13 +163,13 @@ public abstract class JsonElement
 
 		final JsonObject object = parent.asObject();
 
-		final Collection<Key> keySet = object.keys();
+		Set<Entry<Key, JsonElement>> entrySet = object.entrySet();
 
-		for (final Key string : keySet)
+		for (Entry<Key, JsonElement> entry : entrySet)
 		{
-			if (object.get(string) == this)
+			if (entry.getValue() == this)
 			{
-				return string.getValue();
+				return entry.getKey().getValue();
 			}
 		}
 
