@@ -11,79 +11,79 @@ import org.sweetlemonade.eclipse.json.preference.JsonPreferences;
 public class JsonPlugin extends AbstractUIPlugin
 {
 
-	// The plug-in ID
-	public static final String PLUGIN_ID = "org.sweetlemonade.eclipse.json"; //$NON-NLS-1$
+    // The plug-in ID
+    public static final String PLUGIN_ID = "org.sweetlemonade.eclipse.json"; //$NON-NLS-1$
 
-	// The shared instance
-	private static JsonPlugin plugin;
+    // The shared instance
+    private static JsonPlugin plugin;
 
-	private JsonPreferences mPreferences;
-	private ColorManager mColorManager;
+    private JsonPreferences mPreferences;
+    private ColorManager mColorManager;
 
-	/**
-	 * The constructor
-	 */
-	public JsonPlugin()
-	{
-	}
+    /**
+     * The constructor
+     */
+    public JsonPlugin()
+    {
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
-	 */
-	@Override
-	public void start(BundleContext context) throws Exception
-	{
-		super.start(context);
-		plugin = this;
-		mColorManager = new ColorManager();
-		mPreferences = new JsonPreferences();
-	}
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
+     */
+    @Override
+    public void start(BundleContext context) throws Exception
+    {
+        super.start(context);
+        plugin = this;
+        mColorManager = new ColorManager();
+        mPreferences = new JsonPreferences();
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
-	 */
-	@Override
-	public void stop(BundleContext context) throws Exception
-	{
-		plugin = null;
-		mColorManager.dispose();
-		mColorManager = null;
-		mPreferences = null;
-		super.stop(context);
-	}
+    /*
+     * (non-Javadoc)
+     * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
+     */
+    @Override
+    public void stop(BundleContext context) throws Exception
+    {
+        plugin = null;
+        mColorManager.dispose();
+        mColorManager = null;
+        mPreferences = null;
+        super.stop(context);
+    }
 
-	/**
-	 * Returns the shared instance
-	 * 
-	 * @return the shared instance
-	 */
-	public static JsonPlugin getDefault()
-	{
-		return plugin;
-	}
+    /**
+     * Returns the shared instance
+     * 
+     * @return the shared instance
+     */
+    public static JsonPlugin getDefault()
+    {
+        return plugin;
+    }
 
-	/**
-	 * Returns an image descriptor for the image file at the given plug-in
-	 * relative path
-	 * 
-	 * @param path
-	 *            the path
-	 * @return the image descriptor
-	 */
-	public static ImageDescriptor getImageDescriptor(String path)
-	{
-		return imageDescriptorFromPlugin(PLUGIN_ID, path);
-	}
+    /**
+     * Returns an image descriptor for the image file at the given plug-in
+     * relative path
+     * 
+     * @param path
+     *            the path
+     * @return the image descriptor
+     */
+    public static ImageDescriptor getImageDescriptor(String path)
+    {
+        return imageDescriptorFromPlugin(PLUGIN_ID, path);
+    }
 
-	public static JsonPreferences getPreferences()
-	{
-		return plugin.mPreferences;
-	}
+    public static JsonPreferences getPreferences()
+    {
+        return plugin.mPreferences;
+    }
 
-	public static ColorManager getColorManager()
-	{
-		return plugin.mColorManager;
-	}
+    public static ColorManager getColorManager()
+    {
+        return plugin.mColorManager;
+    }
 }

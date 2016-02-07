@@ -14,39 +14,39 @@ import org.sweetlemonade.eclipse.json.model.JsonGrammar;
 public class StringValueRule extends SingleLineRule
 {
 
-	public StringValueRule(String startSequence, String endSequence, IToken token, char escapeCharacter)
-	{
-		super(startSequence, endSequence, token, escapeCharacter);
-	}
+    public StringValueRule(String startSequence, String endSequence, IToken token, char escapeCharacter)
+    {
+        super(startSequence, endSequence, token, escapeCharacter);
+    }
 
-	@Override
-	public IToken evaluate(ICharacterScanner scanner)
-	{
-		scanner.read();
+    @Override
+    public IToken evaluate(ICharacterScanner scanner)
+    {
+        scanner.read();
 
-		int read;
-		int count = -1;
+        int read;
+        int count = -1;
 
-		do
-		{
-			scanner.unread();
-			scanner.unread();
+        do
+        {
+            scanner.unread();
+            scanner.unread();
 
-			read = scanner.read();
-			count++;
-		}
-		while (JsonGrammar.isWhitespace((char) read));
+            read = scanner.read();
+            count++;
+        }
+        while (JsonGrammar.isWhitespace((char) read));
 
-		for (int i = 0; i < count; i++)
-		{
-			scanner.read();
-		}
+        for (int i = 0; i < count; i++)
+        {
+            scanner.read();
+        }
 
-		if (read != ':')
-		{
-			return Token.UNDEFINED;
-		}
+        if (read != ':')
+        {
+            return Token.UNDEFINED;
+        }
 
-		return super.evaluate(scanner);
-	}
+        return super.evaluate(scanner);
+    }
 }

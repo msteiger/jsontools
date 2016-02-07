@@ -20,61 +20,61 @@ import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
  */
 public class JsonConfiguration extends TextSourceViewerConfiguration
 {
-	private JsonScanner mJsonScanner;
-	private final JsonEditor mEditor;
+    private JsonScanner mJsonScanner;
+    private final JsonEditor mEditor;
 
-	public JsonConfiguration(JsonEditor editor)
-	{
-		mEditor = editor;
-	}
+    public JsonConfiguration(JsonEditor editor)
+    {
+        mEditor = editor;
+    }
 
-	private ITokenScanner getJsonScanner()
-	{
-		if (mJsonScanner == null)
-		{
-			mJsonScanner = new JsonScanner();
-		}
+    private ITokenScanner getJsonScanner()
+    {
+        if (mJsonScanner == null)
+        {
+            mJsonScanner = new JsonScanner();
+        }
 
-		return mJsonScanner;
-	}
+        return mJsonScanner;
+    }
 
-	@Override
-	public IContentFormatter getContentFormatter(ISourceViewer sourceViewer)
-	{
-		return new JsonContentFormatter(mEditor);
-	}
+    @Override
+    public IContentFormatter getContentFormatter(ISourceViewer sourceViewer)
+    {
+        return new JsonContentFormatter(mEditor);
+    }
 
-	@Override
-	public IReconciler getReconciler(ISourceViewer sourceViewer)
-	{
-		return new MonoReconciler(new JsonReconcileStrategy(mEditor), false);
-	}
+    @Override
+    public IReconciler getReconciler(ISourceViewer sourceViewer)
+    {
+        return new MonoReconciler(new JsonReconcileStrategy(mEditor), false);
+    }
 
-	@Override
-	public IPresentationReconciler getPresentationReconciler(ISourceViewer sourceViewer)
-	{
-		final PresentationReconciler reconciler = new PresentationReconciler();
+    @Override
+    public IPresentationReconciler getPresentationReconciler(ISourceViewer sourceViewer)
+    {
+        final PresentationReconciler reconciler = new PresentationReconciler();
 
-		DefaultDamagerRepairer dr;
+        DefaultDamagerRepairer dr;
 
-		dr = new DefaultDamagerRepairer(getJsonScanner());
-		reconciler.setDamager(dr, IDocument.DEFAULT_CONTENT_TYPE);
-		reconciler.setRepairer(dr, IDocument.DEFAULT_CONTENT_TYPE);
+        dr = new DefaultDamagerRepairer(getJsonScanner());
+        reconciler.setDamager(dr, IDocument.DEFAULT_CONTENT_TYPE);
+        reconciler.setRepairer(dr, IDocument.DEFAULT_CONTENT_TYPE);
 
-		return reconciler;
-	}
+        return reconciler;
+    }
 
-	@Override
-	public IAutoEditStrategy[] getAutoEditStrategies(ISourceViewer sourceViewer, String contentType)
-	{
-		return new IAutoEditStrategy[] { new DefaultIndentLineAutoEditStrategy() };
-	}
+    @Override
+    public IAutoEditStrategy[] getAutoEditStrategies(ISourceViewer sourceViewer, String contentType)
+    {
+        return new IAutoEditStrategy[] { new DefaultIndentLineAutoEditStrategy() };
+    }
 
-	public void updatePreferences()
-	{
-		if (mJsonScanner != null)
-		{
-			mJsonScanner.updateRules();
-		}
-	}
+    public void updatePreferences()
+    {
+        if (mJsonScanner != null)
+        {
+            mJsonScanner.updateRules();
+        }
+    }
 }

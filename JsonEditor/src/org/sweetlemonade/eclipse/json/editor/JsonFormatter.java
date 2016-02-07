@@ -19,262 +19,262 @@ import org.sweetlemonade.eclipse.json.preference.JsonPreferencesInitializer;
  */
 public class JsonFormatter
 {
-	private final JsonElement mElement;
+    private final JsonElement mElement;
 
-	private boolean mWrapArray;
-	private boolean mWrapObject;
+    private boolean mWrapArray;
+    private boolean mWrapObject;
 
-	private boolean mArrayBracketsNewLine;
-	private boolean mObjectBracketsNewLine;
+    private boolean mArrayBracketsNewLine;
+    private boolean mObjectBracketsNewLine;
 
-	private boolean mAfterComma;
-	private boolean mAfterColon;
-	private boolean mBeforeColon;
+    private boolean mAfterComma;
+    private boolean mAfterColon;
+    private boolean mBeforeColon;
 
-	private boolean mBlankLineAfterComplex;
+    private boolean mBlankLineAfterComplex;
 
-	private boolean mSpaceAfterObjectOpen;
-	private boolean mSpaceBeforeObjectClose;
+    private boolean mSpaceAfterObjectOpen;
+    private boolean mSpaceBeforeObjectClose;
 
-	private boolean mSpaceAfterArrayOpen;
-	private boolean mSpaceBeforeArrayClose;
+    private boolean mSpaceAfterArrayOpen;
+    private boolean mSpaceBeforeArrayClose;
 
-	private boolean mSpaces;
-	private int mTabSize;
+    private boolean mSpaces;
+    private int mTabSize;
 
-	private final IPreferenceStore mStore;
+    private final IPreferenceStore mStore;
 
-	public JsonFormatter(JsonElement element, IPreferenceStore store)
-	{
-		mElement = element;
-		mStore = store;
+    public JsonFormatter(JsonElement element, IPreferenceStore store)
+    {
+        mElement = element;
+        mStore = store;
 
-	}
+    }
 
-	public String format(int initialCapacity)
-	{
-		mWrapArray = mStore.getBoolean(JsonPreferencesInitializer.PREF_WRAP_ARRAY);
-		mWrapObject = mStore.getBoolean(JsonPreferencesInitializer.PREF_WRAP_OBJECT);
-		mArrayBracketsNewLine = mStore.getBoolean(JsonPreferencesInitializer.PREF_ARRAY_BRACKETS_NEW_LINE);
-		mObjectBracketsNewLine = mStore.getBoolean(JsonPreferencesInitializer.PREF_OBJECT_BRACKETS_NEW_LINE);
-		mAfterComma = mStore.getBoolean(JsonPreferencesInitializer.PREF_SPACE_AFTER_COMMA);
-		mAfterColon = mStore.getBoolean(JsonPreferencesInitializer.PREF_SPACE_AFTER_COLON);
-		mBeforeColon = mStore.getBoolean(JsonPreferencesInitializer.PREF_SPACE_BEFORE_COLON);
-		mBlankLineAfterComplex = mStore.getBoolean(JsonPreferencesInitializer.PREF_BLANK_LINE_AFTER_COMPLEX);
-		mSpaceAfterObjectOpen = mStore.getBoolean(JsonPreferencesInitializer.PREF_SPACE_AFTER_OBJECT_OPEN);
-		mSpaceBeforeObjectClose = mStore.getBoolean(JsonPreferencesInitializer.PREF_SPACE_BEFORE_OBJECT_CLOSE);
-		mSpaceAfterArrayOpen = mStore.getBoolean(JsonPreferencesInitializer.PREF_SPACE_AFTER_ARRAY_OPEN);
-		mSpaceBeforeArrayClose = mStore.getBoolean(JsonPreferencesInitializer.PREF_SPACE_BEFORE_ARRAY_CLOSE);
-		mSpaces = mStore.getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_SPACES_FOR_TABS);
-		mTabSize = mStore.getInt(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_TAB_WIDTH);
+    public String format(int initialCapacity)
+    {
+        mWrapArray = mStore.getBoolean(JsonPreferencesInitializer.PREF_WRAP_ARRAY);
+        mWrapObject = mStore.getBoolean(JsonPreferencesInitializer.PREF_WRAP_OBJECT);
+        mArrayBracketsNewLine = mStore.getBoolean(JsonPreferencesInitializer.PREF_ARRAY_BRACKETS_NEW_LINE);
+        mObjectBracketsNewLine = mStore.getBoolean(JsonPreferencesInitializer.PREF_OBJECT_BRACKETS_NEW_LINE);
+        mAfterComma = mStore.getBoolean(JsonPreferencesInitializer.PREF_SPACE_AFTER_COMMA);
+        mAfterColon = mStore.getBoolean(JsonPreferencesInitializer.PREF_SPACE_AFTER_COLON);
+        mBeforeColon = mStore.getBoolean(JsonPreferencesInitializer.PREF_SPACE_BEFORE_COLON);
+        mBlankLineAfterComplex = mStore.getBoolean(JsonPreferencesInitializer.PREF_BLANK_LINE_AFTER_COMPLEX);
+        mSpaceAfterObjectOpen = mStore.getBoolean(JsonPreferencesInitializer.PREF_SPACE_AFTER_OBJECT_OPEN);
+        mSpaceBeforeObjectClose = mStore.getBoolean(JsonPreferencesInitializer.PREF_SPACE_BEFORE_OBJECT_CLOSE);
+        mSpaceAfterArrayOpen = mStore.getBoolean(JsonPreferencesInitializer.PREF_SPACE_AFTER_ARRAY_OPEN);
+        mSpaceBeforeArrayClose = mStore.getBoolean(JsonPreferencesInitializer.PREF_SPACE_BEFORE_ARRAY_CLOSE);
+        mSpaces = mStore.getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_SPACES_FOR_TABS);
+        mTabSize = mStore.getInt(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_TAB_WIDTH);
 
-		final StringBuilder builder = new StringBuilder(initialCapacity);
+        final StringBuilder builder = new StringBuilder(initialCapacity);
 
-		toFormatedString(mElement, builder, 0);
+        toFormatedString(mElement, builder, 0);
 
-		return builder.toString();
-	}
+        return builder.toString();
+    }
 
-	private void toFormatedString(JsonElement element, StringBuilder builder, int indent)
-	{
-		if (element.isArray())
-		{
-			final JsonArray array = (JsonArray) element;
+    private void toFormatedString(JsonElement element, StringBuilder builder, int indent)
+    {
+        if (element.isArray())
+        {
+            final JsonArray array = (JsonArray) element;
 
-			builder.append('[');
+            builder.append('[');
 
-			if (mSpaceAfterArrayOpen)
-			{
-				builder.append(' ');
-			}
+            if (mSpaceAfterArrayOpen)
+            {
+                builder.append(' ');
+            }
 
-			if (mWrapArray)
-			{
-				builder.append('\n');
-				indent(builder, indent + 1);
-			}
+            if (mWrapArray)
+            {
+                builder.append('\n');
+                indent(builder, indent + 1);
+            }
 
-			boolean first = true;
-			boolean wasComplex = false;
+            boolean first = true;
+            boolean wasComplex = false;
 
-			for (final JsonElement jsonElement : array)
-			{
-				if (!first)
-				{
-					builder.append(',');
+            for (final JsonElement jsonElement : array)
+            {
+                if (!first)
+                {
+                    builder.append(',');
 
-					if (mAfterComma)
-					{
-						builder.append(' ');
-					}
+                    if (mAfterComma)
+                    {
+                        builder.append(' ');
+                    }
 
-					if (wasComplex && mBlankLineAfterComplex && mWrapArray)
-					{
-						builder.append('\n');
-					}
+                    if (wasComplex && mBlankLineAfterComplex && mWrapArray)
+                    {
+                        builder.append('\n');
+                    }
 
-					if (mWrapArray)
-					{
-						builder.append('\n');
-						indent(builder, indent + 1);
-					}
-				}
+                    if (mWrapArray)
+                    {
+                        builder.append('\n');
+                        indent(builder, indent + 1);
+                    }
+                }
 
-				wasComplex = false;
-				first = false;
+                wasComplex = false;
+                first = false;
 
-				toFormatedString(jsonElement, builder, indent + 1);
+                toFormatedString(jsonElement, builder, indent + 1);
 
-				if (jsonElement.isObject() || jsonElement.isArray())
-				{
-					wasComplex = true;
-				}
-			}
+                if (jsonElement.isObject() || jsonElement.isArray())
+                {
+                    wasComplex = true;
+                }
+            }
 
-			if (mWrapArray)
-			{
-				builder.append('\n');
-				indent(builder, indent);
-			}
+            if (mWrapArray)
+            {
+                builder.append('\n');
+                indent(builder, indent);
+            }
 
-			if (mSpaceBeforeArrayClose)
-			{
-				builder.append(' ');
-			}
+            if (mSpaceBeforeArrayClose)
+            {
+                builder.append(' ');
+            }
 
-			builder.append(']');
-		}
-		else if (element.isObject())
-		{
-			final JsonObject object = (JsonObject) element;
+            builder.append(']');
+        }
+        else if (element.isObject())
+        {
+            final JsonObject object = (JsonObject) element;
 
-			builder.append('{');
+            builder.append('{');
 
-			if (mSpaceAfterObjectOpen)
-			{
-				builder.append(' ');
-			}
+            if (mSpaceAfterObjectOpen)
+            {
+                builder.append(' ');
+            }
 
-			if (mWrapObject)
-			{
-				builder.append('\n');
-				indent(builder, indent + 1);
-			}
+            if (mWrapObject)
+            {
+                builder.append('\n');
+                indent(builder, indent + 1);
+            }
 
-			final Set<Key> keySet = object.keySet();
+            final Set<Key> keySet = object.keySet();
 
-			boolean first = true;
-			boolean wasComplex = true;
+            boolean first = true;
+            boolean wasComplex = true;
 
-			for (final Key key : keySet)
-			{
-				if (!first)
-				{
-					builder.append(',');
+            for (final Key key : keySet)
+            {
+                if (!first)
+                {
+                    builder.append(',');
 
-					if (mAfterComma)
-					{
-						builder.append(' ');
-					}
+                    if (mAfterComma)
+                    {
+                        builder.append(' ');
+                    }
 
-					if (wasComplex && mBlankLineAfterComplex && mWrapObject)
-					{
-						builder.append('\n');
-					}
+                    if (wasComplex && mBlankLineAfterComplex && mWrapObject)
+                    {
+                        builder.append('\n');
+                    }
 
-					if (mWrapObject)
-					{
-						builder.append('\n');
-						indent(builder, indent + 1);
-					}
-				}
+                    if (mWrapObject)
+                    {
+                        builder.append('\n');
+                        indent(builder, indent + 1);
+                    }
+                }
 
-				wasComplex = false;
-				first = false;
+                wasComplex = false;
+                first = false;
 
-				builder.append('\"');
-				builder.append(key);
-				builder.append('\"');
+                builder.append('\"');
+                builder.append(key);
+                builder.append('\"');
 
-				if (mBeforeColon)
-				{
-					builder.append(' ');
-				}
+                if (mBeforeColon)
+                {
+                    builder.append(' ');
+                }
 
-				builder.append(':');
+                builder.append(':');
 
-				if (mAfterColon)
-				{
-					builder.append(' ');
-				}
+                if (mAfterColon)
+                {
+                    builder.append(' ');
+                }
 
-				final JsonElement jsonElement = object.get(key);
+                final JsonElement jsonElement = object.get(key);
 
-				if (jsonElement.isArray() && mArrayBracketsNewLine)
-				{
-					builder.append('\n');
-					indent(builder, indent + 1);
-				}
-				else if (jsonElement.isObject() && mObjectBracketsNewLine)
-				{
-					builder.append('\n');
-					indent(builder, indent + 1);
-				}
+                if (jsonElement.isArray() && mArrayBracketsNewLine)
+                {
+                    builder.append('\n');
+                    indent(builder, indent + 1);
+                }
+                else if (jsonElement.isObject() && mObjectBracketsNewLine)
+                {
+                    builder.append('\n');
+                    indent(builder, indent + 1);
+                }
 
-				toFormatedString(jsonElement, builder, indent + 1);
+                toFormatedString(jsonElement, builder, indent + 1);
 
-				if (jsonElement.isArray() || jsonElement.isObject())
-				{
-					wasComplex = true;
-				}
-			}
+                if (jsonElement.isArray() || jsonElement.isObject())
+                {
+                    wasComplex = true;
+                }
+            }
 
-			if (mWrapObject)
-			{
-				builder.append('\n');
-				indent(builder, indent);
-			}
+            if (mWrapObject)
+            {
+                builder.append('\n');
+                indent(builder, indent);
+            }
 
-			if (mSpaceBeforeObjectClose)
-			{
-				builder.append(' ');
-			}
+            if (mSpaceBeforeObjectClose)
+            {
+                builder.append(' ');
+            }
 
-			builder.append('}');
-		}
-		else
-		{
-			final JsonPrimitive primitive = (JsonPrimitive) element;
+            builder.append('}');
+        }
+        else
+        {
+            final JsonPrimitive primitive = (JsonPrimitive) element;
 
-			if (primitive.getType() == PrimitiveType.STRING)
-			{
-				builder.append('\"');
-			}
+            if (primitive.getType() == PrimitiveType.STRING)
+            {
+                builder.append('\"');
+            }
 
-			builder.append(primitive.getValue());
+            builder.append(primitive.getValue());
 
-			if (primitive.getType() == PrimitiveType.STRING)
-			{
-				builder.append('\"');
-			}
-		}
-	}
+            if (primitive.getType() == PrimitiveType.STRING)
+            {
+                builder.append('\"');
+            }
+        }
+    }
 
-	private void indent(StringBuilder builder, int indent)
-	{
-		if (mSpaces)
-		{
-			for (int i = 0; i < indent * mTabSize; i++)
-			{
-				builder.append(' ');
-			}
-		}
-		else
-		{
-			for (int i = 0; i < indent; i++)
-			{
-				builder.append('\t');
-			}
-		}
-	}
+    private void indent(StringBuilder builder, int indent)
+    {
+        if (mSpaces)
+        {
+            for (int i = 0; i < indent * mTabSize; i++)
+            {
+                builder.append(' ');
+            }
+        }
+        else
+        {
+            for (int i = 0; i < indent; i++)
+            {
+                builder.append('\t');
+            }
+        }
+    }
 }

@@ -20,27 +20,27 @@ import org.sweetlemonade.eclipse.json.Constants;
 public class OpenJsonEditorHandler extends AbstractHandler
 {
 
-	@Override
-	public Object execute(ExecutionEvent event) throws ExecutionException
-	{
-		final IWorkbench wb = PlatformUI.getWorkbench();
-		final IWorkbenchWindow window = wb.getActiveWorkbenchWindow();
-		final IStorage storage = new StringStorage();
-		final IStorageEditorInput input = new StringInput(storage);
-		final IWorkbenchPage page = window.getActivePage();
+    @Override
+    public Object execute(ExecutionEvent event) throws ExecutionException
+    {
+        final IWorkbench wb = PlatformUI.getWorkbench();
+        final IWorkbenchWindow window = wb.getActiveWorkbenchWindow();
+        final IStorage storage = new StringStorage();
+        final IStorageEditorInput input = new StringInput(storage);
+        final IWorkbenchPage page = window.getActivePage();
 
-		if (page != null)
-		{
-			try
-			{
-				page.openEditor(input, Constants.JSON_EDITOR_ID);
-			}
-			catch (final PartInitException e)
-			{
-			}
-		}
+        if (page != null)
+        {
+            try
+            {
+                page.openEditor(input, Constants.JSON_EDITOR_ID);
+            }
+            catch (final PartInitException e)
+            {
+            }
+        }
 
-		return null;
-	}
+        return null;
+    }
 
 }

@@ -11,47 +11,47 @@ import org.sweetlemonade.eclipse.json.model.JsonElement;
  */
 public class SelectionsFinder
 {
-	private int minStart;
-	private int minEnd;
-	private JsonElement minElement;
+    private int minStart;
+    private int minEnd;
+    private JsonElement minElement;
 
-	public JsonElement findSelectedScope(int start, JsonElement element)
-	{
-		minStart = -1;
-		minEnd = Integer.MAX_VALUE / 2;
-		minElement = null;
+    public JsonElement findSelectedScope(int start, JsonElement element)
+    {
+        minStart = -1;
+        minEnd = Integer.MAX_VALUE / 2;
+        minElement = null;
 
-		if (element != null)
-		{
-			checkElementScope(element, start);
-		}
+        if (element != null)
+        {
+            checkElementScope(element, start);
+        }
 
-		return minElement;
-	}
+        return minElement;
+    }
 
-	private void checkElementScope(JsonElement element, int start)
-	{
-		final int s = element.getStart();
-		final int e = element.getEnd();
+    private void checkElementScope(JsonElement element, int start)
+    {
+        final int s = element.getStart();
+        final int e = element.getEnd();
 
-		if (s <= start && e >= start)
-		{
-			if (e - s < minEnd - minStart)
-			{
-				minElement = element;
-				minEnd = e;
-				minStart = s;
+        if (s <= start && e >= start)
+        {
+            if (e - s < minEnd - minStart)
+            {
+                minElement = element;
+                minEnd = e;
+                minStart = s;
 
-				if (element.hasChilds())
-				{
-					final Collection<JsonElement> children = element.getChilds();
+                if (element.hasChilds())
+                {
+                    final Collection<JsonElement> children = element.getChilds();
 
-					for (final JsonElement jsonElement : children)
-					{
-						checkElementScope(jsonElement, start);
-					}
-				}
-			}
-		}
-	}
+                    for (final JsonElement jsonElement : children)
+                    {
+                        checkElementScope(jsonElement, start);
+                    }
+                }
+            }
+        }
+    }
 }

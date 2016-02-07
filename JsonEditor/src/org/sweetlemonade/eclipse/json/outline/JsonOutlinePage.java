@@ -23,108 +23,108 @@ import org.sweetlemonade.eclipse.json.model.JsonElement;
  */
 public class JsonOutlinePage extends ContentOutlinePage implements ISelectionListener
 {
-	private final JsonEditor mEditor;
-	private JsonTreeExpander mExpander;
-	private JsonElement mElement;
-	private JsonElement mSelectedElement;
-	private final SelectionsFinder mFinder = new SelectionsFinder();
+    private final JsonEditor mEditor;
+    private JsonTreeExpander mExpander;
+    private JsonElement mElement;
+    private JsonElement mSelectedElement;
+    private final SelectionsFinder mFinder = new SelectionsFinder();
 
-	public JsonOutlinePage(JsonEditor editor)
-	{
-		mEditor = editor;
-	}
+    public JsonOutlinePage(JsonEditor editor)
+    {
+        mEditor = editor;
+    }
 
-	@Override
-	public void createControl(Composite parent)
-	{
-		super.createControl(parent);
+    @Override
+    public void createControl(Composite parent)
+    {
+        super.createControl(parent);
 
-		final TreeViewer viewer = getTreeViewer();
-		viewer.setContentProvider(new JsonOutlineContentProvider());
+        final TreeViewer viewer = getTreeViewer();
+        viewer.setContentProvider(new JsonOutlineContentProvider());
 
-		final DelegatingStyledCellLabelProvider delegatingStyledCellLabelProvider = new DelegatingStyledCellLabelProvider(new JsonLabelProvider());
-		viewer.setLabelProvider(delegatingStyledCellLabelProvider);
+        final DelegatingStyledCellLabelProvider delegatingStyledCellLabelProvider = new DelegatingStyledCellLabelProvider(new JsonLabelProvider());
+        viewer.setLabelProvider(delegatingStyledCellLabelProvider);
 
-		getSite().getPage().addPostSelectionListener(this);
+        getSite().getPage().addPostSelectionListener(this);
 
-		mExpander = new JsonTreeExpander(viewer);
+        mExpander = new JsonTreeExpander(viewer);
 
-		if (mElement != null)
-		{
-			mExpander.update(mElement);
-		}
-	}
+        if (mElement != null)
+        {
+            mExpander.update(mElement);
+        }
+    }
 
-	@Override
-	public void dispose()
-	{
-		super.dispose();
+    @Override
+    public void dispose()
+    {
+        super.dispose();
 
-		getSite().getPage().removePostSelectionListener(this);
-	}
+        getSite().getPage().removePostSelectionListener(this);
+    }
 
-	@Override
-	public void selectionChanged(SelectionChangedEvent event)
-	{
-		final ISelection selection = event.getSelection();
+    @Override
+    public void selectionChanged(SelectionChangedEvent event)
+    {
+        final ISelection selection = event.getSelection();
 
-		if (selection.isEmpty())
-		{
-			mEditor.resetHighlightRange();
-		}
-		else
-		{
-			final JsonElement jsonElement = (JsonElement) ((IStructuredSelection) selection).getFirstElement();
+        if (selection.isEmpty())
+        {
+            mEditor.resetHighlightRange();
+        }
+        else
+        {
+            final JsonElement jsonElement = (JsonElement) ((IStructuredSelection) selection).getFirstElement();
 
-			if (jsonElement == mSelectedElement)
-			{
-				mSelectedElement = null;
+            if (jsonElement == mSelectedElement)
+            {
+                mSelectedElement = null;
 
-				return;
-			}
+                return;
+            }
 
-			try
-			{
-				mEditor.selectAndReveal(jsonElement.getStart(), jsonElement.getLength());
-			}
-			catch (final IllegalArgumentException x)
-			{
-				mEditor.resetHighlightRange();
-			}
-		}
-	}
+            try
+            {
+                mEditor.selectAndReveal(jsonElement.getStart(), jsonElement.getLength());
+            }
+            catch (final IllegalArgumentException x)
+            {
+                mEditor.resetHighlightRange();
+            }
+        }
+    }
 
-	public void setInput(JsonElement element)
-	{
-		mElement = element;
+    public void setInput(JsonElement element)
+    {
+        mElement = element;
 
-		final TreeViewer treeViewer = getTreeViewer();
+        final TreeViewer treeViewer = getTreeViewer();
 
-		if (treeViewer != null)
-		{
-			mExpander.update(mElement);
-		}
-	}
+        if (treeViewer != null)
+        {
+            mExpander.update(mElement);
+        }
+    }
 
-	@Override
-	public void selectionChanged(IWorkbenchPart part, ISelection selection)
-	{
-		if (selection instanceof ITextSelection && part instanceof JsonEditor)
-		{
-			final ITextSelection textSelection = (ITextSelection) selection;
-			final int start = textSelection.getOffset();
+    @Override
+    public void selectionChanged(IWorkbenchPart part, ISelection selection)
+    {
+        if (selection instanceof ITextSelection && part instanceof JsonEditor)
+        {
+            final ITextSelection textSelection = (ITextSelection) selection;
+            final int start = textSelection.getOffset();
 
-			mSelectedElement = mFinder.findSelectedScope(start, mElement);
+            mSelectedElement = mFinder.findSelectedScope(start, mElement);
 
-			if (mSelectedElement != null)
-			{
-				final TreeViewer treeViewer = getTreeViewer();
+            if (mSelectedElement != null)
+            {
+                final TreeViewer treeViewer = getTreeViewer();
 
-				final TreeSelection treeSelection = new TreeSelection(new TreePath(new Object[] { mSelectedElement }));
+                final TreeSelection treeSelection = new TreeSelection(new TreePath(new Object[] { mSelectedElement }));
 
-				treeViewer.reveal(mSelectedElement);
-				treeViewer.setSelection(treeSelection);
-			}
-		}
-	}
+                treeViewer.reveal(mSelectedElement);
+                treeViewer.setSelection(treeSelection);
+            }
+        }
+    }
 }

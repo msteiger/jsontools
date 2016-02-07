@@ -19,56 +19,56 @@ import org.sweetlemonade.eclipse.json.preference.JsonPreferencesInitializer.Toke
  */
 public class JsonScanner extends RuleBasedScanner
 {
-	public JsonScanner()
-	{
-		updateRules();
-	}
+    public JsonScanner()
+    {
+        updateRules();
+    }
 
-	public void updateRules()
-	{
-		final JsonPreferences preferences = JsonPlugin.getPreferences();
+    public void updateRules()
+    {
+        final JsonPreferences preferences = JsonPlugin.getPreferences();
 
-		final IToken objectBrackets = new Token(new TextAttribute(preferences.getColor(TokenType.OBJECT_BRACKETS), null, preferences.getStyle(TokenType.OBJECT_BRACKETS)));
-		final IToken arrayBrackets = new Token(new TextAttribute(preferences.getColor(TokenType.ARRAY_BRACKETS), null, preferences.getStyle(TokenType.ARRAY_BRACKETS)));
-		final IToken keys = new Token(new TextAttribute(preferences.getColor(TokenType.KEYS), null, preferences.getStyle(TokenType.KEYS)));
-		final IToken strings = new Token(new TextAttribute(preferences.getColor(TokenType.STRINGS), null, preferences.getStyle(TokenType.STRINGS)));
-		final IToken numbers = new Token(new TextAttribute(preferences.getColor(TokenType.NUMBERS), null, preferences.getStyle(TokenType.NUMBERS)));
-		final IToken booleans = new Token(new TextAttribute(preferences.getColor(TokenType.BOOLEANS), null, preferences.getStyle(TokenType.BOOLEANS)));
-		final IToken nulls = new Token(new TextAttribute(preferences.getColor(TokenType.NULL), null, preferences.getStyle(TokenType.NULL)));
+        final IToken objectBrackets = new Token(new TextAttribute(preferences.getColor(TokenType.OBJECT_BRACKETS), null, preferences.getStyle(TokenType.OBJECT_BRACKETS)));
+        final IToken arrayBrackets = new Token(new TextAttribute(preferences.getColor(TokenType.ARRAY_BRACKETS), null, preferences.getStyle(TokenType.ARRAY_BRACKETS)));
+        final IToken keys = new Token(new TextAttribute(preferences.getColor(TokenType.KEYS), null, preferences.getStyle(TokenType.KEYS)));
+        final IToken strings = new Token(new TextAttribute(preferences.getColor(TokenType.STRINGS), null, preferences.getStyle(TokenType.STRINGS)));
+        final IToken numbers = new Token(new TextAttribute(preferences.getColor(TokenType.NUMBERS), null, preferences.getStyle(TokenType.NUMBERS)));
+        final IToken booleans = new Token(new TextAttribute(preferences.getColor(TokenType.BOOLEANS), null, preferences.getStyle(TokenType.BOOLEANS)));
+        final IToken nulls = new Token(new TextAttribute(preferences.getColor(TokenType.NULL), null, preferences.getStyle(TokenType.NULL)));
 
-		final IRule[] rules = new IRule[6];
+        final IRule[] rules = new IRule[6];
 
-		final WordRule keywords = new WordRule(new IWordDetector()
-		{
-			final String start = "nft";
-			final String part = "nullfalsetrue";
+        final WordRule keywords = new WordRule(new IWordDetector()
+        {
+            final String start = "nft";
+            final String part = "nullfalsetrue";
 
-			@Override
-			public boolean isWordStart(char c)
-			{
-				return start.indexOf(c) != -1;
-			}
+            @Override
+            public boolean isWordStart(char c)
+            {
+                return start.indexOf(c) != -1;
+            }
 
-			@Override
-			public boolean isWordPart(char c)
-			{
-				return part.indexOf(c) != -1;
-			}
-		});
+            @Override
+            public boolean isWordPart(char c)
+            {
+                return part.indexOf(c) != -1;
+            }
+        });
 
-		keywords.addWord("null", nulls);
-		keywords.addWord("false", booleans);
-		keywords.addWord("true", booleans);
+        keywords.addWord("null", nulls);
+        keywords.addWord("false", booleans);
+        keywords.addWord("true", booleans);
 
-		rules[0] = new StringValueRule("\"", "\"", strings, '\\');
-		rules[1] = new SingleLineRule("\"", "\"", keys, '\\');
-		rules[2] = new CharacterRule(objectBrackets, '{', '}');
-		rules[3] = new CharacterRule(arrayBrackets, '[', ']');
-		rules[4] = keywords;
-		rules[5] = new JsonNumberRule(numbers);
+        rules[0] = new StringValueRule("\"", "\"", strings, '\\');
+        rules[1] = new SingleLineRule("\"", "\"", keys, '\\');
+        rules[2] = new CharacterRule(objectBrackets, '{', '}');
+        rules[3] = new CharacterRule(arrayBrackets, '[', ']');
+        rules[4] = keywords;
+        rules[5] = new JsonNumberRule(numbers);
 
-		setRules(rules);
+        setRules(rules);
 
-		setDefaultReturnToken(new Token(new TextAttribute(JsonPlugin.getPreferences().getColor(TokenType.DEFAULT))));
-	}
+        setDefaultReturnToken(new Token(new TextAttribute(JsonPlugin.getPreferences().getColor(TokenType.DEFAULT))));
+    }
 }

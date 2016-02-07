@@ -12,60 +12,60 @@ import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
 
 public class JsonNewFileWizard extends BasicNewResourceWizard
 {
-	private WizardNewFileCreationPage mainPage;
+    private WizardNewFileCreationPage mainPage;
 
-	public JsonNewFileWizard()
-	{
-		super();
-	}
+    public JsonNewFileWizard()
+    {
+        super();
+    }
 
-	@Override
-	public void addPages()
-	{
-		super.addPages();
-		mainPage = new WizardNewFileCreationPage("newFilePage1", getSelection());
-		mainPage.setTitle("Create JSON File");
-		mainPage.setFileName("file.json");
-		addPage(mainPage);
-	}
+    @Override
+    public void addPages()
+    {
+        super.addPages();
+        mainPage = new WizardNewFileCreationPage("newFilePage1", getSelection());
+        mainPage.setTitle("Create JSON File");
+        mainPage.setFileName("file.json");
+        addPage(mainPage);
+    }
 
-	@Override
-	public void init(IWorkbench workbench, IStructuredSelection currentSelection)
-	{
-		super.init(workbench, currentSelection);
-		setWindowTitle("New JSON File");
-		setNeedsProgressMonitor(true);
-	}
+    @Override
+    public void init(IWorkbench workbench, IStructuredSelection currentSelection)
+    {
+        super.init(workbench, currentSelection);
+        setWindowTitle("New JSON File");
+        setNeedsProgressMonitor(true);
+    }
 
-	@Override
-	public boolean performFinish()
-	{
-		final IFile file = mainPage.createNewFile();
-		if (file == null)
-		{
-			return false;
-		}
+    @Override
+    public boolean performFinish()
+    {
+        final IFile file = mainPage.createNewFile();
+        if (file == null)
+        {
+            return false;
+        }
 
-		selectAndReveal(file);
+        selectAndReveal(file);
 
-		final IWorkbenchWindow dw = getWorkbench().getActiveWorkbenchWindow();
+        final IWorkbenchWindow dw = getWorkbench().getActiveWorkbenchWindow();
 
-		try
-		{
-			if (dw != null)
-			{
-				final IWorkbenchPage page = dw.getActivePage();
+        try
+        {
+            if (dw != null)
+            {
+                final IWorkbenchPage page = dw.getActivePage();
 
-				if (page != null)
-				{
-					IDE.openEditor(page, file, true);
-				}
-			}
-		}
-		catch (final PartInitException e)
-		{
-		}
+                if (page != null)
+                {
+                    IDE.openEditor(page, file, true);
+                }
+            }
+        }
+        catch (final PartInitException e)
+        {
+        }
 
-		return true;
-	}
+        return true;
+    }
 }

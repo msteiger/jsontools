@@ -12,30 +12,30 @@ import org.eclipse.jface.text.rules.Token;
  */
 public class CharacterRule implements IRule
 {
-	private final IToken mToken;
-	private final char[] mC;
+    private final IToken mToken;
+    private final char[] mC;
 
-	public CharacterRule(IToken token, char... c)
-	{
-		mToken = token;
-		mC = c;
-	}
+    public CharacterRule(IToken token, char... c)
+    {
+        mToken = token;
+        mC = c;
+    }
 
-	@Override
-	public IToken evaluate(ICharacterScanner scanner)
-	{
-		final int read = scanner.read();
+    @Override
+    public IToken evaluate(ICharacterScanner scanner)
+    {
+        final int read = scanner.read();
 
-		for (int i = 0; i < mC.length; i++)
-		{
-			if (mC[i] == read)
-			{
-				return mToken;
-			}
-		}
+        for (int i = 0; i < mC.length; i++)
+        {
+            if (mC[i] == read)
+            {
+                return mToken;
+            }
+        }
 
-		scanner.unread();
+        scanner.unread();
 
-		return Token.UNDEFINED;
-	}
+        return Token.UNDEFINED;
+    }
 }

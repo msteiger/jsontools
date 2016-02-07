@@ -39,272 +39,272 @@ import org.sweetlemonade.eclipse.json.preference.PseudoPreferenceStore;
  */
 public class JsonSyntaxColorsPreferencePage extends PreferencePage implements IWorkbenchPreferencePage, ISelectionChangedListener, IPropertyChangeListener, SelectionListener
 {
-	private final PseudoPreferenceStore mPreferenceStore = new PseudoPreferenceStore();
-	private Button mEnabledButton;
-	private TokenType mSelection;
-	private ColorSelector mSelector;
-	private TextHighlighter mHighlighter;
-	private Button mBoldButton;
-	private Button mItalicButton;
-	private Button mUnderButton;
-	private Button mStrikeButton;
-	private Button mCopyJavaPrefsButton;
+    private final PseudoPreferenceStore mPreferenceStore = new PseudoPreferenceStore();
+    private Button mEnabledButton;
+    private TokenType mSelection;
+    private ColorSelector mSelector;
+    private TextHighlighter mHighlighter;
+    private Button mBoldButton;
+    private Button mItalicButton;
+    private Button mUnderButton;
+    private Button mStrikeButton;
+    private Button mCopyJavaPrefsButton;
 
-	private JavaColorPrefsCopier mCopier;
+    private JavaColorPrefsCopier mCopier;
 
-	public JsonSyntaxColorsPreferencePage()
-	{
-		final IPreferenceStore store = JsonPlugin.getDefault().getPreferenceStore();
-		final TokenType[] types = TokenType.values();
+    public JsonSyntaxColorsPreferencePage()
+    {
+        final IPreferenceStore store = JsonPlugin.getDefault().getPreferenceStore();
+        final TokenType[] types = TokenType.values();
 
-		for (final TokenType colorType : types)
-		{
-			mPreferenceStore.setValue(colorType.getKey(), StringConverter.asString(colorType.getOwnColor(store)));
-			mPreferenceStore.setValue(colorType.getEnabledKey(), colorType.isEnabled(store));
-			mPreferenceStore.setValue(colorType.getStyleKey(), colorType.getOwnStyle(store));
-		}
-	}
+        for (final TokenType colorType : types)
+        {
+            mPreferenceStore.setValue(colorType.getKey(), StringConverter.asString(colorType.getOwnColor(store)));
+            mPreferenceStore.setValue(colorType.getEnabledKey(), colorType.isEnabled(store));
+            mPreferenceStore.setValue(colorType.getStyleKey(), colorType.getOwnStyle(store));
+        }
+    }
 
-	@Override
-	protected Control createContents(Composite parent)
-	{
-		final Composite appearanceComposite = new Composite(parent, SWT.NONE);
-		appearanceComposite.setLayout(new FormLayout());
+    @Override
+    protected Control createContents(Composite parent)
+    {
+        final Composite appearanceComposite = new Composite(parent, SWT.NONE);
+        appearanceComposite.setLayout(new FormLayout());
 
-		final ListViewer listViewer = new ListViewer(appearanceComposite, SWT.BORDER | SWT.V_SCROLL);
-		final List list = listViewer.getList();
+        final ListViewer listViewer = new ListViewer(appearanceComposite, SWT.BORDER | SWT.V_SCROLL);
+        final List list = listViewer.getList();
 
-		final FormData fd_list = new FormData();
-		fd_list.top = new FormAttachment(0, 0);
-		fd_list.left = new FormAttachment(0, 0);
+        final FormData fd_list = new FormData();
+        fd_list.top = new FormAttachment(0, 0);
+        fd_list.left = new FormAttachment(0, 0);
 
-		list.setLayoutData(fd_list);
+        list.setLayoutData(fd_list);
 
-		mEnabledButton = new Button(appearanceComposite, SWT.CHECK);
-		final FormData fd_btnCheckButton = new FormData();
-		fd_btnCheckButton.top = new FormAttachment(0, 0);
-		fd_btnCheckButton.left = new FormAttachment(list, 10);
-		mEnabledButton.setLayoutData(fd_btnCheckButton);
-		mEnabledButton.setText("Enabled");
-		mEnabledButton.addSelectionListener(this);
+        mEnabledButton = new Button(appearanceComposite, SWT.CHECK);
+        final FormData fd_btnCheckButton = new FormData();
+        fd_btnCheckButton.top = new FormAttachment(0, 0);
+        fd_btnCheckButton.left = new FormAttachment(list, 10);
+        mEnabledButton.setLayoutData(fd_btnCheckButton);
+        mEnabledButton.setText("Enabled");
+        mEnabledButton.addSelectionListener(this);
 
-		mSelector = new ColorSelector(appearanceComposite);
-		final Button colorButton = mSelector.getButton();
-		final FormData fd_btnColorButton = new FormData();
-		fd_btnColorButton.top = new FormAttachment(mEnabledButton, 10);
-		fd_btnColorButton.left = new FormAttachment(list, 10);
-		colorButton.setLayoutData(fd_btnColorButton);
-		mSelector.addListener(this);
+        mSelector = new ColorSelector(appearanceComposite);
+        final Button colorButton = mSelector.getButton();
+        final FormData fd_btnColorButton = new FormData();
+        fd_btnColorButton.top = new FormAttachment(mEnabledButton, 10);
+        fd_btnColorButton.left = new FormAttachment(list, 10);
+        colorButton.setLayoutData(fd_btnColorButton);
+        mSelector.addListener(this);
 
-		final TextViewer textViewer = new TextViewer(appearanceComposite, SWT.BORDER);
-		final StyledText styledText = textViewer.getTextWidget();
-		final FormData fd_styledText = new FormData();
-		fd_styledText.bottom = new FormAttachment(100, -0);
-		fd_styledText.right = new FormAttachment(100, -0);
-		fd_styledText.top = new FormAttachment(list, 10);
-		fd_styledText.left = new FormAttachment(0, 0);
-		styledText.setLayoutData(fd_styledText);
+        final TextViewer textViewer = new TextViewer(appearanceComposite, SWT.BORDER);
+        final StyledText styledText = textViewer.getTextWidget();
+        final FormData fd_styledText = new FormData();
+        fd_styledText.bottom = new FormAttachment(100, -0);
+        fd_styledText.right = new FormAttachment(100, -0);
+        fd_styledText.top = new FormAttachment(list, 10);
+        fd_styledText.left = new FormAttachment(0, 0);
+        styledText.setLayoutData(fd_styledText);
 
-		textViewer.setEditable(false);
+        textViewer.setEditable(false);
 
-		mHighlighter = new TextHighlighter(textViewer, mPreferenceStore);
+        mHighlighter = new TextHighlighter(textViewer, mPreferenceStore);
 
-		mBoldButton = new Button(appearanceComposite, SWT.CHECK);
-		final FormData fd_btnBold = new FormData();
-		fd_btnBold.top = new FormAttachment(colorButton, 10);
-		fd_btnBold.left = new FormAttachment(list, 10);
-		mBoldButton.setLayoutData(fd_btnBold);
-		mBoldButton.setText("Bold");
-		mBoldButton.addSelectionListener(this);
+        mBoldButton = new Button(appearanceComposite, SWT.CHECK);
+        final FormData fd_btnBold = new FormData();
+        fd_btnBold.top = new FormAttachment(colorButton, 10);
+        fd_btnBold.left = new FormAttachment(list, 10);
+        mBoldButton.setLayoutData(fd_btnBold);
+        mBoldButton.setText("Bold");
+        mBoldButton.addSelectionListener(this);
 
-		mItalicButton = new Button(appearanceComposite, SWT.CHECK);
-		final FormData fd_btnCheckButton0 = new FormData();
-		fd_btnCheckButton0.top = new FormAttachment(mBoldButton, 10);
-		fd_btnCheckButton0.left = new FormAttachment(list, 10);
-		mItalicButton.setLayoutData(fd_btnCheckButton0);
-		mItalicButton.setText("Italic");
-		mItalicButton.addSelectionListener(this);
+        mItalicButton = new Button(appearanceComposite, SWT.CHECK);
+        final FormData fd_btnCheckButton0 = new FormData();
+        fd_btnCheckButton0.top = new FormAttachment(mBoldButton, 10);
+        fd_btnCheckButton0.left = new FormAttachment(list, 10);
+        mItalicButton.setLayoutData(fd_btnCheckButton0);
+        mItalicButton.setText("Italic");
+        mItalicButton.addSelectionListener(this);
 
-		mUnderButton = new Button(appearanceComposite, SWT.CHECK);
-		final FormData fd_btnCheckButton_1 = new FormData();
-		fd_btnCheckButton_1.top = new FormAttachment(colorButton, 10);
-		fd_btnCheckButton_1.left = new FormAttachment(mItalicButton, 10);
-		mUnderButton.setLayoutData(fd_btnCheckButton_1);
-		mUnderButton.setText("Underline");
-		mUnderButton.addSelectionListener(this);
+        mUnderButton = new Button(appearanceComposite, SWT.CHECK);
+        final FormData fd_btnCheckButton_1 = new FormData();
+        fd_btnCheckButton_1.top = new FormAttachment(colorButton, 10);
+        fd_btnCheckButton_1.left = new FormAttachment(mItalicButton, 10);
+        mUnderButton.setLayoutData(fd_btnCheckButton_1);
+        mUnderButton.setText("Underline");
+        mUnderButton.addSelectionListener(this);
 
-		mStrikeButton = new Button(appearanceComposite, SWT.CHECK);
-		final FormData fd_btnCheckButton_2 = new FormData();
-		fd_btnCheckButton_2.top = new FormAttachment(mUnderButton, 10);
-		fd_btnCheckButton_2.left = new FormAttachment(mItalicButton, 10);
-		mStrikeButton.setLayoutData(fd_btnCheckButton_2);
-		mStrikeButton.setText("Strikethrough");
-		mStrikeButton.addSelectionListener(this);
+        mStrikeButton = new Button(appearanceComposite, SWT.CHECK);
+        final FormData fd_btnCheckButton_2 = new FormData();
+        fd_btnCheckButton_2.top = new FormAttachment(mUnderButton, 10);
+        fd_btnCheckButton_2.left = new FormAttachment(mItalicButton, 10);
+        mStrikeButton.setLayoutData(fd_btnCheckButton_2);
+        mStrikeButton.setText("Strikethrough");
+        mStrikeButton.addSelectionListener(this);
 
-		if (JavaColorPrefsCopier.mayCopyJavaColorPrefs())
-		{
-			mCopyJavaPrefsButton = new Button(appearanceComposite, SWT.NONE);
-			FormData fd_btnCopyJavaPrefs = new FormData();
-			fd_btnCopyJavaPrefs.top = new FormAttachment(0, 10);
-			fd_btnCopyJavaPrefs.right = new FormAttachment(100, -10);
-			mCopyJavaPrefsButton.setLayoutData(fd_btnCopyJavaPrefs);
-			mCopyJavaPrefsButton.setText("Copy Java prefs");
-			mCopyJavaPrefsButton.addSelectionListener(this);
-		}
+        if (JavaColorPrefsCopier.mayCopyJavaColorPrefs())
+        {
+            mCopyJavaPrefsButton = new Button(appearanceComposite, SWT.NONE);
+            FormData fd_btnCopyJavaPrefs = new FormData();
+            fd_btnCopyJavaPrefs.top = new FormAttachment(0, 10);
+            fd_btnCopyJavaPrefs.right = new FormAttachment(100, -10);
+            mCopyJavaPrefsButton.setLayoutData(fd_btnCopyJavaPrefs);
+            mCopyJavaPrefsButton.setText("Copy Java prefs");
+            mCopyJavaPrefsButton.addSelectionListener(this);
+        }
 
-		listViewer.setContentProvider(new ColorsContentProvider());
-		listViewer.setLabelProvider(new ColorsLabelProvider());
-		listViewer.addSelectionChangedListener(this);
+        listViewer.setContentProvider(new ColorsContentProvider());
+        listViewer.setLabelProvider(new ColorsLabelProvider());
+        listViewer.addSelectionChangedListener(this);
 
-		final TokenType[] values = TokenType.values();
-		listViewer.setInput(new Container(values));
+        final TokenType[] values = TokenType.values();
+        listViewer.setInput(new Container(values));
 
-		if (mSelection == null)
-		{
-			listViewer.setSelection(new StructuredSelection(values[0]));
-		}
+        if (mSelection == null)
+        {
+            listViewer.setSelection(new StructuredSelection(values[0]));
+        }
 
-		mHighlighter.update();
+        mHighlighter.update();
 
-		return appearanceComposite;
-	}
+        return appearanceComposite;
+    }
 
-	@Override
-	public void selectionChanged(SelectionChangedEvent event)
-	{
-		mSelection = (TokenType) ((IStructuredSelection) event.getSelection()).getFirstElement();
+    @Override
+    public void selectionChanged(SelectionChangedEvent event)
+    {
+        mSelection = (TokenType) ((IStructuredSelection) event.getSelection()).getFirstElement();
 
-		updateSelection();
-	}
+        updateSelection();
+    }
 
-	@Override
-	public void propertyChange(PropertyChangeEvent event)
-	{
-		if (ColorSelector.PROP_COLORCHANGE.equals(event.getProperty()))
-		{
-			mPreferenceStore.setValue(mSelection.getKey(), StringConverter.asString((RGB) event.getNewValue()));
+    @Override
+    public void propertyChange(PropertyChangeEvent event)
+    {
+        if (ColorSelector.PROP_COLORCHANGE.equals(event.getProperty()))
+        {
+            mPreferenceStore.setValue(mSelection.getKey(), StringConverter.asString((RGB) event.getNewValue()));
 
-			mHighlighter.update();
-		}
-	}
+            mHighlighter.update();
+        }
+    }
 
-	private void updateSelection()
-	{
-		final int style = mSelection.getOwnStyle(mPreferenceStore);
+    private void updateSelection()
+    {
+        final int style = mSelection.getOwnStyle(mPreferenceStore);
 
-		mSelector.setColorValue(mSelection.getOwnColor(mPreferenceStore));
-		mBoldButton.setSelection(JsonPreferences.isBold(style));
-		mItalicButton.setSelection(JsonPreferences.isItalic(style));
-		mUnderButton.setSelection(JsonPreferences.isUnderline(style));
-		mStrikeButton.setSelection(JsonPreferences.isStrike(style));
+        mSelector.setColorValue(mSelection.getOwnColor(mPreferenceStore));
+        mBoldButton.setSelection(JsonPreferences.isBold(style));
+        mItalicButton.setSelection(JsonPreferences.isItalic(style));
+        mUnderButton.setSelection(JsonPreferences.isUnderline(style));
+        mStrikeButton.setSelection(JsonPreferences.isStrike(style));
 
-		if (mSelection == TokenType.DEFAULT)
-		{
-			mEnabledButton.setSelection(true);
-			mEnabledButton.setEnabled(false);
-		}
-		else
-		{
-			mEnabledButton.setEnabled(true);
-			mEnabledButton.setSelection(mSelection.isEnabled(mPreferenceStore));
-		}
+        if (mSelection == TokenType.DEFAULT)
+        {
+            mEnabledButton.setSelection(true);
+            mEnabledButton.setEnabled(false);
+        }
+        else
+        {
+            mEnabledButton.setEnabled(true);
+            mEnabledButton.setSelection(mSelection.isEnabled(mPreferenceStore));
+        }
 
-		mHighlighter.update();
-	}
+        mHighlighter.update();
+    }
 
-	@Override
-	public boolean performOk()
-	{
-		final IPreferenceStore store = JsonPlugin.getDefault().getPreferenceStore();
-		final TokenType[] types = TokenType.values();
+    @Override
+    public boolean performOk()
+    {
+        final IPreferenceStore store = JsonPlugin.getDefault().getPreferenceStore();
+        final TokenType[] types = TokenType.values();
 
-		for (final TokenType type : types)
-		{
-			store.setValue(type.getEnabledKey(), type.isEnabled(mPreferenceStore));
-			store.setValue(type.getKey(), StringConverter.asString(type.getOwnColor(mPreferenceStore)));
-			store.setValue(type.getStyleKey(), type.getOwnStyle(mPreferenceStore));
-		}
+        for (final TokenType type : types)
+        {
+            store.setValue(type.getEnabledKey(), type.isEnabled(mPreferenceStore));
+            store.setValue(type.getKey(), StringConverter.asString(type.getOwnColor(mPreferenceStore)));
+            store.setValue(type.getStyleKey(), type.getOwnStyle(mPreferenceStore));
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	@Override
-	protected void performDefaults()
-	{
-		super.performDefaults();
+    @Override
+    protected void performDefaults()
+    {
+        super.performDefaults();
 
-		final IPreferenceStore store = JsonPlugin.getDefault().getPreferenceStore();
-		final TokenType[] types = TokenType.values();
+        final IPreferenceStore store = JsonPlugin.getDefault().getPreferenceStore();
+        final TokenType[] types = TokenType.values();
 
-		for (final TokenType type : types)
-		{
-			mPreferenceStore.setValue(type.getEnabledKey(), store.getDefaultBoolean(type.getEnabledKey()));
-			mPreferenceStore.setValue(type.getKey(), store.getDefaultString(type.getKey()));
-			mPreferenceStore.setValue(type.getStyleKey(), store.getDefaultInt(type.getStyleKey()));
-		}
+        for (final TokenType type : types)
+        {
+            mPreferenceStore.setValue(type.getEnabledKey(), store.getDefaultBoolean(type.getEnabledKey()));
+            mPreferenceStore.setValue(type.getKey(), store.getDefaultString(type.getKey()));
+            mPreferenceStore.setValue(type.getStyleKey(), store.getDefaultInt(type.getStyleKey()));
+        }
 
-		updateSelection();
-		mHighlighter.update();
-	}
+        updateSelection();
+        mHighlighter.update();
+    }
 
-	@Override
-	public void init(IWorkbench workbench)
-	{
-		setPreferenceStore(JsonPlugin.getDefault().getPreferenceStore());
-	}
+    @Override
+    public void init(IWorkbench workbench)
+    {
+        setPreferenceStore(JsonPlugin.getDefault().getPreferenceStore());
+    }
 
-	private int collectStyle()
-	{
-		final boolean bold = mBoldButton.getSelection();
-		final boolean italic = mItalicButton.getSelection();
-		final boolean under = mUnderButton.getSelection();
-		final boolean strike = mStrikeButton.getSelection();
+    private int collectStyle()
+    {
+        final boolean bold = mBoldButton.getSelection();
+        final boolean italic = mItalicButton.getSelection();
+        final boolean under = mUnderButton.getSelection();
+        final boolean strike = mStrikeButton.getSelection();
 
-		return JsonPreferences.mergeStyles(bold, italic, under, strike);
-	}
+        return JsonPreferences.mergeStyles(bold, italic, under, strike);
+    }
 
-	@Override
-	public void widgetSelected(SelectionEvent e)
-	{
-		if (e.widget == mEnabledButton)
-		{
-			mPreferenceStore.setValue(mSelection.getEnabledKey(), mEnabledButton.getSelection());
-		}
-		else if (mCopyJavaPrefsButton != null && e.widget == mCopyJavaPrefsButton)
-		{
-			if (mCopier == null)
-			{
-				mCopier = new JavaColorPrefsCopier();
-			}
+    @Override
+    public void widgetSelected(SelectionEvent e)
+    {
+        if (e.widget == mEnabledButton)
+        {
+            mPreferenceStore.setValue(mSelection.getEnabledKey(), mEnabledButton.getSelection());
+        }
+        else if (mCopyJavaPrefsButton != null && e.widget == mCopyJavaPrefsButton)
+        {
+            if (mCopier == null)
+            {
+                mCopier = new JavaColorPrefsCopier();
+            }
 
-			mCopier.copyPrefs(mPreferenceStore);
+            mCopier.copyPrefs(mPreferenceStore);
 
-			updateSelection();
-		}
-		else
-		{
-			mPreferenceStore.setValue(mSelection.getStyleKey(), collectStyle());
-		}
+            updateSelection();
+        }
+        else
+        {
+            mPreferenceStore.setValue(mSelection.getStyleKey(), collectStyle());
+        }
 
-		mHighlighter.update();
-	}
+        mHighlighter.update();
+    }
 
-	@Override
-	public void widgetDefaultSelected(SelectionEvent e)
-	{
-		if (e.widget == mEnabledButton)
-		{
-			mPreferenceStore.setValue(mSelection.getEnabledKey(), mEnabledButton.getSelection());
-		}
-		else if (mCopyJavaPrefsButton != null && e.widget == mCopyJavaPrefsButton)
-		{
-			//XXX ???
-		}
-		else
-		{
-			mPreferenceStore.setValue(mSelection.getStyleKey(), collectStyle());
-		}
+    @Override
+    public void widgetDefaultSelected(SelectionEvent e)
+    {
+        if (e.widget == mEnabledButton)
+        {
+            mPreferenceStore.setValue(mSelection.getEnabledKey(), mEnabledButton.getSelection());
+        }
+        else if (mCopyJavaPrefsButton != null && e.widget == mCopyJavaPrefsButton)
+        {
+            //XXX ???
+        }
+        else
+        {
+            mPreferenceStore.setValue(mSelection.getStyleKey(), collectStyle());
+        }
 
-		mHighlighter.update();
-	}
+        mHighlighter.update();
+    }
 }

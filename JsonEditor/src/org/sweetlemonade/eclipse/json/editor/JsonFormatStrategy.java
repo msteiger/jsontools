@@ -16,53 +16,53 @@ import org.sweetlemonade.eclipse.json.model.JsonParserMy;
  */
 public class JsonFormatStrategy extends ContextBasedFormattingStrategy
 {
-	private final LinkedList<IDocument> mDocuments = new LinkedList<>();
-	private final JsonEditor mEditor;
-	private JsonElement mElement;
-	private JsonFormatter mFormatter;
+    private final LinkedList<IDocument> mDocuments = new LinkedList<>();
+    private final JsonEditor mEditor;
+    private JsonElement mElement;
+    private JsonFormatter mFormatter;
 
-	public JsonFormatStrategy(JsonEditor editor)
-	{
-		mEditor = editor;
-	}
+    public JsonFormatStrategy(JsonEditor editor)
+    {
+        mEditor = editor;
+    }
 
-	@Override
-	public void formatterStarts(IFormattingContext context)
-	{
-		super.formatterStarts(context);
+    @Override
+    public void formatterStarts(IFormattingContext context)
+    {
+        super.formatterStarts(context);
 
-		final IDocument document = (IDocument) context.getProperty(FormattingContextProperties.CONTEXT_MEDIUM);
+        final IDocument document = (IDocument) context.getProperty(FormattingContextProperties.CONTEXT_MEDIUM);
 
-		mElement = new JsonParserMy(document).parse(); //TODO do it right sometime...
-		mFormatter = new JsonFormatter(mElement, mEditor.getMergedPreferenceStore());
+        mElement = new JsonParserMy(document).parse(); //TODO do it right sometime...
+        mFormatter = new JsonFormatter(mElement, mEditor.getMergedPreferenceStore());
 
-		mDocuments.addLast(document);
-	}
+        mDocuments.addLast(document);
+    }
 
-	@Override
-	public void format()
-	{
-		super.format();
+    @Override
+    public void format()
+    {
+        super.format();
 
-		if (mElement == null)
-		{
-			return;
-		}
+        if (mElement == null)
+        {
+            return;
+        }
 
-		final IDocument document = mDocuments.removeFirst();
+        final IDocument document = mDocuments.removeFirst();
 
-		final String format = mFormatter.format(document.getLength());
+        final String format = mFormatter.format(document.getLength());
 
-		document.set(format);
+        document.set(format);
 
-		mEditor.doSaveAfterFormat();
-	}
+        mEditor.doSaveAfterFormat();
+    }
 
-	@Override
-	public void formatterStops()
-	{
-		super.formatterStops();
+    @Override
+    public void formatterStops()
+    {
+        super.formatterStops();
 
-		mDocuments.clear();
-	}
+        mDocuments.clear();
+    }
 }

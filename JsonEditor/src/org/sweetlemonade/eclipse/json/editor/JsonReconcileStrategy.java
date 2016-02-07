@@ -18,67 +18,67 @@ import org.sweetlemonade.eclipse.json.model.antlr.ParseUtils.ParseResult;
  */
 public class JsonReconcileStrategy implements IReconcilingStrategy, IReconcilingStrategyExtension
 {
-	private IDocument mDocument;
-	private final JsonEditor mEditor;
+    private IDocument mDocument;
+    private final JsonEditor mEditor;
 
-	public JsonReconcileStrategy(JsonEditor editor)
-	{
-		mEditor = editor;
-	}
+    public JsonReconcileStrategy(JsonEditor editor)
+    {
+        mEditor = editor;
+    }
 
-	@Override
-	public void setDocument(IDocument document)
-	{
-		mDocument = document;
-	}
+    @Override
+    public void setDocument(IDocument document)
+    {
+        mDocument = document;
+    }
 
-	@Override
-	public void reconcile(DirtyRegion dirtyRegion, IRegion subRegion)
-	{
-		reconcile();
-	}
+    @Override
+    public void reconcile(DirtyRegion dirtyRegion, IRegion subRegion)
+    {
+        reconcile();
+    }
 
-	@Override
-	public void reconcile(IRegion partition)
-	{
-		reconcile();
-	}
+    @Override
+    public void reconcile(IRegion partition)
+    {
+        reconcile();
+    }
 
-	private void reconcile()
-	{
-		try
-		{
-			final ParseResult parse = ParseUtils.parse(mDocument);
+    private void reconcile()
+    {
+        try
+        {
+            final ParseResult parse = ParseUtils.parse(mDocument);
 
-			Display.getDefault().asyncExec(new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					mEditor.setJsonInput(ParseUtils.tree(parse.tree), parse.errors);
-				}
+            Display.getDefault().asyncExec(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    mEditor.setJsonInput(ParseUtils.tree(parse.tree), parse.errors);
+                }
 
-			});
+            });
 
-			return;
-		}
-		catch (final IllegalParseStateException e)
-		{
-			e.getClass();
+            return;
+        }
+        catch (final IllegalParseStateException e)
+        {
+            e.getClass();
 
-			return;
-		}
+            return;
+        }
 
-	}
+    }
 
-	@Override
-	public void setProgressMonitor(IProgressMonitor monitor)
-	{
-	}
+    @Override
+    public void setProgressMonitor(IProgressMonitor monitor)
+    {
+    }
 
-	@Override
-	public void initialReconcile()
-	{
-		reconcile();
-	}
+    @Override
+    public void initialReconcile()
+    {
+        reconcile();
+    }
 }

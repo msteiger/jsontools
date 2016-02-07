@@ -21,44 +21,44 @@ import org.sweetlemonade.eclipse.json.JsonPlugin;
  */
 public class JsonRootPreferencePage extends PreferencePage implements IWorkbenchPreferencePage, SelectionListener
 {
-	public JsonRootPreferencePage()
-	{
-	}
+    public JsonRootPreferencePage()
+    {
+    }
 
-	@Override
-	public void init(IWorkbench workbench)
-	{
-		setPreferenceStore(JsonPlugin.getDefault().getPreferenceStore());
-	}
+    @Override
+    public void init(IWorkbench workbench)
+    {
+        setPreferenceStore(JsonPlugin.getDefault().getPreferenceStore());
+    }
 
-	@Override
-	protected Control createContents(Composite parent)
-	{
-		Composite rootComposite = new Composite(parent, SWT.NONE);
-		rootComposite.setLayout(new FormLayout());
+    @Override
+    protected Control createContents(Composite parent)
+    {
+        Composite rootComposite = new Composite(parent, SWT.NONE);
+        rootComposite.setLayout(new FormLayout());
 
-		Button saveAsOnSave = new Button(rootComposite, SWT.CHECK);
-		FormData fd_btnCheckButton = new FormData();
-		fd_btnCheckButton.top = new FormAttachment(0);
-		fd_btnCheckButton.left = new FormAttachment(0);
-		saveAsOnSave.setLayoutData(fd_btnCheckButton);
-		saveAsOnSave.setText("Do \"Save As\" when saving \"pseudo\" Json editor");
-		saveAsOnSave.addSelectionListener(this);
+        Button saveAsOnSave = new Button(rootComposite, SWT.CHECK);
+        FormData fd_btnCheckButton = new FormData();
+        fd_btnCheckButton.top = new FormAttachment(0);
+        fd_btnCheckButton.left = new FormAttachment(0);
+        saveAsOnSave.setLayoutData(fd_btnCheckButton);
+        saveAsOnSave.setText("Do \"Save As\" when saving \"pseudo\" Json editor");
+        saveAsOnSave.addSelectionListener(this);
 
-		saveAsOnSave.setSelection(getPreferenceStore().getBoolean(JsonPreferencesInitializer.PREF_SAVE_AS_ON_SAVE));
+        saveAsOnSave.setSelection(getPreferenceStore().getBoolean(JsonPreferencesInitializer.PREF_SAVE_AS_ON_SAVE));
 
-		return rootComposite;
-	}
+        return rootComposite;
+    }
 
-	@Override
-	public void widgetSelected(SelectionEvent e)
-	{
-		getPreferenceStore().setValue(JsonPreferencesInitializer.PREF_SAVE_AS_ON_SAVE, ((Button) e.widget).getSelection());
-	}
+    @Override
+    public void widgetSelected(SelectionEvent e)
+    {
+        getPreferenceStore().setValue(JsonPreferencesInitializer.PREF_SAVE_AS_ON_SAVE, ((Button) e.widget).getSelection());
+    }
 
-	@Override
-	public void widgetDefaultSelected(SelectionEvent e)
-	{
-	}
+    @Override
+    public void widgetDefaultSelected(SelectionEvent e)
+    {
+    }
 
 }

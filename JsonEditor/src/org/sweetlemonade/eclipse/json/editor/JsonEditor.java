@@ -52,431 +52,431 @@ import org.sweetlemonade.eclipse.json.preference.JsonPreferencesInitializer.Toke
  */
 public class JsonEditor extends TextEditor
 {
-	private JsonOutlinePage mOutlinePage;
-	private JsonElement mElement;
-	private JsonAnnotationer mAnnotationer;
-	private boolean mDirty;
-
-	public JsonEditor()
-	{
-		setSourceViewerConfiguration(new JsonConfiguration(this));
-	}
-
-	@Override
-	protected void configureSourceViewerDecorationSupport(SourceViewerDecorationSupport support)
-	{
-		support.setCharacterPairMatcher(new DefaultCharacterPairMatcher(new char[] { '{', '}', '[', ']' }));
-		support.setMatchingCharacterPainterPreferenceKeys(JsonPreferencesInitializer.PREF_ENABLED_MATCH_BRACKET, JsonPreferencesInitializer.PREF_COLOR_MATCH_BRACKET);
-
-		super.configureSourceViewerDecorationSupport(support);
-	}
-
-	@Override
-	protected void initializeKeyBindingScopes()
-	{
-		setKeyBindingScopes(new String[] { Constants.JSON_EDITOR_CONTEXT });
-	}
-
-	private void format()
-	{
-		mDirty = isDirty();
-
-		mAnnotationer.store();
-
-		((ProjectionViewer) getSourceViewer()).doOperation(ISourceViewer.FORMAT);
-	}
-
-	@Override
-	protected void createActions()
-	{
-		super.createActions();
-
-		Action action = new Action()
-		{
-			@Override
-			public void run()
-			{
-				format();
-			}
-		};
-
-		action.setActionDefinitionId(Constants.COMMAND_FORMAT_ID);
-		action.setText("Format Json");
-		setAction(Constants.COMMAND_FORMAT_ID, action);
-
-		action = new Action()
-		{
-			@Override
-			public void run()
-			{
-				if (mElement != null)
-				{
-					final JsonQuickOutline outline = new JsonQuickOutline(getSite().getShell(), JsonEditor.this);
-					outline.setInput(mElement);
-					outline.setVisible(true);
-					outline.setFocus();
-				}
-			}
-		};
-
-		action.setActionDefinitionId(Constants.COMMAND_QUICK_OUTLINE_ID);
-		action.setText("Quick outline");
-		setAction(Constants.COMMAND_QUICK_OUTLINE_ID, action);
-	}
-
-	@Override
-	public void doSave(IProgressMonitor progressMonitor)
-	{
-		if (JsonPlugin.getDefault().getPreferenceStore().getBoolean(JsonPreferencesInitializer.PREF_SAVE_AS_ON_SAVE) && getEditorInput() instanceof StringInput)
-		{
-			doSaveAs();
-		}
-		else
-		{
-			super.doSave(progressMonitor);
-
-			if (JsonPlugin.getDefault().getPreferenceStore().getBoolean(JsonPreferencesInitializer.PREF_AUTO_FORMAT_ON_SAVE))
-			{
-				format();
-			}
-		}
-	}
-
-	public void doSaveAfterFormat()
-	{
-		if (!mDirty)
-		{
-			super.doSave(getProgressMonitor());
-		}
-	}
-
-	@Override
-	protected void editorContextMenuAboutToShow(IMenuManager menu)
-	{
-		super.editorContextMenuAboutToShow(menu);
-
-		addAction(menu, ITextEditorActionConstants.GROUP_EDIT, Constants.COMMAND_FORMAT_ID);
-		addAction(menu, ITextEditorActionConstants.GROUP_OPEN, Constants.COMMAND_QUICK_OUTLINE_ID);
-	}
-
-	public IPreferenceStore getMergedPreferenceStore()
-	{
-		return getPreferenceStore();
-	}
-
-	@Override
-	protected void initializeEditor()
-	{
-		super.initializeEditor();
-
-		final IPreferenceStore store = getPreferenceStore();
-		final IPreferenceStore myStore = JsonPlugin.getDefault().getPreferenceStore();
-
-		if (store != null)
-		{
-			setPreferenceStore(new ChainedPreferenceStore(new IPreferenceStore[] { store, myStore }));
-		}
-		else
-		{
-			setPreferenceStore(myStore);
-		}
-	}
-
-	@Override
-	protected void handlePreferenceStoreChanged(PropertyChangeEvent event)
-	{
-		super.handlePreferenceStoreChanged(event);
-
-		final TokenType[] values = TokenType.values();
-		final String property = event.getProperty();
-
-		for (final TokenType colorType : values)
-		{
-			if (colorType.getKey().equals(property) || colorType.getEnabledKey().equals(property) || colorType.getStyleKey().equals(property))
-			{
-				updatePresentation();
-
-				break;
-			}
-		}
-
-		for (int i = 0; i < JsonPreferencesInitializer.FORMAT_KEYS.length; i++)
-		{
-			final String key = JsonPreferencesInitializer.FORMAT_KEYS[i];
-
-			if (key.equals(property))
-			{
-				updatePresentation();
-
-				break;
-			}
-		}
-	}
-
-	private void updatePresentation()
-	{
-		((JsonConfiguration) getSourceViewerConfiguration()).updatePreferences();
-
-		getSourceViewer().invalidateTextPresentation();
-	}
-
-	@Override
-	public void createPartControl(Composite parent)
-	{
-		super.createPartControl(parent);
-
-		final SourceViewerDecorationSupport support = getSourceViewerDecorationSupport(getSourceViewer());
-		support.install(getPreferenceStore());
-
-		final ProjectionViewer sourceViewer = (ProjectionViewer) getSourceViewer();
-		final ProjectionSupport projectionSupport = new ProjectionSupport(sourceViewer, getAnnotationAccess(), getSharedColors());
-		projectionSupport.install();
-
-		sourceViewer.doOperation(ProjectionViewer.TOGGLE);
-
-		mAnnotationer = new JsonAnnotationer(sourceViewer.getProjectionAnnotationModel(), this, getSourceViewer());
-	}
-
-	@Override
-	public IDocumentProvider getDocumentProvider()
-	{
-		final IDocumentProvider provider = super.getDocumentProvider();
-
-		if (provider == null)
-		{
-			return provider;
-		}
-
-		if (provider.getAnnotationModel(getEditorInput()) == null)
-		{
-			return new ForwardingDocumentProvider(null, new IDocumentSetupParticipant()
-			{
-
-				@Override
-				public void setup(IDocument document)
-				{
-				}
-			}, provider)
-			{
-				@Override
-				public IAnnotationModel getAnnotationModel(Object element)
-				{
-					return new AnnotationModel();
-				}
-			};
-		}
-
-		return provider;
-	}
-
-	@Override
-	protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler ruler, int styles)
-	{
-		fAnnotationAccess = getAnnotationAccess();
-		fOverviewRuler = createOverviewRuler(getSharedColors());
-
-		final ProjectionViewer viewer = new ProjectionViewer(parent, ruler, getOverviewRuler(), isOverviewRulerVisible(), styles);
-
-		getSourceViewerDecorationSupport(viewer);
-
-		return viewer;
-	}
-
-	@Override
-	public Object getAdapter(@SuppressWarnings("rawtypes") Class required)
-	{
-		if (IContentOutlinePage.class.equals(required))
-		{
-			return getOutlinePage();
-		}
-
-		return super.getAdapter(required);
-	}
-
-	private void findDupKeys(JsonElement element, IResource resource, boolean hasResource)
-	{
-		if (element == null)
-		{
-			return;
-		}
-
-		if (element.isObject())
-		{
-			final JsonObject object = element.asObject();
-
-			final Set<Key> keys = object.keySet();
-			final IAnnotationModel annotationModel = getSourceViewer().getAnnotationModel();
-
-			for (final Key key1 : keys)
-			{
-				for (final Key key2 : keys)
-				{
-					if (key1 != key2 && key1.getValue().equals(key2.getValue()))
-					{
-						try
-						{
-							final IMarker marker = resource.createMarker(Constants.MARKER_ERROR);
-
-							marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_WARNING);
-							marker.setAttribute(IMarker.LOCATION, "Line " + key1.getLine());
-							marker.setAttribute(IMarker.MESSAGE, "Duplicate keys");
-
-							final int start = key1.getStart();
-							final int stop = key1.getStop();
-
-							marker.setAttribute(IMarker.CHAR_START, start);
-							marker.setAttribute(IMarker.CHAR_END, stop);
-
-							if (!hasResource)
-							{
-								final MarkerAnnotation annotation = new MarkerAnnotation(marker);
-
-								annotationModel.addAnnotation(annotation, new Position(start, stop - start));
-
-								mProblems.put(marker, annotation);
-							}
-						}
-						catch (final CoreException e)
-						{
-							e.printStackTrace();
-						}
-					}
-				}
-
-				findDupKeys(object.get(key1), resource, hasResource);
-			}
-		}
-		else if (element.isArray())
-		{
-			final Collection<JsonElement> childs = element.getChilds();
-
-			for (final JsonElement jsonElement : childs)
-			{
-				findDupKeys(jsonElement, resource, hasResource);
-			}
-		}
-	}
-
-	private final IdentityHashMap<IMarker, Annotation> mProblems = new IdentityHashMap<>();
-
-	public void setJsonInput(JsonElement element, Collection<ParseError> errors)
-	{
-		IResource resource = ResourceUtil.getResource(getEditorInput());
-		boolean hasResource = true;
-
-		if (resource == null)
-		{
-			hasResource = false;
-			resource = ResourcesPlugin.getWorkspace().getRoot();
-		}
-
-		if (resource != null)
-		{
-			try
-			{
-				if (hasResource)
-				{
-					resource.deleteMarkers(Constants.MARKER_ERROR, false, 0);
-				}
-
-				final IAnnotationModel annotationModel = getSourceViewer().getAnnotationModel();
-
-				clearAnnos();
-
-				for (final ParseError parseError : errors)
-				{
-					final IMarker marker = resource.createMarker(Constants.MARKER_ERROR);
-
-					marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
-					marker.setAttribute(IMarker.LOCATION, "Line " + parseError.line);
-					marker.setAttribute(IMarker.MESSAGE, parseError.text);
-
-					if (parseError.start != -1)
-					{
-						marker.setAttribute(IMarker.CHAR_START, parseError.start);
-
-						if (parseError.stop != -1)
-						{
-							marker.setAttribute(IMarker.CHAR_END, parseError.stop);
-						}
-						else
-						{
-							marker.setAttribute(IMarker.CHAR_END, parseError.start + 1);
-						}
-					}
-
-					if (!hasResource)
-					{
-						final MarkerAnnotation annotation = new MarkerAnnotation(marker);
-
-						annotationModel.addAnnotation(annotation, new Position(parseError.start, 1));
-						mProblems.put(marker, annotation);
-					}
-				}
-			}
-			catch (final CoreException e)
-			{
-				e.printStackTrace();
-			}
-
-			findDupKeys(element, resource, hasResource);
-		}
-
-		mAnnotationer.update(element);
-
-		mElement = element;
-
-		getOutlinePage().setInput(element);
-	}
-
-	private void clearAnnos()
-	{
-		final IAnnotationModel annotationModel = getSourceViewer().getAnnotationModel();
-
-		final Set<IMarker> keySet = mProblems.keySet();
-
-		for (final IMarker iMarker : keySet)
-		{
-			try
-			{
-				iMarker.delete();
-			}
-			catch (final CoreException e)
-			{
-				e.printStackTrace();
-			}
-
-			if (annotationModel != null)
-			{
-				annotationModel.removeAnnotation(mProblems.get(iMarker));
-			}
-		}
-
-		mProblems.clear();
-	}
-
-	private JsonOutlinePage getOutlinePage()
-	{
-		if (mOutlinePage == null)
-		{
-			mOutlinePage = new JsonOutlinePage(this);
-		}
-
-		return mOutlinePage;
-	}
-
-	public JsonElement getJsonElement()
-	{
-		return mElement;
-	}
-
-	@Override
-	public void dispose()
-	{
-		clearAnnos();
-
-		super.dispose();
-
-		mAnnotationer.dispose();
-	}
+    private JsonOutlinePage mOutlinePage;
+    private JsonElement mElement;
+    private JsonAnnotationer mAnnotationer;
+    private boolean mDirty;
+
+    public JsonEditor()
+    {
+        setSourceViewerConfiguration(new JsonConfiguration(this));
+    }
+
+    @Override
+    protected void configureSourceViewerDecorationSupport(SourceViewerDecorationSupport support)
+    {
+        support.setCharacterPairMatcher(new DefaultCharacterPairMatcher(new char[] { '{', '}', '[', ']' }));
+        support.setMatchingCharacterPainterPreferenceKeys(JsonPreferencesInitializer.PREF_ENABLED_MATCH_BRACKET, JsonPreferencesInitializer.PREF_COLOR_MATCH_BRACKET);
+
+        super.configureSourceViewerDecorationSupport(support);
+    }
+
+    @Override
+    protected void initializeKeyBindingScopes()
+    {
+        setKeyBindingScopes(new String[] { Constants.JSON_EDITOR_CONTEXT });
+    }
+
+    private void format()
+    {
+        mDirty = isDirty();
+
+        mAnnotationer.store();
+
+        ((ProjectionViewer) getSourceViewer()).doOperation(ISourceViewer.FORMAT);
+    }
+
+    @Override
+    protected void createActions()
+    {
+        super.createActions();
+
+        Action action = new Action()
+        {
+            @Override
+            public void run()
+            {
+                format();
+            }
+        };
+
+        action.setActionDefinitionId(Constants.COMMAND_FORMAT_ID);
+        action.setText("Format Json");
+        setAction(Constants.COMMAND_FORMAT_ID, action);
+
+        action = new Action()
+        {
+            @Override
+            public void run()
+            {
+                if (mElement != null)
+                {
+                    final JsonQuickOutline outline = new JsonQuickOutline(getSite().getShell(), JsonEditor.this);
+                    outline.setInput(mElement);
+                    outline.setVisible(true);
+                    outline.setFocus();
+                }
+            }
+        };
+
+        action.setActionDefinitionId(Constants.COMMAND_QUICK_OUTLINE_ID);
+        action.setText("Quick outline");
+        setAction(Constants.COMMAND_QUICK_OUTLINE_ID, action);
+    }
+
+    @Override
+    public void doSave(IProgressMonitor progressMonitor)
+    {
+        if (JsonPlugin.getDefault().getPreferenceStore().getBoolean(JsonPreferencesInitializer.PREF_SAVE_AS_ON_SAVE) && getEditorInput() instanceof StringInput)
+        {
+            doSaveAs();
+        }
+        else
+        {
+            super.doSave(progressMonitor);
+
+            if (JsonPlugin.getDefault().getPreferenceStore().getBoolean(JsonPreferencesInitializer.PREF_AUTO_FORMAT_ON_SAVE))
+            {
+                format();
+            }
+        }
+    }
+
+    public void doSaveAfterFormat()
+    {
+        if (!mDirty)
+        {
+            super.doSave(getProgressMonitor());
+        }
+    }
+
+    @Override
+    protected void editorContextMenuAboutToShow(IMenuManager menu)
+    {
+        super.editorContextMenuAboutToShow(menu);
+
+        addAction(menu, ITextEditorActionConstants.GROUP_EDIT, Constants.COMMAND_FORMAT_ID);
+        addAction(menu, ITextEditorActionConstants.GROUP_OPEN, Constants.COMMAND_QUICK_OUTLINE_ID);
+    }
+
+    public IPreferenceStore getMergedPreferenceStore()
+    {
+        return getPreferenceStore();
+    }
+
+    @Override
+    protected void initializeEditor()
+    {
+        super.initializeEditor();
+
+        final IPreferenceStore store = getPreferenceStore();
+        final IPreferenceStore myStore = JsonPlugin.getDefault().getPreferenceStore();
+
+        if (store != null)
+        {
+            setPreferenceStore(new ChainedPreferenceStore(new IPreferenceStore[] { store, myStore }));
+        }
+        else
+        {
+            setPreferenceStore(myStore);
+        }
+    }
+
+    @Override
+    protected void handlePreferenceStoreChanged(PropertyChangeEvent event)
+    {
+        super.handlePreferenceStoreChanged(event);
+
+        final TokenType[] values = TokenType.values();
+        final String property = event.getProperty();
+
+        for (final TokenType colorType : values)
+        {
+            if (colorType.getKey().equals(property) || colorType.getEnabledKey().equals(property) || colorType.getStyleKey().equals(property))
+            {
+                updatePresentation();
+
+                break;
+            }
+        }
+
+        for (int i = 0; i < JsonPreferencesInitializer.FORMAT_KEYS.length; i++)
+        {
+            final String key = JsonPreferencesInitializer.FORMAT_KEYS[i];
+
+            if (key.equals(property))
+            {
+                updatePresentation();
+
+                break;
+            }
+        }
+    }
+
+    private void updatePresentation()
+    {
+        ((JsonConfiguration) getSourceViewerConfiguration()).updatePreferences();
+
+        getSourceViewer().invalidateTextPresentation();
+    }
+
+    @Override
+    public void createPartControl(Composite parent)
+    {
+        super.createPartControl(parent);
+
+        final SourceViewerDecorationSupport support = getSourceViewerDecorationSupport(getSourceViewer());
+        support.install(getPreferenceStore());
+
+        final ProjectionViewer sourceViewer = (ProjectionViewer) getSourceViewer();
+        final ProjectionSupport projectionSupport = new ProjectionSupport(sourceViewer, getAnnotationAccess(), getSharedColors());
+        projectionSupport.install();
+
+        sourceViewer.doOperation(ProjectionViewer.TOGGLE);
+
+        mAnnotationer = new JsonAnnotationer(sourceViewer.getProjectionAnnotationModel(), this, getSourceViewer());
+    }
+
+    @Override
+    public IDocumentProvider getDocumentProvider()
+    {
+        final IDocumentProvider provider = super.getDocumentProvider();
+
+        if (provider == null)
+        {
+            return provider;
+        }
+
+        if (provider.getAnnotationModel(getEditorInput()) == null)
+        {
+            return new ForwardingDocumentProvider(null, new IDocumentSetupParticipant()
+            {
+
+                @Override
+                public void setup(IDocument document)
+                {
+                }
+            }, provider)
+            {
+                @Override
+                public IAnnotationModel getAnnotationModel(Object element)
+                {
+                    return new AnnotationModel();
+                }
+            };
+        }
+
+        return provider;
+    }
+
+    @Override
+    protected ISourceViewer createSourceViewer(Composite parent, IVerticalRuler ruler, int styles)
+    {
+        fAnnotationAccess = getAnnotationAccess();
+        fOverviewRuler = createOverviewRuler(getSharedColors());
+
+        final ProjectionViewer viewer = new ProjectionViewer(parent, ruler, getOverviewRuler(), isOverviewRulerVisible(), styles);
+
+        getSourceViewerDecorationSupport(viewer);
+
+        return viewer;
+    }
+
+    @Override
+    public Object getAdapter(@SuppressWarnings("rawtypes") Class required)
+    {
+        if (IContentOutlinePage.class.equals(required))
+        {
+            return getOutlinePage();
+        }
+
+        return super.getAdapter(required);
+    }
+
+    private void findDupKeys(JsonElement element, IResource resource, boolean hasResource)
+    {
+        if (element == null)
+        {
+            return;
+        }
+
+        if (element.isObject())
+        {
+            final JsonObject object = element.asObject();
+
+            final Set<Key> keys = object.keySet();
+            final IAnnotationModel annotationModel = getSourceViewer().getAnnotationModel();
+
+            for (final Key key1 : keys)
+            {
+                for (final Key key2 : keys)
+                {
+                    if (key1 != key2 && key1.getValue().equals(key2.getValue()))
+                    {
+                        try
+                        {
+                            final IMarker marker = resource.createMarker(Constants.MARKER_ERROR);
+
+                            marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_WARNING);
+                            marker.setAttribute(IMarker.LOCATION, "Line " + key1.getLine());
+                            marker.setAttribute(IMarker.MESSAGE, "Duplicate keys");
+
+                            final int start = key1.getStart();
+                            final int stop = key1.getStop();
+
+                            marker.setAttribute(IMarker.CHAR_START, start);
+                            marker.setAttribute(IMarker.CHAR_END, stop);
+
+                            if (!hasResource)
+                            {
+                                final MarkerAnnotation annotation = new MarkerAnnotation(marker);
+
+                                annotationModel.addAnnotation(annotation, new Position(start, stop - start));
+
+                                mProblems.put(marker, annotation);
+                            }
+                        }
+                        catch (final CoreException e)
+                        {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                findDupKeys(object.get(key1), resource, hasResource);
+            }
+        }
+        else if (element.isArray())
+        {
+            final Collection<JsonElement> childs = element.getChilds();
+
+            for (final JsonElement jsonElement : childs)
+            {
+                findDupKeys(jsonElement, resource, hasResource);
+            }
+        }
+    }
+
+    private final IdentityHashMap<IMarker, Annotation> mProblems = new IdentityHashMap<>();
+
+    public void setJsonInput(JsonElement element, Collection<ParseError> errors)
+    {
+        IResource resource = ResourceUtil.getResource(getEditorInput());
+        boolean hasResource = true;
+
+        if (resource == null)
+        {
+            hasResource = false;
+            resource = ResourcesPlugin.getWorkspace().getRoot();
+        }
+
+        if (resource != null)
+        {
+            try
+            {
+                if (hasResource)
+                {
+                    resource.deleteMarkers(Constants.MARKER_ERROR, false, 0);
+                }
+
+                final IAnnotationModel annotationModel = getSourceViewer().getAnnotationModel();
+
+                clearAnnos();
+
+                for (final ParseError parseError : errors)
+                {
+                    final IMarker marker = resource.createMarker(Constants.MARKER_ERROR);
+
+                    marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
+                    marker.setAttribute(IMarker.LOCATION, "Line " + parseError.line);
+                    marker.setAttribute(IMarker.MESSAGE, parseError.text);
+
+                    if (parseError.start != -1)
+                    {
+                        marker.setAttribute(IMarker.CHAR_START, parseError.start);
+
+                        if (parseError.stop != -1)
+                        {
+                            marker.setAttribute(IMarker.CHAR_END, parseError.stop);
+                        }
+                        else
+                        {
+                            marker.setAttribute(IMarker.CHAR_END, parseError.start + 1);
+                        }
+                    }
+
+                    if (!hasResource)
+                    {
+                        final MarkerAnnotation annotation = new MarkerAnnotation(marker);
+
+                        annotationModel.addAnnotation(annotation, new Position(parseError.start, 1));
+                        mProblems.put(marker, annotation);
+                    }
+                }
+            }
+            catch (final CoreException e)
+            {
+                e.printStackTrace();
+            }
+
+            findDupKeys(element, resource, hasResource);
+        }
+
+        mAnnotationer.update(element);
+
+        mElement = element;
+
+        getOutlinePage().setInput(element);
+    }
+
+    private void clearAnnos()
+    {
+        final IAnnotationModel annotationModel = getSourceViewer().getAnnotationModel();
+
+        final Set<IMarker> keySet = mProblems.keySet();
+
+        for (final IMarker iMarker : keySet)
+        {
+            try
+            {
+                iMarker.delete();
+            }
+            catch (final CoreException e)
+            {
+                e.printStackTrace();
+            }
+
+            if (annotationModel != null)
+            {
+                annotationModel.removeAnnotation(mProblems.get(iMarker));
+            }
+        }
+
+        mProblems.clear();
+    }
+
+    private JsonOutlinePage getOutlinePage()
+    {
+        if (mOutlinePage == null)
+        {
+            mOutlinePage = new JsonOutlinePage(this);
+        }
+
+        return mOutlinePage;
+    }
+
+    public JsonElement getJsonElement()
+    {
+        return mElement;
+    }
+
+    @Override
+    public void dispose()
+    {
+        clearAnnos();
+
+        super.dispose();
+
+        mAnnotationer.dispose();
+    }
 }

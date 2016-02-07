@@ -29,331 +29,331 @@ import org.sweetlemonade.eclipse.json.preference.JsonPreferencesInitializer;
  */
 public class ParseUtils
 {
-	public static class ParseError
-	{
-		public RecognitionException error;
-		public String text;
-		public int line;
-		public int start = -1;
-		public int stop = -1;
-	}
+    public static class ParseError
+    {
+        public RecognitionException error;
+        public String text;
+        public int line;
+        public int start = -1;
+        public int stop = -1;
+    }
 
-	public static class ParseResult
-	{
-		public Object tree;
-		public Collection<ParseError> errors;
-		private int currErrors;
-	}
+    public static class ParseResult
+    {
+        public Object tree;
+        public Collection<ParseError> errors;
+        private int currErrors;
+    }
 
-	private static ParseError fillError(RecognitionException e, BaseRecognizer recognizer, IDocument document)
-	{
-		final ParseError error = new ParseError();
+    private static ParseError fillError(RecognitionException e, BaseRecognizer recognizer, IDocument document)
+    {
+        final ParseError error = new ParseError();
 
-		error.error = e;
-		error.line = e.line;
+        error.error = e;
+        error.line = e.line;
 
-		final CommonToken token = (CommonToken) e.token;
+        final CommonToken token = (CommonToken) e.token;
 
-		if (token != null)
-		{
-			error.start = token.getStartIndex();
-			error.stop = token.getStopIndex();
+        if (token != null)
+        {
+            error.start = token.getStartIndex();
+            error.stop = token.getStopIndex();
 
-			if (error.stop == error.start)
-			{
-				error.stop++;
-			}
-		}
-		else
-		{
-			error.start = e.index;
-		}
+            if (error.stop == error.start)
+            {
+                error.stop++;
+            }
+        }
+        else
+        {
+            error.start = e.index;
+        }
 
-		error.text = recognizer.getErrorMessage(e, recognizer.getTokenNames());
+        error.text = recognizer.getErrorMessage(e, recognizer.getTokenNames());
 
-		return error;
-	}
+        return error;
+    }
 
-	public static ParseResult parse(final IDocument document) throws IllegalParseStateException
-	{
-		IPreferenceStore store = JsonPlugin.getDefault().getPreferenceStore();
+    public static ParseResult parse(final IDocument document) throws IllegalParseStateException
+    {
+        IPreferenceStore store = JsonPlugin.getDefault().getPreferenceStore();
 
-		final boolean validate = store.getBoolean(JsonPreferencesInitializer.PREF_VALIDATE);
-		final int maxErrorsPrefs = store.getInt(JsonPreferencesInitializer.PREF_MAX_ERROR);
-		final int maxErrors;
+        final boolean validate = store.getBoolean(JsonPreferencesInitializer.PREF_VALIDATE);
+        final int maxErrorsPrefs = store.getInt(JsonPreferencesInitializer.PREF_MAX_ERROR);
+        final int maxErrors;
 
-		if (maxErrorsPrefs == 0)
-		{
-			maxErrors = Integer.MAX_VALUE;
-		}
-		else
-		{
-			maxErrors = maxErrorsPrefs;
-		}
+        if (maxErrorsPrefs == 0)
+        {
+            maxErrors = Integer.MAX_VALUE;
+        }
+        else
+        {
+            maxErrors = maxErrorsPrefs;
+        }
 
-		final ParseResult result = new ParseResult();
+        final ParseResult result = new ParseResult();
 
-		result.currErrors = 0;
+        result.currErrors = 0;
 
-		final ArrayList<ParseError> errors = new ArrayList<>();
+        final ArrayList<ParseError> errors = new ArrayList<>();
 
-		result.errors = errors;
+        result.errors = errors;
 
-		final DocumentCharStream charStream = new DocumentCharStream(document);
+        final DocumentCharStream charStream = new DocumentCharStream(document);
 
-		final JsonLexer lexer = new JsonLexer(charStream)
-		{
-			@Override
-			public void reportError(RecognitionException e)
-			{
-				if (!validate || result.currErrors >= maxErrors)
-				{
-					charStream.seek(charStream.size() - 1);
-				}
-				else
-				{
-					result.currErrors++;
+        final JsonLexer lexer = new JsonLexer(charStream)
+        {
+            @Override
+            public void reportError(RecognitionException e)
+            {
+                if (!validate || result.currErrors >= maxErrors)
+                {
+                    charStream.seek(charStream.size() - 1);
+                }
+                else
+                {
+                    result.currErrors++;
 
-					super.reportError(e);
+                    super.reportError(e);
 
-					errors.add(fillError(e, this, document));
-				}
-			}
-		};
+                    errors.add(fillError(e, this, document));
+                }
+            }
+        };
 
-		final CommonTokenStream tokenStream = new CommonTokenStream(lexer);
+        final CommonTokenStream tokenStream = new CommonTokenStream(lexer);
 
-		final JsonParser parser = new JsonParser(tokenStream)
-		{
-			@Override
-			public void reportError(RecognitionException e)
-			{
-				if (!validate || result.currErrors >= maxErrors)
-				{
-					tokenStream.seek(tokenStream.size() - 1);
-				}
-				else
-				{
-					result.currErrors++;
+        final JsonParser parser = new JsonParser(tokenStream)
+        {
+            @Override
+            public void reportError(RecognitionException e)
+            {
+                if (!validate || result.currErrors >= maxErrors)
+                {
+                    tokenStream.seek(tokenStream.size() - 1);
+                }
+                else
+                {
+                    result.currErrors++;
 
-					super.reportError(e);
+                    super.reportError(e);
 
-					errors.add(fillError(e, this, document));
-				}
-			}
-		};
+                    errors.add(fillError(e, this, document));
+                }
+            }
+        };
 
-		result.tree = parser.jsonText().getTree();
+        result.tree = parser.jsonText().getTree();
 
-		return result;
-	}
+        return result;
+    }
 
-	public static JsonElement tree(Object t)
-	{
-		return element((CommonTree) t, null);
-	}
+    public static JsonElement tree(Object t)
+    {
+        return element((CommonTree) t, null);
+    }
 
-	private static JsonElement element(CommonTree tree, JsonElement parent)
-	{
-		if (tree instanceof CommonErrorNode)
-		{
-			return null;
-		}
+    private static JsonElement element(CommonTree tree, JsonElement parent)
+    {
+        if (tree instanceof CommonErrorNode)
+        {
+            return null;
+        }
 
-		final Token token = tree.getToken();
+        final Token token = tree.getToken();
 
-		if (token == null)
-		{
-			tree.getClass();
-		}
+        if (token == null)
+        {
+            tree.getClass();
+        }
 
-		final int type = token.getType();
-		String text = token.getText();
-		PrimitiveType type2 = null;
+        final int type = token.getType();
+        String text = token.getText();
+        PrimitiveType type2 = null;
 
-		switch (type)
-		{
-			case JsonParser.OBJECT:
-				return object(tree, parent);
+        switch (type)
+        {
+            case JsonParser.OBJECT:
+                return object(tree, parent);
 
-			case JsonParser.ARRAY:
-				return array(tree, parent);
+            case JsonParser.ARRAY:
+                return array(tree, parent);
 
-			case JsonParser.FALSE:
-			case JsonParser.TRUE:
-				type2 = PrimitiveType.BOOLEAN;
-				break;
+            case JsonParser.FALSE:
+            case JsonParser.TRUE:
+                type2 = PrimitiveType.BOOLEAN;
+                break;
 
-			case JsonParser.NULL:
-				type2 = PrimitiveType.NULL;
-				break;
+            case JsonParser.NULL:
+                type2 = PrimitiveType.NULL;
+                break;
 
-			case JsonParser.NUMBER:
-				type2 = PrimitiveType.NUMBER;
-				break;
+            case JsonParser.NUMBER:
+                type2 = PrimitiveType.NUMBER;
+                break;
 
-			case JsonParser.STRING:
-				text = dequote(text);
-				type2 = PrimitiveType.STRING;
-				break;
+            case JsonParser.STRING:
+                text = dequote(text);
+                type2 = PrimitiveType.STRING;
+                break;
 
-			default:
-				return null;
-		}
+            default:
+                return null;
+        }
 
-		return fill(new JsonPrimitive(parent, text, type2), tree);
-	}
+        return fill(new JsonPrimitive(parent, text, type2), tree);
+    }
 
-	private static String dequote(String text)
-	{
-		return text.substring(0, text.length());
-	}
+    private static String dequote(String text)
+    {
+        return text.substring(0, text.length());
+    }
 
-	private static JsonArray array(CommonTree t, JsonElement parent)
-	{
-		final JsonArray array = fill(new JsonArray(parent), t);
+    private static JsonArray array(CommonTree t, JsonElement parent)
+    {
+        final JsonArray array = fill(new JsonArray(parent), t);
 
-		final List<? extends Object> children = t.getChildren();
+        final List<? extends Object> children = t.getChildren();
 
-		for (final Object object : children)
-		{
-			final CommonTree child = (CommonTree) object;
+        for (final Object object : children)
+        {
+            final CommonTree child = (CommonTree) object;
 
-			final JsonElement element = element(child, array);
+            final JsonElement element = element(child, array);
 
-			if (element == null)
-			{
-				continue;
-			}
+            if (element == null)
+            {
+                continue;
+            }
 
-			array.add(element);
-		}
+            array.add(element);
+        }
 
-		return array;
-	}
+        return array;
+    }
 
-	public static JsonObject object(CommonTree t, JsonElement parent)
-	{
-		final JsonObject object = fill(new JsonObject(parent), t);
+    public static JsonObject object(CommonTree t, JsonElement parent)
+    {
+        final JsonObject object = fill(new JsonObject(parent), t);
 
-		final List<? extends Object> children = t.getChildren();
+        final List<? extends Object> children = t.getChildren();
 
-		for (final Object object2 : children)
-		{
-			final CommonTree child = (CommonTree) object2;
+        for (final Object object2 : children)
+        {
+            final CommonTree child = (CommonTree) object2;
 
-			if (child.getType() != JsonParser.STRING)
-			{
-				continue;
-			}
+            if (child.getType() != JsonParser.STRING)
+            {
+                continue;
+            }
 
-			final CommonToken token = (CommonToken) child.getToken();
-			String text = token.getText();
-			text = dequote(text);
+            final CommonToken token = (CommonToken) child.getToken();
+            String text = token.getText();
+            text = dequote(text);
 
-			final Key key = new Key(text);
-			key.setStart(token.getStartIndex());
-			key.setStop(token.getStopIndex() + 1);
-			key.setLine(token.getLine());
+            final Key key = new Key(text);
+            key.setStart(token.getStartIndex());
+            key.setStop(token.getStopIndex() + 1);
+            key.setLine(token.getLine());
 
-			final JsonElement element = element((CommonTree) child.getChild(0), object);
+            final JsonElement element = element((CommonTree) child.getChild(0), object);
 
-			if (element == null)
-			{
-				continue;
-			}
+            if (element == null)
+            {
+                continue;
+            }
 
-			object.put(key, element);
-		}
+            object.put(key, element);
+        }
 
-		return object;
-	}
+        return object;
+    }
 
-	private static <T extends JsonElement> T fill(T element, CommonTree tree)
-	{
-		final CommonToken startToken = (CommonToken) tree.getToken();
-		CommonToken lastToken = startToken;
+    private static <T extends JsonElement> T fill(T element, CommonTree tree)
+    {
+        final CommonToken startToken = (CommonToken) tree.getToken();
+        CommonToken lastToken = startToken;
 
-		final int childCount = tree.getChildCount();
+        final int childCount = tree.getChildCount();
 
-		if (childCount > 0)
-		{
-			lastToken = (CommonToken) ((CommonTree) tree.getChild(childCount - 1)).getToken();
-		}
+        if (childCount > 0)
+        {
+            lastToken = (CommonToken) ((CommonTree) tree.getChild(childCount - 1)).getToken();
+        }
 
-		element.setStart(startToken.getStartIndex());
-		element.setEnd(lastToken.getStopIndex() + 1);
-		element.setStartLine(startToken.getLine());
-		element.setEndLine(lastToken.getLine());
+        element.setStart(startToken.getStartIndex());
+        element.setEnd(lastToken.getStopIndex() + 1);
+        element.setStartLine(startToken.getLine());
+        element.setEndLine(lastToken.getLine());
 
-		return element;
-	}
+        return element;
+    }
 }
 /*if (e instanceof NoViableAltException)
 {
-	NoViableAltException exception = (NoViableAltException) e;
+    NoViableAltException exception = (NoViableAltException) e;
 
-	exception.getClass();
-	//token
+    exception.getClass();
+    //token
 }
 else if (e instanceof MismatchedTreeNodeException)
 {
-	MismatchedTreeNodeException exception = (MismatchedTreeNodeException) e;
+    MismatchedTreeNodeException exception = (MismatchedTreeNodeException) e;
 
-	exception.getClass();
+    exception.getClass();
 }
 else if (e instanceof MissingTokenException)
 {
-	MissingTokenException exception = (MissingTokenException) e;
+    MissingTokenException exception = (MissingTokenException) e;
 
-	exception.getClass();
-	//token
+    exception.getClass();
+    //token
 }
 else if (e instanceof UnwantedTokenException)
 {
-	UnwantedTokenException exception = (UnwantedTokenException) e;
+    UnwantedTokenException exception = (UnwantedTokenException) e;
 
-	exception.getClass();
-	//token
+    exception.getClass();
+    //token
 }
 else if (e instanceof MismatchedTokenException)
 {
-	MismatchedTokenException exception = (MismatchedTokenException) e;
+    MismatchedTokenException exception = (MismatchedTokenException) e;
 
-	exception.getClass();
-	//token
+    exception.getClass();
+    //token
 }
 else if (e instanceof MismatchedNotSetException)
 {
-	MismatchedNotSetException exception = (MismatchedNotSetException) e;
+    MismatchedNotSetException exception = (MismatchedNotSetException) e;
 
-	exception.getClass();
-	//token
+    exception.getClass();
+    //token
 }
 else if (e instanceof MismatchedSetException)
 {
-	MismatchedSetException exception = (MismatchedSetException) e;
+    MismatchedSetException exception = (MismatchedSetException) e;
 
-	exception.getClass();
-	//token
+    exception.getClass();
+    //token
 }
 else if (e instanceof MismatchedRangeException)
 {
-	MismatchedRangeException exception = (MismatchedRangeException) e;
+    MismatchedRangeException exception = (MismatchedRangeException) e;
 
-	exception.getClass();
+    exception.getClass();
 }
 else if (e instanceof FailedPredicateException)
 {
-	FailedPredicateException exception = (FailedPredicateException) e;
+    FailedPredicateException exception = (FailedPredicateException) e;
 
-	exception.getClass();
+    exception.getClass();
 }
 else if (e instanceof EarlyExitException)
 {
-	EarlyExitException exception = (EarlyExitException) e;
+    EarlyExitException exception = (EarlyExitException) e;
 
-	exception.getClass();
-	//token
+    exception.getClass();
+    //token
 }
 */

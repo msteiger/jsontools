@@ -19,125 +19,125 @@ import org.sweetlemonade.eclipse.json.model.JsonObject.Key;
  */
 public class JsonTreeExpander
 {
-	private TreeViewer mViewer;
-	private JsonElement mElement;
+    private TreeViewer mViewer;
+    private JsonElement mElement;
 
-	public JsonTreeExpander(TreeViewer viewer)
-	{
-		mViewer = viewer;
-		mViewer.setComparer(new IElementComparer()
-		{
+    public JsonTreeExpander(TreeViewer viewer)
+    {
+        mViewer = viewer;
+        mViewer.setComparer(new IElementComparer()
+        {
 
-			@Override
-			public int hashCode(Object element)
-			{
-				return System.identityHashCode(element);
-			}
+            @Override
+            public int hashCode(Object element)
+            {
+                return System.identityHashCode(element);
+            }
 
-			@Override
-			public boolean equals(Object a, Object b)
-			{
-				return a == b;
-			}
-		});
-	}
+            @Override
+            public boolean equals(Object a, Object b)
+            {
+                return a == b;
+            }
+        });
+    }
 
-	public void update(JsonElement element)
-	{
-		if (mElement == null)
-		{
-			mViewer.setInput(new Container(element));
-			mViewer.expandToLevel(2);
-			mElement = element;
+    public void update(JsonElement element)
+    {
+        if (mElement == null)
+        {
+            mViewer.setInput(new Container(element));
+            mViewer.expandToLevel(2);
+            mElement = element;
 
-			return;
-		}
+            return;
+        }
 
-		final Object[] objects = mViewer.getExpandedElements();
-		final JsonElement[] elements = new JsonElement[objects.length];
-		System.arraycopy(objects, 0, elements, 0, objects.length);
+        final Object[] objects = mViewer.getExpandedElements();
+        final JsonElement[] elements = new JsonElement[objects.length];
+        System.arraycopy(objects, 0, elements, 0, objects.length);
 
-		mViewer.setInput(new Container(element));
+        mViewer.setInput(new Container(element));
 
-		if (element == null)
-		{
-			return;
-		}
+        if (element == null)
+        {
+            return;
+        }
 
-		final List<JsonElement> expanded = Arrays.<JsonElement> asList(elements);
-		final List<JsonElement> expand = new ArrayList<>();
+        final List<JsonElement> expanded = Arrays.<JsonElement> asList(elements);
+        final List<JsonElement> expand = new ArrayList<>();
 
-		check(mElement, element, expanded, expand);
+        check(mElement, element, expanded, expand);
 
-		mViewer.setExpandedElements(expand.toArray());
+        mViewer.setExpandedElements(expand.toArray());
 
-		mElement = element;
-	}
+        mElement = element;
+    }
 
-	private boolean check(JsonElement elementWas, JsonElement elementNow, List<JsonElement> expanded, List<JsonElement> expand)
-	{
-		if (elementWas.isPrimitive() || elementNow.isPrimitive())
-		{
-			return false;
-		}
+    private boolean check(JsonElement elementWas, JsonElement elementNow, List<JsonElement> expanded, List<JsonElement> expand)
+    {
+        if (elementWas.isPrimitive() || elementNow.isPrimitive())
+        {
+            return false;
+        }
 
-		if (elementWas.getClass() != elementNow.getClass())
-		{
-			return false;
-		}
+        if (elementWas.getClass() != elementNow.getClass())
+        {
+            return false;
+        }
 
-		boolean result = false;
+        boolean result = false;
 
-		if (expanded.contains(elementWas))
-		{
-			result = true;
+        if (expanded.contains(elementWas))
+        {
+            result = true;
 
-			expand.add(elementNow);
-		}
+            expand.add(elementNow);
+        }
 
-		if (!elementWas.hasChilds())
-		{
-			return result;
-		}
+        if (!elementWas.hasChilds())
+        {
+            return result;
+        }
 
-		if (elementWas.isArray())
-		{
-			final List<JsonElement> wasChilds = elementWas.asArray();
-			final List<JsonElement> nowChilds = elementNow.asArray();
+        if (elementWas.isArray())
+        {
+            final List<JsonElement> wasChilds = elementWas.asArray();
+            final List<JsonElement> nowChilds = elementNow.asArray();
 
-			final int len = Math.min(wasChilds.size(), nowChilds.size());
+            final int len = Math.min(wasChilds.size(), nowChilds.size());
 
-			for (int i = 0; i < len; i++)
-			{
-				final JsonElement was = wasChilds.get(i);
-				final JsonElement now = nowChilds.get(i);
+            for (int i = 0; i < len; i++)
+            {
+                final JsonElement was = wasChilds.get(i);
+                final JsonElement now = nowChilds.get(i);
 
-				check(was, now, expanded, expand);
-			}
-		}
-		else if (elementWas.isObject())
-		{
-			final JsonObject wasObj = elementWas.asObject();
-			final JsonObject nowObj = elementNow.asObject();
+                check(was, now, expanded, expand);
+            }
+        }
+        else if (elementWas.isObject())
+        {
+            final JsonObject wasObj = elementWas.asObject();
+            final JsonObject nowObj = elementNow.asObject();
 
-			final Set<Key> wasSet = wasObj.keySet();
-			final Set<Key> nowSet = nowObj.keySet();
+            final Set<Key> wasSet = wasObj.keySet();
+            final Set<Key> nowSet = nowObj.keySet();
 
-			outer: for (final Key wasKey : wasSet)
-			{
-				for (final Key nowKey : nowSet)
-				{
-					if (nowKey.getValue().equals(wasKey.getValue()))
-					{
-						if (check(wasObj.get(wasKey), nowObj.get(nowKey), expanded, expand))
-						{
-							continue outer;
-						}
-					}
-				}
-			}
-		}
+            outer: for (final Key wasKey : wasSet)
+            {
+                for (final Key nowKey : nowSet)
+                {
+                    if (nowKey.getValue().equals(wasKey.getValue()))
+                    {
+                        if (check(wasObj.get(wasKey), nowObj.get(nowKey), expanded, expand))
+                        {
+                            continue outer;
+                        }
+                    }
+                }
+            }
+        }
 
-		return result;
-	}
+        return result;
+    }
 }

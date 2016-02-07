@@ -6,20 +6,20 @@ import org.sweetlemonade.eclipse.json.Container;
 
 public class ColorsContentProvider implements IStructuredContentProvider
 {
-	@Override
-	public void dispose()
-	{
+    @Override
+    public void dispose()
+    {
 
-	}
+    }
 
-	@Override
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput)
-	{
-	}
+    @Override
+    public void inputChanged(Viewer viewer, Object oldInput, Object newInput)
+    {
+    }
 
-	@Override
-	public Object[] getElements(Object inputElement)
-	{
-		return (Object[]) ((Container) inputElement).object;
-	}
+    @Override
+    public Object[] getElements(Object inputElement)
+    {
+        return (Object[]) ((Container) inputElement).object;
+    }
 }
