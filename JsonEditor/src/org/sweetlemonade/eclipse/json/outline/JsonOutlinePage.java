@@ -58,9 +58,9 @@ public class JsonOutlinePage extends ContentOutlinePage implements ISelectionLis
     @Override
     public void dispose()
     {
-        super.dispose();
-
         getSite().getPage().removePostSelectionListener(this);
+        
+        super.dispose();
     }
 
     @Override
